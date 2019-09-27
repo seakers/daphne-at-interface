@@ -34,7 +34,7 @@ const actions = {
                 }
             }
             let dataResponse = await fetch(
-                '/api/daphne/command',
+                '/api/at/dialogue/command',
                 {
                     method: 'POST',
                     body: reqData,

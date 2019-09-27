@@ -16,7 +16,7 @@ const actions = {
             let reqData = new FormData();
             reqData.append('filename', fileName);
 
-            let dataResponse = await fetchPost('/api/anomaly/import-database', reqData);
+            let dataResponse = await fetchPost('/api/at/import-database', reqData);
 
             if (dataResponse.ok){
                 let data = await dataResponse.json();
@@ -36,7 +36,7 @@ const actions = {
             let reqData = new FormData();
             reqData.append('file', file);
 
-            let dataResponse = await fetchPost('/api/anomaly/import-database-from-file', reqData);
+            let dataResponse = await fetchPost('/api/at/import-database-from-file', reqData);
 
             if (dataResponse.ok){
                 let data = await dataResponse.json();

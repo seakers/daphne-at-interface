@@ -132,7 +132,7 @@ const actions = {
 
             if (state.methodsAPI.includes(Method)) {
                 console.log(reqData);
-                let dataResponse = await fetchPost('/api/anomaly/' + Method, reqData, true);
+                let dataResponse = await fetchPost('/api/at/' + Method, reqData, true);
 
                 if (dataResponse.ok) {
                     let data = await dataResponse.json();
@@ -168,7 +168,7 @@ const actions = {
 
                     // Websocket connection
                     let websocket = new WebSocket(((window.location.protocol === 'https:') ? 'wss://' : 'ws://')
-                        + window.location.host + '/api/anomaly/' + Method);
+                        + window.location.host + '/api/at/' + Method);
 
                     websocket.onopen = function() {
                         resolve();
@@ -217,7 +217,7 @@ const actions = {
             let reqData = new FormData();
             reqData.append('filename', fileName);
 
-            let dataResponse = await fetchPost('/api/anomaly/import-data', reqData);
+            let dataResponse = await fetchPost('/api/at/import-data', reqData);
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
@@ -242,7 +242,7 @@ const actions = {
             let reqData = new FormData();
             reqData.append('file', file);
 
-            let dataResponse = await fetchPost('/api/anomaly/read-data', reqData);
+            let dataResponse = await fetchPost('/api/at/read-data', reqData);
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
@@ -301,7 +301,7 @@ const actions = {
                 reqData[parameter.variable] = parameter.value;
             });
 
-            let dataResponse = await fetchPost('/api/anomaly/analysis/' + questionCode, reqData, true);
+            let dataResponse = await fetchPost('/api/at/analysis/' + questionCode, reqData, true);
 
             // Process response
             if (dataResponse.ok) {
