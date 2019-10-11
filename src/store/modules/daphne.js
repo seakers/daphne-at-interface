@@ -54,6 +54,22 @@ const actions = {
             console.error('Networking error:', e);
         }
         commit('setIsLoading', false);
+    },
+    async simulateTelemetry() {
+        let dataResponse = await fetch(
+            '/api/at/telemetry/simulate',
+            {
+                method: 'POST',
+                body: '',
+                credentials: 'same-origin'
+            }
+        );
+        if (dataResponse.ok) {
+            console.info('Success simulating the telemetry feed.')
+        }
+        else {
+            console.error('Error simulating the telemetry feed.');
+        }
     }
 };
 
@@ -75,7 +91,7 @@ const mutations = {
         Object.keys(recoveredState).forEach((key) => {
             state[key] = recoveredState[key];
         });
-    }
+    },
 };
 
 export default {

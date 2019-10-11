@@ -1,42 +1,32 @@
 <template>
     <div>
-        <div class="columns">
-            <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
-                <div>
-                    <main-menu></main-menu>
-                    <timer
-                            v-if="timerExperimentCondition"
-                            v-bind:duration="stageDuration"
-                            v-bind:start-time="stageStartTime"
-                            v-on:countdown-end="onCountdownEnd">
-                    </timer>
+        <div>
+            <nav class="navbar">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="https://www.selva-research.com/daphne">Daphne</a>
+                    <div class="navbar-burger burger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
-            </aside>
-            <div class="column is-10" id="admin-panel">
-                <nav class="navbar">
-                    <div class="navbar-brand">
-                        <a class="navbar-item" href="https://www.selva-research.com/daphne">Daphne</a>
-                        <div class="navbar-burger burger">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
 
-                    <div class="navbar-menu">
-                        <div class="navbar-start is-fullwidth">
-                            <div class="navbar-item is-fullwidth">
-                                <question-bar v-if="questionBarExperimentCondition" id="question-bar"></question-bar>
-                            </div>
+                <div class="navbar-menu">
+                    <div class="navbar-start is-fullwidth">
+                        <div class="navbar-item is-fullwidth">
+                            <question-bar v-if="questionBarExperimentCondition" id="question-bar"></question-bar>
                         </div>
                     </div>
-                </nav>
-                <section class="section is-small">
-                    <div class="columns is-mobile">
-                        <anomaly-plot></anomaly-plot>
-                    </div>
-                    <functionality-list></functionality-list>
-                </section>
+                </div>
+            </nav>
+            <div class="box">
+                <daphne-answer></daphne-answer>
+            </div>
+            <div class="box">
+                <simulate-telemetry></simulate-telemetry>
+                <div class="columns is-mobile">
+                    <anomaly-plot></anomaly-plot>
+                </div>
             </div>
         </div>
         <footer class="footer">
@@ -67,6 +57,8 @@
 
     import { mapGetters } from 'vuex';
     import AnomalyPlot from "./AnomalyPlot";
+    import DaphneAnswer from "./DaphneAnswer";
+    import SimulateTelemetry from "./SimulateTelemetry";
 
     let introJs = require('intro.js').introJs;
 
@@ -128,20 +120,20 @@
                 this.isModalActive = false;
             }
         },
-        components: {AnomalyPlot, MainMenu, Timer, QuestionBar, TradespacePlot, FunctionalityList, Modal },
-        mounted() {
-            // Tutorial
-            this.tutorial = introJs();
+        components: {
+            SimulateTelemetry,
+            DaphneAnswer, AnomalyPlot, MainMenu, Timer, QuestionBar, TradespacePlot, FunctionalityList, Modal },
+        async mounted() {
 
             // Set up initial state
-            this.$store.commit('setProblem', EOSS);
-            this.$store.commit('setFilter', EOSSFilter);
+            // this.$store.commit('addFunctionality', 'AnomalyDetection');
+            // this.$store.commit('addFunctionality', 'DataLoader');
 
-            this.$store.commit('addFunctionality', 'AnomalyDetection');
-            this.$store.commit('addFunctionality', 'DataLoader');
+            // Connect to Websocket
+            await this.$store.dispatch('startWebsocket');
 
             // New Anomaly detection code
-            this.$store.dispatch('loadAnomalyData', 'sample.csv');
+            // this.$store.dispatch('loadAnomalyData', 'sample.csv');
         },
         watch: {
             experimentStage: function (val, oldVal) {
