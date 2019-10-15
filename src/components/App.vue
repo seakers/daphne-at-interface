@@ -44,23 +44,18 @@
 </template>
 
 <script>
-    import MainMenu from './MainMenu';
-    import Timer from './Timer';
-    import QuestionBar from './QuestionBar';
-    import TradespacePlot from './TradespacePlot';
-    //import AnomalyPlot from './AnomalyPlot'
-    import FunctionalityList from './FunctionalityList';
-    import Modal from './Modal';
-
-    import EOSS from '../scripts/eoss';
-    import EOSSFilter from '../scripts/eoss-filter';
+    let introJs = require('intro.js').introJs;
 
     import { mapGetters } from 'vuex';
+    import {wsTools} from "../scripts/websocket";
+
+    import MainMenu from './MainMenu';
+    import QuestionBar from './QuestionBar';
+    import FunctionalityList from './FunctionalityList';
+    import Modal from './Modal';
     import AnomalyPlot from "./AnomalyPlot";
     import DaphneAnswer from "./DaphneAnswer";
     import SimulateTelemetry from "./SimulateTelemetry";
-
-    let introJs = require('intro.js').introJs;
 
     export default {
         name: 'app',
@@ -89,40 +84,18 @@
                     return this.stageInformation[this.experimentStage].availableFunctionalities.includes('QuestionBar');
                 }
             },
-            timerExperimentCondition() {
-                if (!this.inExperiment) {
-                    return false;
-                }
-                else {
-                    return this.experimentStage === 'no_daphne' || this.experimentStage === 'daphne_peer' || this.experimentStage === 'daphne_assistant';
-                }
-            },
-            stageDuration() {
-                return this.stageInformation[this.experimentStage].stageDuration;
-            },
-            stageStartTime() {
-                return this.stageInformation[this.experimentStage].startTime;
-            },
             modalContent() {
                 return this.$store.state.experiment.modalContent[this.$store.state.experiment.currentStageNum];
             }
         },
         methods: {
-            onCountdownEnd() {
-                console.log('Countdown ended!');
-                // First stop the current stage
-                this.$store.dispatch('finishStage').then(() => {
-                    // Activate the modal with end of stage information
-                    this.isModalActive = true;
-                });
-            },
             onCloseModal() {
                 this.isModalActive = false;
             }
         },
         components: {
             SimulateTelemetry,
-            DaphneAnswer, AnomalyPlot, MainMenu, Timer, QuestionBar, TradespacePlot, FunctionalityList, Modal },
+            DaphneAnswer, AnomalyPlot, MainMenu, QuestionBar, FunctionalityList, Modal },
         async mounted() {
 
             // Set up initial state
@@ -130,7 +103,7 @@
             // this.$store.commit('addFunctionality', 'DataLoader');
 
             // Connect to Websocket
-            await this.$store.dispatch('startWebsocket');
+            await wsTools.wsConnect();
 
             // New Anomaly detection code
             // this.$store.dispatch('loadAnomalyData', 'sample.csv');

@@ -13,6 +13,7 @@ let responsiveVoice = window.responsiveVoice;
 // Styles
 import 'intro.js/introjs.css';
 import './styles/app.scss';
+import {wsTools} from "./scripts/websocket";
 
 // Record state and mutations when inside an experiment
 let stateTimer = 0;
@@ -57,36 +58,17 @@ store.subscribe(async (mutation, state) => {
     // Context updates TODO: Refactor into something more modular
     if (updatesContextList.includes(mutation.type)) {
         // Lazily create the Websocket to ensure the session is already created by this point
-        const websocketPromise = new Promise((resolve, reject) => {
-            if (state.websocket === null) {
-                // Websocket connection
-                let websocket = new WebSocket(((window.location.protocol === 'https:') ? 'wss://' : 'ws://') + window.location.host + '/api/daphne');
-                websocket.onopen = function() {
-                    console.log('Web Socket Conenction Made');
-                    resolve();
-                };
-                websocket.onmessage = function (data) {
-                    //ws.send(JSON.stringify(data));
-                };
-                store.commit('setWebsocket', websocket);
-            }
-            else {
-                resolve();
-            }
-        });
-
-        websocketPromise.then(() => {
-            if (mutation.type === 'updateClickedArch') {
-                state.websocket.send(JSON.stringify({
-                    msg_type: 'context_add',
-                    new_context: {
-                        current_design_id: mutation.payload
-                    }
-                }));
-            }
-        });
+        if (mutation.type === 'updateClickedArch') {
+            wsTools.websocket.send(JSON.stringify({
+                msg_type: 'context_add',
+                new_context: {
+                    current_design_id: mutation.payload
+                }
+            }));
+        }
     }
 });
+
 
 let app = new Vue({
     el: '#app',
