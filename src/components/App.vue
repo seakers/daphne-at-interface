@@ -23,22 +23,21 @@
 </template>
 
 <script>
-    import QuestionBar from './QuestionBar';
-    //import AnomalyPlot from './AnomalyPlot'
 
     import { mapGetters } from 'vuex';
-    import AnomalyPlot from "./ZZZAnomalyPlot";
-    import DaphneAnswer from "./DaphneAnswer";
+    import {wsTools} from "../scripts/websocket";
 
-    import {wsTools} from "../scripts/websocket-tools";
+    let introJs = require('intro.js').introJs;
+
+    import QuestionBar from './QuestionBar';
+    // import AnomalyPlot from "./AnomalyPlot";
+    import DaphneAnswer from "./DaphneAnswer";
     import TelemetryFeedWindow from "./TelemetryFeedWindow";
     import AnomalyTreatmentWindow from "./AnomalyTreatmentWindow";
     import OtherStuffWindow from "./OtherStuffWindow";
     import AnomalyDetection from "./ZZZAnomalyDetection";
     import ChatWindow from "./ChatWindow";
     import TheFooter from "./TheFooter";
-
-    let introJs = require('intro.js').introJs;
 
     export default {
         name: 'app',
@@ -58,14 +57,6 @@
                 datasets: 'getDatasets',
                 aggregationXls: 'getAggregationXls'
             }),
-            questionBarExperimentCondition() {
-                if (!this.inExperiment) {
-                    return true;
-                }
-                else {
-                    return this.stageInformation[this.experimentStage].availableFunctionalities.includes('QuestionBar');
-                }
-            },
             stageDuration() {
                 return this.stageInformation[this.experimentStage].stageDuration;
             },

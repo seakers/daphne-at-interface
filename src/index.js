@@ -64,52 +64,13 @@ store.subscribe(async (mutation, state) => {
             wsTools.websocket.send(JSON.stringify({
                 msg_type: 'context_add',
                 new_context: {
+                    current_design_id: mutation.payload
                 }
             }));
         }
-
-        // Live Recommender System
-        if (mutation.type === "updateClickedArchInputs") {
-            // TODO: Find a way to differentiate between binary and discrete problems
-            // Active Engineer
-            window.setTimeout(function() {
-                if (numberOfEngChanges > 0) {
-                    --numberOfEngChanges;
-                }
-            },60*1000);
-            ++numberOfEngChanges;
-
-            if (numberOfEngChanges >= 3) {
-                numberOfEngChanges = 0;
-                console.log(mutation);
-                // Send a WS request for expert information on current arch
-                wsTools.websocket.send(JSON.stringify({
-                    msg_type: 'active_engineer',
-                    type: 'binary', // TODO!
-                    genome: mutation.payload
-                }));
-            }
-
-            // Active Historian
-            window.setTimeout(function() {
-                if (numberOfHistChanges > 0) {
-                    --numberOfHistChanges;
-                }
-            }, 60*1000);
-            ++numberOfHistChanges;
-
-            if (numberOfHistChanges >= 3) {
-                numberOfHistChanges = 0;
-                // Send a WS request for historian information on current arch
-                wsTools.websocket.send(JSON.stringify({
-                    msg_type: 'active_historian',
-                    type: 'binary', // TODO!
-                    genome: mutation.payload
-                }));
-            }
-        }
     }
 });
+
 
 let app = new Vue({
     el: '#app',
