@@ -160,7 +160,7 @@
 
             selectionMode: {
                 get() {
-                    return this.$store.state.tradespacePlot.selectionMode;
+                    // return this.$store.state.tradespacePlot.selectionMode;
                 },
                 set(newSelectionMode) {
                     this.$store.commit('updateSelectionMode', newSelectionMode);
@@ -647,7 +647,6 @@
             activeMouseInterval: function(val, oldVal) {
                 this.drawAnomalyPlot(this.context);
             },
-
 
             selectionMode: function(val, oldVal) {
                 this.configureSelectionMode();

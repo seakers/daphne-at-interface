@@ -10,10 +10,6 @@ export async function fetchPost(url, postBody, jsonBody = false) {
     if (csrftoken !== undefined) {
         reqHeaders.append('X-CSRFToken', csrftoken);
     }
-    if (jsonBody) {
-        postBody = JSON.stringify(postBody);
-        reqHeaders.append('Content-Type', 'application/json');
-    }
 
     return fetch(
         url,

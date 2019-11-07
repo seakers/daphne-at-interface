@@ -20,34 +20,6 @@ functionalityTypes.set('AnomalyDetection', {
     ]
 });
 
-functionalityTypes.set('DataLoader', {
-    title: 'Data Loader',
-    component: 'DataLoader',
-    class: 'data-loader',
-    minSize: 'one-third',
-    maxRepeat: 1,
-    optionsList: [
-        // Here we will be listing the sample data sets available
-        {name: "", value: ""},
-        {name: "Temperature", value: "sample.csv"},
-        {name: "Traffic", value: "sample_2.csv"},
-        {name: "Satellite", value: "SatelliteBattery.csv"}
-    ]
-});
-
-functionalityTypes.set('DatabaseLoader', {
-    title: 'Anomaly Database Loader',
-    component: 'DatabaseLoader',
-    class: 'database-loader',
-    minSize: 'one-third',
-    maxRepeat: 1,
-    optionsList: [
-        // Here we will be listing the sample data sets available
-        {name: "", value: ""},
-        {name: "Satellite", value: "SatelliteBattery.csv"}
-    ]
-});
-
 functionalityTypes.set('AnomalyQuestions', {
     title: 'Anomaly Questions',
     component: 'AnomalyQuestions',
@@ -58,13 +30,8 @@ functionalityTypes.set('AnomalyQuestions', {
 });
 
 functionalityTypes.set('DaphneAnswer', { title: 'Answers', component: 'DaphneAnswer', class: 'answers', minSize: 'one-third', maxRepeat: 1});
-functionalityTypes.set('DesignBuilder', { title: 'Design Builder', component: 'DesignBuilder', class: 'design-builder', minSize: 'two-thirds', maxRepeat: 1});
-functionalityTypes.set('DataMining', { title: 'Data Mining', component: 'DataMining', class: 'data-mining', minSize: 'one-third', maxRepeat: 1});
-functionalityTypes.set('EOSSFilter', { title: 'Filter', component: 'EOSSFilter', class: 'filter', minSize: 'one-third', maxRepeat: 1});
-functionalityTypes.set('FeatureApplication', { title: 'Feature Application', component: 'FeatureApplication', class: 'feature-application', minSize: 'one-third', maxRepeat: 1});
 functionalityTypes.set('OrbitInstrInfo', {
     title: 'Orbits and Instruments Information',
-    component: 'Cheatsheet',
     class: 'orbit-instr-info',
     minSize: 'one-third',
     maxRepeat: 10,
@@ -75,7 +42,6 @@ functionalityTypes.set('OrbitInstrInfo', {
     ]});
 functionalityTypes.set('AvailableCommands', {
     title: 'Available Commands',
-    component: 'Cheatsheet',
     class: 'available-commands',
     minSize: 'one-third',
     maxRepeat: 10,
@@ -89,7 +55,6 @@ functionalityTypes.set('AvailableCommands', {
     ]});
 functionalityTypes.set('CommandsInformation', {
     title: 'Commands Information',
-    component: 'Cheatsheet',
     class: 'commands-information',
     minSize: 'one-third',
     maxRepeat: 10,
@@ -114,14 +79,8 @@ let newFunctionalityId = 0;
 const state = {
     availableFunctionalities: [
         // { name: 'DaphneAnswer', title: 'Answers', icon: 'fa-comments' },
-        // { name: 'DesignBuilder', title: 'Design Builder', icon: 'fa-search' },
         { name: 'AnomalyDetection', title: 'Anomaly Detection', icon: 'fa-chart-bar' },
-        { name: 'DataLoader', title: 'Data Loader', icon: 'fa-upload' },
-        { name: 'DatabaseLoader', title: 'Anomaly Database Loader', icon: 'fa-upload' },
         { name: 'AnomalyQuestions', title: 'Questions', icon: 'fa-question-circle' },
-        // { name: 'DataMining', title: 'Data Mining', icon: 'fa-chart-bar' },
-        // { name: 'EOSSFilter', title: 'Filter', icon: 'fa-filter' },
-        // { name: 'FeatureApplication', title: 'Feature Application', icon: 'fa-sitemap' },
         // { name: 'OrbitInstrInfo', title: 'Orbits and Instruments Information', icon: 'fa-book' },
         // { name: 'AvailableCommands', title: 'Available Commands', icon: 'fa-book' },
         // { name: 'CommandsInformation', title: 'Commands Information', icon: 'fa-book' }
@@ -129,14 +88,8 @@ const state = {
     functionalities: [],
     functionalityCount: {
         'DaphneAnswer': 0,
-        'DesignBuilder': 0,
         'AnomalyDetection': 0,
         'AnomalyQuestions': 0,
-        'DataLoader': 0,
-        'DatabaseLoader': 0,
-        'DataMining': 0,
-        'EOSSFilter': 0,
-        'FeatureApplication': 0,
         'OrbitInstrInfo': 0,
         'AvailableCommands': 0,
         'CommandsInformation': 0
@@ -180,15 +133,6 @@ const mutations = {
         state.functionalities.splice(funcIndex, 1);
         state.functionalityCount[funcName]--;
     },
-    resetFunctionalityList(state) {
-        state = Object.assign(state, _.cloneDeep(initialState));
-    },
-    restoreFunctionalityList(state, recoveredState) {
-        Object.keys(recoveredState).forEach((key) => {
-            state[key] = recoveredState[key];
-        });
-    }
-
 };
 
 export default {

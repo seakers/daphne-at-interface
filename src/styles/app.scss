@@ -4,103 +4,52 @@ body {
   height: 100%;
 }
 
-.button.is-success {
-  background-color: #2EB398;
+.vertical-divider {
+    background: $grey-light;
+    width: 1px;
 }
 
-.navbar.is-dark {
-  background-color: #232B2D;
-  color: #F6F7F7;
+.horizontal-divider {
+    background: $grey-light;
+    height: 1px;
 }
 
-.navbar.is-dark .navbar-item a, .navbar.is-dark a.navbar-item {
-    color: #F6F7F7;
+.title {
+    background: lightgray;
+    font-size: 20px;
+    color: black;
 }
 
-.navbar.is-dark .navbar-item a.button.is-default {
-    color: #F6F7F7;
-    background-color: transparent;
-    border-width: 2px;
+.is-main {
+    margin-top: 2px;
+    margin-left: 5px;
+    padding: 10px;
 }
 
-.aside {
-  background-color: #354052;
-  margin-right: -10px;
+.is-stretched {
+    margin: 0px;
+    border: 1px grey;
+    padding: 1px;
+    box-shadow: none;
 }
 
-.aside .main {
-  padding: 40px;
-  color: #6F7B7E;
+.is-custom-button {
+    padding: 2px;
+    line-height: 5px;
+    width: 150px;
+    border: 2px solid white;
+    color: white;
+    font-size: 14px;
 }
 
-.aside .title {
-  color: #6F7B7E;
-  font-weight: bold;
-  text-transform: uppercase;
+.is-red {
+    background: firebrick;
 }
 
-.aside .main .item {
-  display: block;
-  padding: 10px 0;
-  color: #6F7B7E;
+.is-blue {
+    background: dodgerblue;
 }
 
-.aside .main .item.active {
-  color: #F6F7F7;
-}
-
-.aside .main .icon {
-  font-size: 19px;
-  padding-right: 30px;
-}
-
-.aside .main .name {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-#admin-panel {
-  padding-bottom: 0;
-  padding-right: 0;
-}
-
-.hero .tabs ul {
-    border-bottom: 1px solid #d3d6db;
-}
-
-.section.is-small {
-  padding: 1rem 1.5rem;
-}
-
-.card-content.is-small {
-  padding: 0.75rem;
-}
-
-#arch_info_display_table td {
-  text-align: center;
-}
-
-#main-plot {
-  position: relative;
-}
-
-.is-fullwidth {
-  width: 100%;
-}
-
-.functionality {
-  flex-grow: 1;
-  align-items: flex-start;
-  overflow: auto;
-  flex-direction: column;
-}
-
-.func-panel {
-  display: flex;
-  flex-direction: column;
-  height: 375px;
-}
-
-.introjs-tooltip {
-  min-width: 500px;
+.space-marker {
+    border: none;
 }

@@ -1,8 +1,19 @@
 // initial state
 import * as _ from 'lodash-es';
+import {fetchGet, fetchPost} from "../../scripts/fetch-helpers";
 
 const state = {
     command: '',
+    dialogueHistory: [
+        {"voice_message": 'Howdy Daphne',
+            "visual_message_type": ["text"],
+            "visual_message": ['Howdy Daphne'],
+            "writer": "user"},
+        {"voice_message": 'Howdy User',
+            "visual_message_type": ["text"],
+            "visual_message": ['Howdy User, how can I help?'],
+            "writer": "daphne"}
+    ],
     response: {},
     isLoading: false
 };
@@ -21,11 +32,33 @@ const getters = {
 
 // actions
 const actions = {
+    async loadDialogue({ state, commit, rootState }) {
+        try {
+            let dataResponse = await fetchGet(API_URL + 'eoss/dialogue/history');
+
+            if (dataResponse.ok) {
+                let data = await dataResponse.json();
+                commit('setDialogueHistory', data['dialogue_pieces']);
+            }
+            else {
+                console.error('Error retrieving past conversation history.');
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+    },
     async executeCommand({ state, commit, rootState }) {
         commit('setIsLoading', true);
         try {
             let reqData = new FormData();
             reqData.append('command', state.command);
+            commit('addDialoguePiece', {
+                "voice_message": state.command,
+                "visual_message_type": ["text"],
+                "visual_message": [state.command],
+                "writer": "user"
+            });
             if (rootState.experiment.inExperiment) {
                 let experimentStage = rootState.experiment.experimentStage;
                 let restrictedQuestions = rootState.experiment.stageInformation[experimentStage].restrictedQuestions;
@@ -44,7 +77,7 @@ const actions = {
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
-                commit('setResponse', data['response']);
+                commit('addDialoguePiece', data['response']);
             }
             else {
                 console.error('Error processing the command.');
@@ -55,22 +88,6 @@ const actions = {
         }
         commit('setIsLoading', false);
     },
-    async simulateTelemetry() {
-        let dataResponse = await fetch(
-            '/api/at/telemetry/simulate',
-            {
-                method: 'POST',
-                body: '',
-                credentials: 'same-origin'
-            }
-        );
-        if (dataResponse.ok) {
-            console.info('Success simulating the telemetry feed.')
-        }
-        else {
-            console.error('Error simulating the telemetry feed.');
-        }
-    }
 };
 
 // mutations
@@ -91,6 +108,12 @@ const mutations = {
         Object.keys(recoveredState).forEach((key) => {
             state[key] = recoveredState[key];
         });
+    },
+    setDialogueHistory(state, dialogueHistory) {
+        state.dialogueHistory = dialogueHistory;
+    },
+    addDialoguePiece(state, dialoguePiece) {
+        state.dialogueHistory.push(dialoguePiece);
     },
 };
 

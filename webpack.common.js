@@ -19,6 +19,14 @@ module.exports = {
 
     module: {
         rules: [
+            // Plotly Loader
+            {
+                test: /\.js$/,
+                use: [
+                    'ify-loader',
+                    'transform-loader?plotly.js/tasks/compress_attributes.js',
+                ]
+            },
             // script-loader with 'env' preset
             {
                 test: /\.js$/,

@@ -4,6 +4,7 @@ import Vue from 'vue';
 
 import App from './components/App';
 import store from './store';
+import {wsTools} from "./scripts/websocket-tools";
 
 // Non ES-modularized libraries
 let annyang = require('annyang');
@@ -16,12 +17,14 @@ import './styles/app.scss';
 
 // Record state and mutations when inside an experiment
 let stateTimer = 0;
-let mutationBlackList = ['setIsLoading', 'resetDaphne', 'clearFeatures', 'resetDataMining', 'resetFeatureApplication',
-    'resetFilter', 'resetFunctionalityList', 'setProblem', 'updateExtra', 'updateProblemData', 'resetProblem',
-    'updatePlotData', 'resetTradespacePlot', 'restoreProblem', 'restoreFilter', 'restoreTradespacePlot',
-    'restoreDaphne', 'restoreFunctionalityList', 'restoreDataMining', 'restoreFeatureApplication', 'restoreExperiment',
-    'setIsRecovering'];
-let updatesContextList = ['updateClickedArch'];
+let mutationBlackList = ['setIsLoading', 'resetDaphne', 'clearFeatures',
+    'resetFilter', 'setProblem', 'updateExtra', 'updatePlotData', 'restoreFilter',
+    'restoreDaphne', 'restoreExperiment', 'setIsRecovering'];
+let updatesContextList = ['updateClickedArch', 'updateClickedArchInputs'];
+
+// Active timers
+let numberOfEngChanges = 0;
+let numberOfHistChanges = 0;
 
 // Experiment Websocket connection
 store.subscribe(async (mutation, state) => {
@@ -57,34 +60,54 @@ store.subscribe(async (mutation, state) => {
     // Context updates TODO: Refactor into something more modular
     if (updatesContextList.includes(mutation.type)) {
         // Lazily create the Websocket to ensure the session is already created by this point
-        const websocketPromise = new Promise((resolve, reject) => {
-            if (state.websocket === null) {
-                // Websocket connection
-                let websocket = new WebSocket(((window.location.protocol === 'https:') ? 'wss://' : 'ws://') + window.location.host + '/api/daphne');
-                websocket.onopen = function() {
-                    console.log('Web Socket Conenction Made');
-                    resolve();
-                };
-                websocket.onmessage = function (data) {
-                    //ws.send(JSON.stringify(data));
-                };
-                store.commit('setWebsocket', websocket);
-            }
-            else {
-                resolve();
-            }
-        });
+        if (mutation.type === 'updateClickedArch') {
+            wsTools.websocket.send(JSON.stringify({
+                msg_type: 'context_add',
+                new_context: {
+                }
+            }));
+        }
 
-        websocketPromise.then(() => {
-            if (mutation.type === 'updateClickedArch') {
-                state.websocket.send(JSON.stringify({
-                    msg_type: 'context_add',
-                    new_context: {
-                        current_design_id: mutation.payload
-                    }
+        // Live Recommender System
+        if (mutation.type === "updateClickedArchInputs") {
+            // TODO: Find a way to differentiate between binary and discrete problems
+            // Active Engineer
+            window.setTimeout(function() {
+                if (numberOfEngChanges > 0) {
+                    --numberOfEngChanges;
+                }
+            },60*1000);
+            ++numberOfEngChanges;
+
+            if (numberOfEngChanges >= 3) {
+                numberOfEngChanges = 0;
+                console.log(mutation);
+                // Send a WS request for expert information on current arch
+                wsTools.websocket.send(JSON.stringify({
+                    msg_type: 'active_engineer',
+                    type: 'binary', // TODO!
+                    genome: mutation.payload
                 }));
             }
-        });
+
+            // Active Historian
+            window.setTimeout(function() {
+                if (numberOfHistChanges > 0) {
+                    --numberOfHistChanges;
+                }
+            }, 60*1000);
+            ++numberOfHistChanges;
+
+            if (numberOfHistChanges >= 3) {
+                numberOfHistChanges = 0;
+                // Send a WS request for historian information on current arch
+                wsTools.websocket.send(JSON.stringify({
+                    msg_type: 'active_historian',
+                    type: 'binary', // TODO!
+                    genome: mutation.payload
+                }));
+            }
+        }
     }
 });
 
@@ -113,7 +136,7 @@ if (annyang) {
     SpeechKITT.setStylesheet('//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/themes/flat.css');
 
     // Render KITT's interface
-    SpeechKITT.vroom();
+    // SpeechKITT.vroom();
 
-    SpeechKITT.startRecognition();
+    // SpeechKITT.startRecognition();
 }

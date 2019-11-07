@@ -11,8 +11,7 @@
 <script>
     import { mapGetters } from 'vuex';
     import TextResponse from './TextResponse';
-    import ListResponse from './ListResponse';
-    import BasicLinePlot from './BasicLinePlot';
+    import ListResponse from './ZZZListResponse';
     let loaderImage = require('../images/loader.svg');
     export default {
         name: 'daphne-answer',
@@ -21,7 +20,6 @@
                 responseTypes: {
                     text: 'TextResponse',
                     list: 'ListResponse',
-                    basic_plot: 'BasicLinePlot'
                 }
             }
         },
@@ -36,8 +34,7 @@
         },
         components: {
             TextResponse,
-            ListResponse,
-            BasicLinePlot
+            ListResponse
         }
     }
 </script>

@@ -15,7 +15,7 @@
   "author": "SEAK",
   "license": "MIT",
   "dependencies": {
-    "Plotly": "latest",
+    "@statnett/vue-plotly": "^0.3.2",
     "annyang": "^2.6.1",
     "bulma": "^0.7.2",
     "d3": "^5.7.0",
@@ -27,10 +27,13 @@
     "reconnecting-websocket": "^4.2.0",
     "speechkitt": "^1.0.0",
     "vue": "^2.5.22",
+    "vue-multiselect": "^2.1.6",
     "vuedraggable": "^2.17.0",
     "vuex": "^3.1.0"
   },
   "devDependencies": {
+    "ify-loader": "^1.1.0",
+    "transform-loader": "^0.2.4",
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.3",

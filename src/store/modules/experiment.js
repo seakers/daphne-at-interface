@@ -7,7 +7,7 @@ const state = {
     experimentWebsocket: {},
     experimentStage: '',
     currentStageNum: -1,
-    modalContent: ['', 'Stage1Modal', 'Stage2Modal'],
+    // modalContent: ['', 'Stage1Modal', 'Stage2Modal'],
     datasets: ['EOSS_data_recalculated.csv', 'stage1.csv', 'stage2.csv'],
     aggregationXls: ['/xls/Climate-centric/Climate-centric Aggregation Rules.xls',
         '/xls/Climate-centric/Climate-centric Aggregation Rules-Climate.xls',
@@ -15,7 +15,6 @@ const state = {
     stageInformation: {
         tutorial: {
             availableFunctionalities: [
-                'DesignBuilder',
                 'DaphneAnswer',
                 'OrbitInstrInfo',
                 'AvailableCommands',
@@ -23,7 +22,6 @@ const state = {
                 'QuestionBar'
             ],
             shownFunctionalities: [
-                'DesignBuilder',
                 'DaphneAnswer',
                 'OrbitInstrInfo',
                 'AvailableCommands',
@@ -122,16 +120,8 @@ const state = {
         },
         no_daphne: {
             availableFunctionalities: [
-                'DesignBuilder',
-                'DataMining',
-                'FeatureApplication',
-                'EOSSFilter'
             ],
             shownFunctionalities: [
-                'DesignBuilder',
-                'DataMining',
-                'FeatureApplication',
-                'EOSSFilter'
             ],
             restrictedQuestions: null,
             nextStage: '',
@@ -140,14 +130,12 @@ const state = {
         },
         daphne_peer: {
             availableFunctionalities: [
-                'DesignBuilder',
                 'DaphneAnswer',
                 'OrbitInstrInfo',
                 'AvailableCommands',
                 'QuestionBar'
             ],
             shownFunctionalities: [
-                'DesignBuilder',
                 'DaphneAnswer',
                 'OrbitInstrInfo',
                 'AvailableCommands'
@@ -173,7 +161,6 @@ const state = {
         },
         daphne_assistant: {
             availableFunctionalities: [
-                'DesignBuilder',
                 'DaphneAnswer',
                 'OrbitInstrInfo',
                 'AvailableCommands',
@@ -181,7 +168,6 @@ const state = {
                 'QuestionBar'
             ],
             shownFunctionalities: [
-                'DesignBuilder',
                 'DaphneAnswer',
                 'OrbitInstrInfo',
                 'AvailableCommands',
@@ -329,11 +315,7 @@ const actions = {
                     commit('setIsRecovering', true);
                     commit('restoreProblem', experimentInformation.experiment_data.state.problem);
                     commit('restoreFilter', experimentInformation.experiment_data.state.filter);
-                    commit('restoreTradespacePlot', experimentInformation.experiment_data.state.tradespacePlot);
                     commit('restoreDaphne', experimentInformation.experiment_data.state.daphne);
-                    commit('restoreFunctionalityList', experimentInformation.experiment_data.state.functionalityList);
-                    commit('restoreDataMining', experimentInformation.experiment_data.state.dataMining);
-                    commit('restoreFeatureApplication', experimentInformation.experiment_data.state.featureApplication);
                     commit('restoreExperiment', experimentInformation.experiment_data.state.experiment);
                     // Start the websockets after completing the request so the session cookie is already set
                     commit('startExperimentWebsocket');
