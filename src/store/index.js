@@ -9,7 +9,7 @@ import anomalyPlot from './modules/anomaly-plot';
 import anomalyInfo from './modules/anomaly-info';
 import anomalyDiagnose from './modules/anomaly-diagnose';
 import telemetryFeed from './modules/telemetry-feed';
-import {processedTelemetryData} from "../scripts/at-data-helpers";
+import {processedPlotData} from "../scripts/at-display-builders";
 import { mapGetters, mapMutations } from 'vuex';
 
 Vue.use(Vuex);
@@ -39,14 +39,15 @@ export default new Vuex.Store({
             } else if (received_info['type'] === 'initialize_telemetry') {
                 let telemetryVariables = received_info['variables'];
                 commit('initializeTelemetry', telemetryVariables);
-                console.log('Telemetry feed thread succesfully initialized.');
             } else if (received_info['type'] === 'telemetry_update') {
-                console.log("Telemetry Feed Data update received.");
                 let rawTelemetryValues = received_info['values'];
-                // let TelemetryInfo = received_info['info'];
+                let telemetryInfo = received_info['info'];
                 let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
-                let plotData = processedTelemetryData(rawTelemetryValues, selectedVariables);
+                let plotData = processedPlotData(rawTelemetryValues, telemetryInfo, selectedVariables);
                 commit('updateTelemetryPlotData', plotData);
+            } else if (received_info['type'] === 'ad_message') {
+                message = received_info['message'];
+                commit('updateSignatureMessages', message);
             }
         },
     },

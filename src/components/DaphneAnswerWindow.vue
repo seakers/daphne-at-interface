@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="title">Other Stuff</div>
+        <div class="title">Daphne-AT Answer</div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "OtherStuffWindow"
+        name: "DaphneAnswerWindow"
     }
 </script>
 

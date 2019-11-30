@@ -4,6 +4,7 @@ const state = {
     telemetryPlotData: [],
     telemetryInputVariables: [],
     telemetryPlotSelectedVariables: [],
+    signatureMessages: [],
 };
 
 const getters = {
@@ -16,18 +17,19 @@ const getters = {
     getInputVariables(state) {
         return state.telemetryInputVariables;
     },
-}
+    getSignatureMessages(state) {
+        return state.signatureMessages
+    }
+};
 
 const actions = {
-    async simulateTelemetry() {
+    async startTelemetry() {
         let reqData = new FormData();
-        let dataResponse = await fetchPost('/api/at/telemetry/simulate', reqData);
-        if (dataResponse.ok) {
-            console.info('Triggering the telemetry feed simulation.')
-        }
-        else {
-            console.error('Error simulating the telemetry feed.');
-        }
+        await fetchPost('/api/at/simulate', reqData);
+    },
+    async stopTelemetry() {
+        let reqData = new FormData();
+        await fetchPost('/api/at/stop', reqData);
     },
 };
 
@@ -41,6 +43,14 @@ const mutations = {
     },
     async updateSelectedVariables(state, newVariables) {
         state.telemetryPlotSelectedVariables = newVariables;
+    },
+    async clearTelemetry(state) {
+        state.telemetryPlotData = [];
+        state.telemetryInputVariables = [];
+        state.telemetryPlotSelectedVariables = [];
+    },
+    async updateSignatureMessages(state, messages) {
+        state.signatureMessages = messages;
     }
 };
 

@@ -25,7 +25,7 @@
 <script>
 
     import { mapGetters } from 'vuex';
-    import {wsTools} from "../scripts/websocket";
+    import {wsTools} from "../scripts/websocket-tools";
 
     let introJs = require('intro.js').introJs;
 
@@ -34,10 +34,11 @@
     import DaphneAnswer from "./DaphneAnswer";
     import TelemetryFeedWindow from "./TelemetryFeedWindow";
     import AnomalyTreatmentWindow from "./AnomalyTreatmentWindow";
-    import OtherStuffWindow from "./OtherStuffWindow";
+    import DaphneAnswerWindow from "./DaphneAnswerWindow";
     import AnomalyDetection from "./ZZZAnomalyDetection";
     import ChatWindow from "./ChatWindow";
     import TheFooter from "./TheFooter";
+    import {fetchPost} from "../scripts/fetch-helpers";
 
     export default {
         name: 'app',
@@ -73,18 +74,18 @@
             },
         },
         components: {
-            TheFooter,
             ChatWindow,
             AnomalyDetection,
             TelemetryFeedWindow,
             AnomalyTreatmentWindow,
-            OtherStuffWindow,
+            OtherStuffWindow: DaphneAnswerWindow,
             DaphneAnswer,
             // AnomalyPlot,
             QuestionBar,
             TheFooter
         },
         async mounted() {
+            await fetchPost('/api/auth/generate-session', new FormData());
             // Connect to Websocket
             await wsTools.wsConnect(this.$store);
         },

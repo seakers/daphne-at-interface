@@ -5,11 +5,11 @@ import {fetchGet, fetchPost} from "../../scripts/fetch-helpers";
 const state = {
     command: '',
     dialogueHistory: [
-        {"voice_message": 'Howdy Daphne',
+        {"voice_message": 'Hello Daphne',
             "visual_message_type": ["text"],
             "visual_message": ['Howdy Daphne'],
             "writer": "user"},
-        {"voice_message": 'Howdy User',
+        {"voice_message": 'Hi User',
             "visual_message_type": ["text"],
             "visual_message": ['Howdy User, how can I help?'],
             "writer": "daphne"}

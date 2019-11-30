@@ -28,10 +28,10 @@
                 </div>
                 <div class="column is-2">
                     <div class="box is-stretched space-marker">
-                        <a class="button is-custom-button is-blue" id="send_command" v-on:click.prevent="startTelemetry">
+                        <a class="button is-custom-button is-blue" v-on:click.prevent="startTelemetry">
                             START TELEMETRY
                         </a>
-                        <a class="button is-custom-button is-red" id="send_command" v-on:click.prevent="startTelemetry">
+                        <a class="button is-custom-button is-red" v-on:click.prevent="stopTelemetry">
                             STOP TELEMETRY
                         </a>
                     </div>
@@ -40,10 +40,7 @@
             <div class="box is-stretched is-centered space-marker">
                 <vue-plotly
                         :data="plotData"
-                        :layout="{
-                            height: 200,
-                            margin: {l: 20, r: 20, b: 20, t: 20, pad: 0},
-                        }"
+                        :layout="plotLayout"
                         :options="{}"/>
             </div>
         </div>
@@ -54,6 +51,7 @@
     import VuePlotly from '@statnett/vue-plotly'
     import Multiselect from 'vue-multiselect'
     import { mapGetters, mapMutations } from 'vuex';
+    import {setLayout} from "../scripts/at-display-builders";
 
 
     export default {
@@ -63,7 +61,7 @@
             ...mapGetters({
                 plotData: 'getPlotData',
                 selectedVariables: 'getSelectedVariables',
-                inputVariables: 'getInputVariables'
+                inputVariables: 'getInputVariables',
             }),
             value ()  {
                 let variables = this.selectedVariables;
@@ -81,11 +79,18 @@
                 }
                 return aux;
             },
+            plotLayout () {
+                return setLayout(this.selectedVariables);
+            }
         },
 
         methods: {
             startTelemetry() {
-                this.$store.dispatch('simulateTelemetry');
+                this.$store.dispatch('startTelemetry');
+            },
+            stopTelemetry() {
+                this.$store.dispatch('stopTelemetry');
+                this.$store.commit('clearTelemetry');
             },
             newSelection(newElement) {
                 let newSelectedVariables = [];
