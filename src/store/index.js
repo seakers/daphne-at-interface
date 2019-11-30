@@ -45,8 +45,8 @@ export default new Vuex.Store({
                 let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(rawTelemetryValues, telemetryInfo, selectedVariables);
                 commit('updateTelemetryPlotData', plotData);
-            } else if (received_info['type'] === 'ad_message') {
-                message = received_info['message'];
+            } else if (received_info['type'] === 'at_analysis') {
+                message = received_info['diagnosed_anomalies'];
                 commit('updateSignatureMessages', message);
             }
         },
