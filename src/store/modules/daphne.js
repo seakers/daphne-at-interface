@@ -7,11 +7,11 @@ const state = {
     dialogueHistory: [
         {"voice_message": 'Hello Daphne',
             "visual_message_type": ["text"],
-            "visual_message": ['Howdy Daphne'],
+            "visual_message": ['Hello Daphne'],
             "writer": "user"},
         {"voice_message": 'Hi User',
             "visual_message_type": ["text"],
-            "visual_message": ['Howdy User, how can I help?'],
+            "visual_message": ['Hi User, how can I help?'],
             "writer": "daphne"}
     ],
     response: {},

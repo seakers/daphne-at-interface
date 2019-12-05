@@ -133,6 +133,7 @@ export function setLayout(selectedVariables) {
     if (selectedVariables.length === 1) {
         layout['yaxis'] = {
             title: selectedVariables[0],
+            side: 'right'
         };
     }
     else if (selectedVariables.length === 2) {

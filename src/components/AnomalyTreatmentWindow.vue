@@ -10,18 +10,18 @@
                     </ul>
                 </div>
             </div>
-            <div class="vertical-divider"></div>
+            <!--<div class="vertical-divider"></div>
             <div class="column">
                 Diagnosis:
                 <div style="margin-left: 40px">
                     <ol>
                     </ol>
                 </div>
-            </div>
-            <div class="vertical-divider"></div>
+            </div>-->
+            <!--<div class="vertical-divider"></div>
             <div class="column">
                 Recommendations:
-            </div>
+            </div>-->
         </div>
     </div>
 </template>
