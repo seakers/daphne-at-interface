@@ -48,35 +48,40 @@ const actions = {
             console.error('Networking error:', e);
         }
     },
-    async executeCommand({ state, commit, rootState }) {
-        commit('setIsLoading', true);
+    async clearHistory({ state, commit, rootState }) {
         try {
             let reqData = new FormData();
-            reqData.append('command', state.command);
+            let dataResponse = await fetchPost(API_URL + 'eoss/dialogue/clear-history', reqData);
+
+            if (dataResponse.ok) {
+                let data = await dataResponse.json();
+                commit('setDialogueHistory', []);
+            }
+            else {
+                console.error('Error clearing conversation history.');
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+    },
+    async executeCommand({ state, commit, rootState }) {
+        try {
+            commit('setIsLoading', true);
             commit('addDialoguePiece', {
                 "voice_message": state.command,
                 "visual_message_type": ["text"],
                 "visual_message": [state.command],
                 "writer": "user"
             });
-            if (rootState.experiment.inExperiment) {
-                let experimentStage = rootState.experiment.experimentStage;
-                let restrictedQuestions = rootState.experiment.stageInformation[experimentStage].restrictedQuestions;
-                if (restrictedQuestions !== null) {
-                    reqData.append('allowed_commands', JSON.stringify(restrictedQuestions));
-                }
-            }
-            let dataResponse = await fetch(
-                '/api/at/dialogue/command',
-                {
-                    method: 'POST',
-                    body: reqData,
-                    credentials: 'same-origin'
-                }
-            );
+
+            let reqData = new FormData();
+            reqData.append('command', state.command);
+            let dataResponse = await fetchPost('/api/at/dialogue/command', reqData);
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
+                console.log(data['response']['visual_answer_type']);
                 commit('addDialoguePiece', data['response']);
             }
             else {
@@ -87,7 +92,7 @@ const actions = {
             console.error('Networking error:', e);
         }
         commit('setIsLoading', false);
-    },
+    }
 };
 
 // mutations
