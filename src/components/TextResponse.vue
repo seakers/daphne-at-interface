@@ -1,5 +1,5 @@
 <template>
-    <p>{{ response }}</p>
+    <p v-html="response"></p>
 </template>
 
 <script>
