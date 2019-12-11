@@ -3,25 +3,31 @@
         <div class="title">Anomaly Treatment</div>
         <div class="columns">
             <div class="column">
-                Signature:
+                Detection:
                 <div style="margin-left: 40px">
                     <ul>
-                        <li v-for="message in signatureMessages">{{message}}</li>
+                        <li v-for="message in detectionMessages">{{message}}</li>
                     </ul>
                 </div>
             </div>
-            <!--<div class="vertical-divider"></div>
+            <div class="vertical-divider"></div>
             <div class="column">
                 Diagnosis:
                 <div style="margin-left: 40px">
-                    <ol>
-                    </ol>
+                    <ul>
+                        <li v-for="message in diagnosisMessages">{{message}}</li>
+                    </ul>
                 </div>
-            </div>-->
-            <!--<div class="vertical-divider"></div>
+            </div>
+            <div class="vertical-divider"></div>
             <div class="column">
                 Recommendations:
-            </div>-->
+                <div style="margin-left: 40px">
+                    <ul>
+                        <li v-for="message in recommendationMessages">{{message}}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -34,7 +40,9 @@
 
         computed: {
             ...mapGetters({
-                signatureMessages: 'getSignatureMessages'
+                detectionMessages: 'getDetectionMessages',
+                diagnosisMessages: 'getDiagnosisMessages',
+                recommendationMessages: 'getRecommendationMessages'
             }),
         }
     }

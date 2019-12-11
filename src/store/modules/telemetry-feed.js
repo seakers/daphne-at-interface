@@ -4,7 +4,9 @@ const state = {
     telemetryPlotData: [],
     telemetryInputVariables: [],
     telemetryPlotSelectedVariables: [],
-    signatureMessages: [],
+    detectionMessages: [],
+    diagnosisMessages: [],
+    recommendationMessages: [],
 };
 
 const getters = {
@@ -17,8 +19,14 @@ const getters = {
     getInputVariables(state) {
         return state.telemetryInputVariables;
     },
-    getSignatureMessages(state) {
-        return state.signatureMessages
+    getDetectionMessages(state) {
+        return state.detectionMessages
+    },
+    getDiagnosisMessages(state) {
+        return state.diagnosisMessages
+    },
+    getRecommendationMessages(state) {
+        return state.recommendationMessages
     }
 };
 
@@ -49,8 +57,10 @@ const mutations = {
         state.telemetryInputVariables = [];
         state.telemetryPlotSelectedVariables = [];
     },
-    async updateSignatureMessages(state, messages) {
-        state.signatureMessages = messages;
+    async updateATMessages(state, report) {
+        state.detectionMessages = report['detection'];
+        state.diagnosisMessages = report['diagnosis'];
+        state.recommendationMessages = report['recommendation'];
     }
 };
 
