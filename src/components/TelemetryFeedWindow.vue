@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="telemetry-feed">
         <div class="title">Telemetry Feed</div>
         <div class="is-centered">
             <div class="columns">
@@ -28,11 +28,14 @@
                 </div>
                 <div class="column is-2">
                     <div class="box is-stretched space-marker">
-                        <a class="button is-custom-button is-blue" v-on:click.prevent="startTelemetry">
+                        <a class="button is-custom-button is-green" v-on:click.prevent="startTelemetry">
                             START TELEMETRY
                         </a>
                         <a class="button is-custom-button is-red" v-on:click.prevent="stopTelemetry">
                             STOP TELEMETRY
+                        </a>
+                        <a class="button is-custom-button is-blue" v-on:click.prevent="startSeclssFeed">
+                            SECLSS FEED
                         </a>
                     </div>
                 </div>
@@ -91,6 +94,9 @@
             stopTelemetry() {
                 this.$store.dispatch('stopTelemetry');
                 this.$store.commit('clearTelemetry');
+            },
+            startSeclssFeed() {
+                this.$store.dispatch('startSeclssFeed');
             },
             newSelection(newElement) {
                 let newSelectedVariables = [];

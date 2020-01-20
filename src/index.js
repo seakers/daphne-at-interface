@@ -22,10 +22,6 @@ let mutationBlackList = ['setIsLoading', 'resetDaphne', 'clearFeatures',
     'restoreDaphne', 'restoreExperiment', 'setIsRecovering'];
 let updatesContextList = ['updateClickedArch', 'updateClickedArchInputs'];
 
-// Active timers
-let numberOfEngChanges = 0;
-let numberOfHistChanges = 0;
-
 // Experiment Websocket connection
 store.subscribe(async (mutation, state) => {
     // Only update if inside experiment

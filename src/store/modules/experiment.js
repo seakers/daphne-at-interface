@@ -1,221 +1,242 @@
 // initial state
 import * as _ from "lodash-es";
+import {fetchGet} from "../../scripts/fetch-helpers";
+import {wsTools} from "../../scripts/websocket-tools";
 
 const state = {
     inExperiment: false,
     isRecovering: false,
-    experimentWebsocket: {},
     experimentStage: '',
     currentStageNum: -1,
-    // modalContent: ['', 'Stage1Modal', 'Stage2Modal'],
-    datasets: ['EOSS_data_recalculated.csv', 'stage1.csv', 'stage2.csv'],
-    aggregationXls: ['/xls/Climate-centric/Climate-centric Aggregation Rules.xls',
-        '/xls/Climate-centric/Climate-centric Aggregation Rules-Climate.xls',
-        '/xls/Climate-centric/Climate-centric Aggregation Rules-Weather.xls'],
     stageInformation: {
         tutorial: {
-            availableFunctionalities: [
-                'DaphneAnswer',
-                'OrbitInstrInfo',
-                'AvailableCommands',
-                'CommandsInformation',
-                'QuestionBar'
-            ],
-            shownFunctionalities: [
-                'DaphneAnswer',
-                'OrbitInstrInfo',
-                'AvailableCommands',
-                'CommandsInformation'
-            ],
-            restrictedQuestions: {
-                analyst: ['2012', '2016'],
-                critic: ['3005'],
-                historian: ['4006'],
-                ifeed: [],
-                analyst_instruments: [],
-                analyst_instrument_parameters: [],
-                analyst_measurements: [],
-                measurements: [],
-                missions: [],
-                objectives: [],
-                space_agencies: []
-            },
             nextStage: '',
             steps: [
                 {
-                    intro: 'As a Systems Engineer at "The EasySpace Corporation" (ESC) you have been tasked with exploring some designs for a new Earth Observation mission. This mission will fly in about 10 years. Your bosses at ESC have asked you to <b>find designs in a range of possible budgets from $1,000K to $10,000K</b>, as NASA does not yet know how much money it will be able to allocate to it. What\'s more, as science priorities change depending on who is in the White House, you have been asked to do this study twice, first making climate science the biggest priority and then making weather studies the most important research factor. <b>Your partners have been really helpful and have encoded the different priorities in a black-box model for you, so you don\'t need to think about the differences. You should only focus on getting the best designs you can in each case.</b>'
+                    text: `Hello astronaut! Congratulations on been selected as one of the crew members for the
+mission to Mars. <b>It is going to be a long, arduous journey, so buckle up your seat-belt. Onwards to Mars!`
                 },
                 {
-                    intro: 'But that is not all. As a member of the R&D department in the corporation, your teammates are always trying to improve the tools you all use to design new missions. They have been building a virtual assistant called Daphne which will help you by either answering questions or giving you advice on your satellite designs. <b>They want you to test it and see if it helps you work better or not.</b>'
+                    text: `Specifically, the task consists on designing different constellations of satellites for
+Earth observation. This means you will be assigning different sets of instruments from a predefined pool of instruments
+to different orbits and then evaluating your constellation design (e.g, the set of satellites with specific instruments
+assigned to specific orbits) to see which constellations are the best for each of the two tasks. Note that a
+constellation design that works well for one of the two problems might not work well at all for the next one, so simply
+ copying designs from one stage to the next is unlikely to work well.`
                 },
                 {
-                    intro: 'Your job consists of designing different constellations of satellites for Earth observation. This means you will assign instruments from a predefined set into different orbits and then evaluate your designs to see which ones are the best for each set of priorities and budget limits. You will have to this <b>TWICE</b>, with two different datasets, one for Climate focused missions and one for Weather focused missions. You do not have to do come up with good designs for both focuses at the same time!!!'
+                    attachTo: {
+                        element: '#telemetry-feed',
+                        on: 'right'
+                    },
+                    text: `This is the <b>Telemetry Feed</b> window. This window will provide you subsystem level information.
+about parameters from sensors from various subsystems and `
                 },
                 {
-                    intro: 'For each focus, you have <b>two main objectives</b>: <b>FIRST</b>: You need to come up with a range of designs with a cost between $1,000K and $10,000K with the best science score you can come up with (later we will explain how to get those designs) and <b>SECOND</b>: After 20 minutes designing with this focus in mind, you will be asked to choose the best architecture out of a pair of architectures with the same cost, 10 times. This is done to see if you have been able to learn something. With this out of the way, let\'s learn how to actually design new satellite architectures! It\'s important to try out the functions you are being shown, as this will help you perform better during the experiment.'
+                    attachTo: {
+                        element: '#main-plot-block',
+                        on: 'bottom'
+                    },
+                    text: `This is the plot that shows the trade-space of the constellation designs you come up with.
+This set of constellation designs comes from a different problem, so don't worry if you see something different when
+the actual focused task begins. Each dot here is a single constellation design, and each design has an associated
+science/societal score and a cost. The science score, just as a reminder, is a measure (ranging from 0 to 1) of how
+well you are satisfying a set of requirements which are decided by different stakeholders.`
                 },
                 {
-                    element: '#arch-info-display-table',
-                    intro: 'Each design is represented by a table as shown here. Each row represents one spacecraft flying in a specified orbit, so the instruments in each row represent the ones in that spacecraft. If one orbit has no instruments, it means there will be no spacecraft flying there. Orbits are defined by various parameters, such as altitude, inclination and local sun time for those which are sun-synchronous.'
+                    attachTo: {
+                        element: '.design-builder',
+                        on: 'right'
+                    },
+                    text: `You will also notice how there is a Details button in this window. If you click on it
+will open a new window with more information on this architecture. This is one of the features only available on the
+ Assistant version of Daphne. There you can see a detailed breakdown of the science score and the lifecycle cost.
+ Note that this might be too much information to process adequately in the duration of the experiment, so we would
+ advice to use with caution (perhaps a few times at the beginning and then only when needed).`
                 },
                 {
-                    element:  '.panel.orbit-instr-info',
-                    intro: 'Detailed information on what these orbits and instruments are is given in the Orbits and Instruments Information panel. <b>You should read about them now by clicking on the elements of the dropdown list.</b>'
+                    attachTo: {
+                        element: '.data-mining',
+                        on: 'left'
+                    },
+                    text: `While this is the basic functionality for tradespace analysis, you have more tools available
+to you in this experiment. The first of them, and the one you will have available in the Assistant Daphne, is
+Data Mining. The Data Mining feature allows you to select a set of points in the dataset either by drawing squares in
+the dataset or using filters. Then, by pressing Run Data Mining, you obtain a set of "features". A feature is a set of
+characteristics shared by a group of designs, such as having an L-band radar and an L-band radiometer in the same orbit.
+Let's see how it works step by step.`
                 },
                 {
-                    element: '#main-plot-block',
-                    intro: 'Your first task in the experiment is, again, to come up with a range of designs with the highest science benefit for a range of costs between $1,000K and $10,000K. You can see some initial designs here, but you still need to know how to come up with new, better ones!'
+                    attachTo: {
+                        element: '#main-plot-block',
+                        on: 'bottom'
+                    },
+                    text: `First of all, choose Drag-select in the Mouse Selection panel. This allows you to select a
+subset of points from which you want to obtain relevant features. <b>Try making a selection.</b>`
                 },
                 {
-                    element: '#main-plot-block',
-                    intro: 'This is the plot that shows the trade-space of the designs you come up with. This set of designs comes from a different problem, so don\'t worry if you see something different when the actual focused task begins. Each dot here is a single design, and each design has an associated science score and a cost. The science score represents how much value each design brings to the scientific community you\'re appealing to (either climate or weather), and the cost is a measure of how much it is going to cost to launch and operate this design (in thousands of dollars).'
+                    attachTo: {
+                        element: '.data-mining',
+                        on: 'right'
+                    },
+                    text: `With that done, ,<b>click on Run data mining</b> to see the features. They are represented
+as triangles in this plot, where two important metrics for them are represented: Coverage and Specificity. Coverage
+measures how many points in your selection are covered by this feature, while Specificity measures which percentage of
+the points with the feature are inside your selection. An ideal feature would be the one with perfect Coverage (all your
+selected points are inside it) and Specificity (no points outside your selection have this feature). To learn more about
+a feature, we have the Feature Application. <b>Before clicking on Next, click on one Feature</b>`
                 },
                 {
-                    element: '#admin-panel',
-                    intro: 'As you hover over each dot on the scatter plot, you can see the corresponding information being changed in the Design Builder space. If you click on a dot, it is replaced by a cross. The cross means you have selected that design. <b>Try selecting a design which has the highest science benefit for a certain cost (so the one the furthest right for any cost).</b> Just in case you want to know, the set of all the points with the best science for a certain cost is also known as the Pareto Front, and this is an important concept in Systems Engineering.'
+                    attachTo: {
+                        element: '.feature-application',
+                        on: 'left'
+                    },
+                    text: `In this window you can see how a feature is described. The tree you see is how the feature
+explains itself. Thus, if you have found a feature you want your designs to have, this window here will tell you how to
+ensure that. Now on to the last feature of the Data Mining functionality.`
                 },
                 {
-                    element: '.design-builder',
-                    intro: 'You can move the instruments from one orbit to another, add new instruments, or remove them using drag-and-drop. After modifying the design, you can evaluate it using the <b>"Evaluate Architecture"</b> button on the top-right side. After the evaluation is finished, a new cross will appear on the scatter plot with its location determined by the new science score and cost. It is very important to evaluate the new designs you make, as otherwise they won\'t get saved and you won\'t know how much you improved (or how worse you got :()! <b>Try coming up with a new design before going forward with the tutorial.</b>',
-                    position: 'right'
+                    attachTo: {
+                        element: '.filter',
+                        on: 'left'
+                    },
+                    text: `This last window is the Filters window. Instead of selecting a group of features manually in
+                    the dataset, you can use this window to select a set of designs that have something in common. You
+                    can try using any of those, as they're pretty self explanatory.`
                 },
                 {
-                    element: '#admin-panel',
-                    intro: 'You must have noticed how the interface also has a few other windows and text inputs. Those are the different ways you can use to communicate with Daphne, which, if you don\'t remember, is the assistant your partners have been working on. Let\'s learn how you can ask questions first.'
+                    attachTo: {
+                        element: '#admin-panel'
+                    },
+                    text: `The next feature you need to know about is how to communicate with the Virtual Assistant.
+                    Let's learn how you can ask questions.`
                 },
                 {
-                    element: '#question-bar',
-                    intro: 'To ask a question, you can write it down here, and then either click Do It! or press Enter on your keyboard.'
+                    attachTo: {
+                        element: '.chat-container'
+                    },
+                    text: `To ask a question, you can write it down here, and then either click Send or press Enter
+on your keyboard.`
                 },
                 {
-                    element: '#question-bar',
-                    intro: 'For example, you can ask what Daphne thinks about the currently design. After thinking for a while, Daphne will give her thoughts on the design along with some hints on how you might want to improve it. <b>Try writing or copying the following question into the Question Bar: "What do you think of this design?"</b> If you want to hear the output instead of just reading it, you can unmute Daphne by clicking on the speaker.'
+                    attachTo: {
+                        element: '.chat-container'
+                    },
+                    text: `For example, you can ask Daphne what she thinks about the current design. After thinking for
+a while, Daphne will give her thoughts on the design along with some suggestions on how to improve it.
+<b>Try writing or copying the following question into the Question Bar: "What do you think of this design?"</b>
+If you want to hear the output instead of just reading it, you can unmute Daphne by clicking on the speaker.`
                 },
                 {
-                    element: '.answers',
-                    intro: 'You can read all the suggestions Daphne has for you about your design in here. There are a few more questions you can ask Daphne, so you should know a little more about it.'
+                    attachTo: {
+                        element: '.chat-container'
+                    },
+                    text: `You can read all the suggestions Daphne has for you about your design in here. You can see
+there is advice from different roles: the Expert Critic will give advice based on a knowledge base with simple rules of
+thumb about how to design Earth observing systems (e.g., don't put a visible light instrument in a dawn-dusk orbit);
+the Explorer Critic will use brute force search around the current design to see if it finds a way to improve it; the
+Historian Critic will compare your constellation design to past missions and tell you if it finds any similarity (which
+is not inherently good or bad, but rather a trade-off between innovation and risk); and the Analyst Critic will suggest
+changes based on what the best constellation designs in the current dataset have in common. Take Daphne's advice with
+caution - as you would with any peer's advice. While it is likely to help you, it may in some cases not help you
+achieve your current goal. "What do you think of this design" is just one question Daphne can answer, but there are a
+few more. It is worth noting this will only be available on the Daphne Peer version.`
                 },
                 {
-                    intro: 'Daphne is a virtual assistant, and it can take on three different roles: Analyst, Historian or Critic. All three roles can answer different kinds of questions, with the Analyst focusing on telling you WHY a design has a certain score, the Historian giving you information on past missions which have been launched, and the Critic explaining HOW you can improve a design with advice.'
+                    text: `Generally speaking, Daphne can answer WHY questions (e.g., about why a constellation design
+has a certain score), WHAT questions (e.g., information on past and planned Earth observing mission), and HOW questions
+(e.g., suggestions on HOW you can improve a constellation design). The first and second types will be the answered by
+ the Assistant Daphne, while the last one will be answered by Daphne Peer.`
                 },
                 {
-                    element: '#admin-panel',
-                    intro: 'You can now try choosing a question from those available at the Available Commands lists. If you look at the Analyst list, you will see that there are strange looking words such as ${analyst_stakeholder}. You can look at the lists in Commands Information such as Analyst Stakeholders or Historical Technologies to know valid values for these fields. If a part of a question is inside brackets it means it is optional. <b>One very common way to use the Analyst is to first ask "Why does this design have this science benefit?" and then ask "Which instruments improve the science score for stakeholder ${analyst_stakeholder}?" with the stakeholder which has the lowest score. Another example question (which you can try!) would be: "Which orbit is the most common for ocean colour instruments?"</b>'
+                    attachTo: {
+                        element: 'body'
+                    },
+                    text: `You can now try choosing a question from those available at the Available Commands lists.
+There you will see the questions listed by role (Engineer, Analyst, Explorer, Historian, Critic). If you look at the
+Engineer list, you will see that there are terms between curly brackets such as $\{engineer_stakeholder}. You can look
+at the lists in Commands Information such as Stakeholders (Engineer) or Technologies (Historian) to know valid values
+for these fields. If a part of a question is inside square brackets it means it is optional. <b>For example, one way to
+ use the Engineer is to first ask "Why does this design have this science benefit?" and then ask "Which instruments
+ improve the science score for stakeholder $\{engineer_stakeholder}?" with a stakeholder that has a low score. Another
+ example question (which you can try!) would be: "Which orbit is most common for radar altimeters?"</b>`
                 },
                 {
-                    intro: 'Now you know every tool available to you! The experiment, as you already probably remember ;), will have two stages. Apart from the different focuses, which again don\'t affect you in any way, the main difference between them will be the questions you can ask Daphne: on one case you will only be able to use the Critic questions, while in the other case you will have both the Historian and the Analyst available (but no Critic). Which one you get first is totally randomized.'
+                    attachTo: {
+                        element: '.chat-container'
+                    },
+                    text: `You might have seen some messages from Daphne that appear without you asking a question.
+One of them will talk about a Background Search. This is a search algorithm that is running behind the scenes, trying to
+ help you find better designs. If you accept its suggestion you may see a few blue points appear on your dataset. The
+ designs it finds will be shown in blue to differentiate them from the ones already there that you found. This feature
+ will always be active for you.`
                 },
                 {
-                    intro: 'To make the most out of the Analyst and the Historian assistant, you should know how the science score is computed and what information can Daphne provide you. The science score measures how many and how well a set of requirements from different stakeholders (Weather scientists, Climate scientists, etc.) are being satisfied, and the Daphne Analyst can help you by telling you how well these requirements are being satisfied in your designs and what instruments can be used to improve on them. You can also ask the historian about which is the most common orbit for certain instruments, so you can put them in the best orbit for them, in case that exists.'
+                    attachTo: {
+                        element: '.active-menu',
+                        on: 'right'
+                    },
+                    text: `You can activate or deactivate this background search here, as well as choose whether you want
+to see the new results it finds or not. You will also notice how there are two other options in this same menu.`
                 },
                 {
-                    intro: 'As a final reminder, <b>each stage of the experiment will last for 20 minutes</b>. Remember, you have two objectives: <b>1. Find a range of designs with good science scores with a cost between $1,000K and $10,000K</b> and <b>2. Learn how to discern between designs with high and low science benefit with similar costs so you can do a test in which you choose the best out of 2 architectures with similar costs</b>. One helpful trick for this second task is try to find which instruments appear on which orbits for the best architectures you can find. <b>Whether you start with the Critic or the Analyst is randomized</b>, so check what you have available in the Available Commands panel! You are also encouraged to take notes during each task, as this will be really helpful in completing the test with an outstanding performance. The first stage will be to design the Climate focused mission and the second one will be for the Weather focused mission, but once again, <b>this doesn\'t affect you in any way other than not being able to reuse designs!</b>. With this being said, click on done to start the experiment!'
+                    attachTo: {
+                        element: '.active-menu',
+                        on: 'right'
+                    },
+                    text: `The Diversifier will track in real time which architectures you have been adding and will
+suggest areas of the datasets that you have left unexplored in case you want to change the area you're exploring. This
+will only be available for the Daphne Peer version.`
+                },
+                {
+                    attachTo: {
+                        element: '.active-menu',
+                        on: 'right'
+                    },
+                    text: `The Suggestions will keep track of the changes you make in the Design Builder, and will give
+you real time advice on how that design can be improved without having to Evaluate it or ask the Critic what it thinks
+about it. Again, this will only be available on the Daphne Peer version.`
+                },
+                {
+                    text: `Now you know every tool available to you! The experiment, just as a reminder, will have two
+stages. Apart from the different tasks with different focus, the main difference between them will be what functions
+are available to you. In one task, you will have Assistant Daphne with you, with the Details panel, the Data Mining
+functions, and the Engineer, Analyst, and Historian questions. The other one, Peer Daphne, will have the Critic
+available to you, as well as the the Diversifier and the Suggestions. The Tradespace Plot, the Design Builder, and the
+Background Search will always be available.`
+                },
+                {
+                    text: `As a final reminder, <b>each stage of the experiment will last for 15 minutes</b>.
+Remember, you have two objectives: <b>1. Find a range of designs with good science scores with a cost between $800M
+and $4,000M</b> and <b>2. Try to learn any patterns useful to discern between designs with high and low science benefit
+with similar costs, so you can do the short tests afterwards</b>. For example, you may try to find which
+instrument-orbits pairings appear most often in the best architectures you can find. The Data Mining capability should
+ be helpful for this. <b>Whether you start with Assistant Daphne or Peer Daphne is randomized</b>.
+  You are also encouraged to take notes during each task, as this will probably be helpful to do well in the test.
+  The first stage will be to design the Surface Water focused mission and the second one will be for the Applications
+  focused mission. And once again, <b>trying to reuse good designs from the first task for the second task will likely
+  not work!</b>. With all this being said, click on done to start the experiment!`
                 }
             ],
-            conditions: [
-                true,
-                true,
-                true,
-            ]
         },
         no_daphne: {
-            availableFunctionalities: [
-            ],
-            shownFunctionalities: [
-            ],
             restrictedQuestions: null,
             nextStage: '',
             startTime: 0,
-            stageDuration: 60*1
-        },
-        daphne_peer: {
-            availableFunctionalities: [
-                'DaphneAnswer',
-                'OrbitInstrInfo',
-                'AvailableCommands',
-                'QuestionBar'
-            ],
-            shownFunctionalities: [
-                'DaphneAnswer',
-                'OrbitInstrInfo',
-                'AvailableCommands'
-            ],
-            restrictedQuestions: {
-                analyst: [],
-                critic: ['3005'],
-                historian: [],
-                ifeed: [],
-                analyst_instruments: [],
-                analyst_instrument_parameters: [],
-                analyst_measurements: [],
-                analyst_stakeholders: [],
-                measurements: [],
-                missions: [],
-                technologies: [],
-                objectives: [],
-                space_agencies: []
-            },
-            nextStage: '',
-            startTime: 0,
-            stageDuration: 60*5
+            stageDuration: 60*20
         },
         daphne_assistant: {
-            availableFunctionalities: [
-                'DaphneAnswer',
-                'OrbitInstrInfo',
-                'AvailableCommands',
-                'CommandsInformation',
-                'QuestionBar'
-            ],
-            shownFunctionalities: [
-                'DaphneAnswer',
-                'OrbitInstrInfo',
-                'AvailableCommands',
-                'CommandsInformation'
-            ],
             restrictedQuestions: {
-                analyst: ['2012', '2016'],
-                critic: [],
-                historian: ['4006', '4007'],
-                ifeed: [],
-                analyst_instruments: [],
-                analyst_instrument_parameters: [],
-                analyst_measurements: [],
-                measurements: [],
-                missions: [],
-                objectives: [],
-                space_agencies: []
             },
             nextStage: '',
             startTime: 0,
-            stageDuration: 60*5
+            stageDuration: 60*15
         }
     }
 };
 
 // getters
 const getters = {
-    getInExperiment(state) {
-        return state.inExperiment;
-    },
-    getExperimentStage(state) {
-        return state.experimentStage;
-    },
-    getStageInformation(state) {
-        return state.stageInformation;
-    },
-    getIsRecovering(state) {
-        return state.isRecovering;
-    },
-    getCurrentStageNum(state) {
-        return state.currentStageNum;
-    },
-    getDatasets(state) {
-        return state.datasets;
-    },
-    getAggregationXls(state) {
-        return state.aggregationXls;
-    }
 };
 
 // actions
@@ -223,17 +244,16 @@ const actions = {
     async startExperiment({ state, commit }) {
         // Call server to start experiment
         try {
-            let response = await fetch('/api/experiment/start-experiment', {credentials: 'same-origin'});
+            let response = await fetchGet(API_URL + 'experiment/start-experiment');
             if (response.ok) {
-                let experimentInformation = await response.json();
+                let experimentStages = await response.json();
                 // Start the experiment: set the order of the conditions after the tutorial
-                console.log(experimentInformation);
-                commit('setNextStage', { experimentStage: 'tutorial', nextStage: experimentInformation.stages[0].type });
-                for (let i = 0; i < experimentInformation.stages.length - 1; ++i) {
-                    commit('setNextStage', { experimentStage: experimentInformation.stages[i].type, nextStage: experimentInformation.stages[i+1].type });
+                commit('setNextStage', { experimentStage: 'tutorial', nextStage: experimentStages[0] });
+                for (let i = 0; i < experimentStages.length - 1; ++i) {
+                    commit('setNextStage', { experimentStage: experimentStages[i], nextStage: experimentStages[i+1] });
                 }
                 // Start the websockets after completing the request so the session cookie is already set
-                commit('startExperimentWebsocket');
+                await wsTools.experimentWsConnect();
             }
             else {
                 console.error('Error starting the experiment.');
@@ -248,12 +268,12 @@ const actions = {
         // Call server to start stage
         try {
             let nextStage = state.currentStageNum;
-            let response = await fetch('/api/experiment/start-stage/' + nextStage, {credentials: 'same-origin'});
+            let response = await fetchGet(API_URL + 'experiment/start-stage/' + nextStage);
             if (response.ok) {
-                let experimentInformation = await response.json();
+                let startDateData = await response.json();
                 // Start the stage: get the starting time from the server information
-                console.log(experimentInformation);
-                let startTime = experimentInformation.stages[nextStage].start_date + '+00:00';
+                console.log(startDateData);
+                let startTime = startDateData.start_date + '+00:00';
                 startTime = Date.parse(startTime);
                 commit('setStartTime', { experimentStage: stage, startTime: startTime });
             }
@@ -270,7 +290,7 @@ const actions = {
         // Call server to finish stage
         try {
             let currentStage = state.currentStageNum - 1;
-            let response = await fetch('/api/experiment/finish-stage/' + currentStage, {credentials: 'same-origin'});
+            let response = await fetchGet(API_URL + 'experiment/finish-stage/' + currentStage);
             if (response.ok) {
                 let experimentInformation = await response.json();
                 // Stage is finished!
@@ -288,7 +308,7 @@ const actions = {
     async finishExperiment({ state, commit }) {
         // Call server to finish experiment
         try {
-            let response = await fetch('/api/experiment/finish-experiment', {credentials: 'same-origin'});
+            let response = await fetchGet(API_URL + 'experiment/finish-experiment');
             if (response.ok) {
                 let experimentInformation = await response.json();
                 // Finish the experiment: set inExperiment to false
@@ -304,21 +324,38 @@ const actions = {
         }
     },
 
-    async recoverExperiment({ state, commit }) {
+    async recoverExperiment({ state, commit, rootState, dispatch }) {
         // Call server to see if there is an experiment already running
         try {
-            let response = await fetch('/api/experiment/reload-experiment', {credentials: 'same-origin'});
+            let response = await fetchGet(API_URL + 'experiment/reload-experiment');
             if (response.ok) {
                 let experimentInformation = await response.json();
                 if (experimentInformation.is_running) {
                     // If experiment was already running restore the last known state
                     commit('setIsRecovering', true);
-                    commit('restoreProblem', experimentInformation.experiment_data.state.problem);
-                    commit('restoreFilter', experimentInformation.experiment_data.state.filter);
-                    commit('restoreDaphne', experimentInformation.experiment_data.state.daphne);
-                    commit('restoreExperiment', experimentInformation.experiment_data.state.experiment);
+                    commit('restoreAuth', experimentInformation.experiment_data.auth);
+                    // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
+                    commit('restoreProblem', experimentInformation.experiment_data.problem);
+                    let problemInfo = chooseProblem(rootState.problem.problemName);
+                    commit('setProblemFunctions', problemInfo.problem);
+                    commit('restoreFilter', experimentInformation.experiment_data.filter);
+                    commit('setFilterFunctions', problemInfo.filter);
+                    commit('restoreTradespacePlot', experimentInformation.experiment_data.tradespacePlot);
+                    commit('restoreDaphne', experimentInformation.experiment_data.daphne);
+                    commit('restoreFunctionalityList', experimentInformation.experiment_data.functionalityList);
+                    commit('restoreDataMining', experimentInformation.experiment_data.dataMining);
+                    commit('restoreFeatureApplication', experimentInformation.experiment_data.featureApplication);
+                    commit('restoreActive', experimentInformation.experiment_data.active);
+                    commit('restoreExperiment', experimentInformation.experiment_data.experiment);
                     // Start the websockets after completing the request so the session cookie is already set
-                    commit('startExperimentWebsocket');
+                    await wsTools.experimentWsConnect();
+                    // Start the Websocket
+                    await wsTools.wsConnect(this);
+                    await dispatch('stopBackgroundTasks');
+                    if (state.stageInformation[state.experimentStage].availableFunctionalities.includes('BackgroundSearch')) {
+                        dispatch("startBackgroundSearch");
+                    }
+                    dispatch('setProblemParameters');
                 }
             }
             else {
@@ -356,13 +393,6 @@ const mutations = {
     setIsRecovering(state, isRecovering) {
         state.isRecovering = isRecovering;
     },
-    startExperimentWebsocket(state) {
-        state.experimentWebsocket = new WebSocket(((window.location.protocol === 'https:') ? 'wss://' : 'ws://') + window.location.host + '/api/experiment');
-        state.experimentWebsocket.onopen = function() {
-            console.log('Experiment Web Socket Conenction Made');
-        };
-        state.experimentWebsocket.onmessage = function (data) {};
-    }
 };
 
 export default {

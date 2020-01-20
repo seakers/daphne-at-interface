@@ -39,6 +39,10 @@ const actions = {
         let reqData = new FormData();
         await fetchPost('/api/at/stop', reqData);
     },
+    async startSeclssFeed() {
+        let reqData = new FormData();
+        await fetchPost('/api/at/startSeclssFeed', reqData);
+    },
 };
 
 const mutations = {
