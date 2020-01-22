@@ -3,29 +3,31 @@
         <div class="title">Anomaly Treatment</div>
         <div class="columns">
             <div class="column">
-                Detection:
+                Current symptoms:
                 <div style="margin-left: 40px">
                     <ul>
-                        <li v-for="message in detectionMessages">{{message}}</li>
+                        <li v-on:click="selectSymptom(message)" v-for="message in symptomsList">
+                            {{message}}
+                        </li>
                     </ul>
                 </div>
             </div>
             <div class="vertical-divider"></div>
             <div class="column">
-                Diagnosis:
-                <div style="margin-left: 40px">
-                    <ul>
-                        <li v-for="message in diagnosisMessages">{{message}}</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="vertical-divider"></div>
-            <div class="column">
-                Recommendations:
-                <div style="margin-left: 40px">
-                    <ul>
-                        <li v-for="message in recommendationMessages">{{message}}</li>
-                    </ul>
+                <div class="columns">
+                    <div class="column is-8">
+                        Selected symptoms to be diagnosed:
+                        <div style="margin-left: 40px">
+                            <ul>
+                                <li v-on:click="deselectSymptom(message)" v-for="message in selectedSymptomsList">
+                                    {{message}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="column is-4">
+                        <a class="button is-custom-button is-blue" v-on:click.prevent="">DIAGNOSE</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,10 +42,18 @@
 
         computed: {
             ...mapGetters({
-                detectionMessages: 'getDetectionMessages',
-                diagnosisMessages: 'getDiagnosisMessages',
-                recommendationMessages: 'getRecommendationMessages'
+                symptomsList: 'getSymptomsList',
+                selectedSymptomsList: 'getSelectedSymptomsList',
             }),
+        },
+
+        methods: {
+            selectSymptom(message) {
+                this.$store.commit('addSelectedSymptom', message);
+            },
+            deselectSymptom(message) {
+                this.$store.commit('clearSelectedSymptom', message);
+            },
         }
     }
 </script>

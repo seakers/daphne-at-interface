@@ -62,8 +62,8 @@ export function processedPlotData(values_df, info_df, selectedVariables) {
     let info = JSON.parse(info_df);
 
     // Parse the timestamp and convert it to an array object
-    let timestamp = values['timestamp'];
-    delete values['timestamp'];
+    // let timestamp = values['timestamp'];
+    // delete values['timestamp'];
     let xaxis = [];
     // xaxis = dataframeToArray(timestamp);
     for (let i = 0; i < 60; i++) {
@@ -122,7 +122,7 @@ export function processedPlotData(values_df, info_df, selectedVariables) {
     return processedData
 }
 
-export function setLayout(selectedVariables) {
+export function setLayout(selectedVariables, selectedVariablesUnits) {
     let layout = {
         height: 200,
         margin: {l: 20, r: 50, b: 20, t: 20, pad: 0},
@@ -131,21 +131,31 @@ export function setLayout(selectedVariables) {
     };
 
     if (selectedVariables.length === 1) {
+        let variable = selectedVariables[0];
+        let units = selectedVariablesUnits[variable];
+        let label = variable + ' [' + units + ']';
         layout['yaxis'] = {
-            title: selectedVariables[0],
+            title: label,
             side: 'right'
         };
     }
     else if (selectedVariables.length === 2) {
         layout['margin']['l'] = 50;
+        let variableRight = selectedVariables[0];
+        let unitsRight = selectedVariablesUnits[variableRight];
+        let labelRight = variableRight + ' [' + unitsRight + ']';
+        let variableLeft = selectedVariables[1];
+        let unitsLeft = selectedVariablesUnits[variableLeft];
+        let labelLeft = variableLeft + ' [' + unitsLeft + ']';
+
         layout['yaxis'] = {
-            title: selectedVariables[0],
+            title: labelRight,
             side: 'right',
             titlefont: {color: blue},
             tickfont: {color: blue},
         };
         layout['yaxis2'] = {
-            title: selectedVariables[1],
+            title: labelLeft,
             side: 'left',
             titlefont: {color: orange},
             tickfont: {color: orange},

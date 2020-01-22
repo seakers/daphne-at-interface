@@ -43,15 +43,19 @@ body {
 }
 
 .is-green {
-    background: forestgreen;
+    background: rgba(0, 128, 0, 0.61);
 }
 
 .is-red {
-    background: firebrick;
+    background: rgba(139, 0, 0, 0.61);
 }
 
 .is-blue {
-    background: dodgerblue;
+    background: rgba(0, 0, 139, 0.61);
+}
+
+.is-grey {
+    background: grey;
 }
 
 .space-marker {

@@ -3,10 +3,10 @@ import {fetchPost} from "../../scripts/fetch-helpers";
 const state = {
     telemetryPlotData: [],
     telemetryInputVariables: [],
+    telemetryInputVariablesUnits: {},
     telemetryPlotSelectedVariables: [],
-    detectionMessages: [],
-    diagnosisMessages: [],
-    recommendationMessages: [],
+    symptomsList: [],
+    selectedSymptomsList: [],
 };
 
 const getters = {
@@ -19,15 +19,15 @@ const getters = {
     getInputVariables(state) {
         return state.telemetryInputVariables;
     },
-    getDetectionMessages(state) {
-        return state.detectionMessages
+    getInputVariablesUnits(state) {
+        return state.telemetryInputVariablesUnits;
     },
-    getDiagnosisMessages(state) {
-        return state.diagnosisMessages
+    getSymptomsList(state) {
+        return state.symptomsList;
     },
-    getRecommendationMessages(state) {
-        return state.recommendationMessages
-    }
+    getSelectedSymptomsList(state) {
+        return state.selectedSymptomsList;
+    },
 };
 
 const actions = {
@@ -49,9 +49,12 @@ const mutations = {
     async updateTelemetryPlotData(state, telemetryData) {
         state.telemetryPlotData = telemetryData;
     },
-    async initializeTelemetry(state, telemetryVariables) {
-        state.telemetryInputVariables = telemetryVariables;
-        state.telemetryPlotSelectedVariables = [telemetryVariables[0]];
+    async initializeTelemetry(state, telemetryVariablesInfo) {
+        let telemetryVariablesNames = telemetryVariablesInfo['names'];
+        let telemetryVariablesUnits = telemetryVariablesInfo['units'];
+        state.telemetryInputVariables = telemetryVariablesNames;
+        state.telemetryPlotSelectedVariables = [telemetryVariablesNames[0]];
+        state.telemetryInputVariablesUnits = telemetryVariablesUnits;
     },
     async updateSelectedVariables(state, newVariables) {
         state.telemetryPlotSelectedVariables = newVariables;
@@ -61,11 +64,28 @@ const mutations = {
         state.telemetryInputVariables = [];
         state.telemetryPlotSelectedVariables = [];
     },
-    async updateATMessages(state, report) {
-        state.detectionMessages = report['detection'];
-        state.diagnosisMessages = report['diagnosis'];
-        state.recommendationMessages = report['recommendation'];
-    }
+    async updateSymptomsReport(state, symptomsReport) {
+        let symptomsList = [];
+        for (let index in symptomsReport) {
+            let event = symptomsReport[index];
+            let message = event['text'];
+            symptomsList.push(message);
+        }
+        state.symptomsList = symptomsList;
+    },
+    async addSelectedSymptom(state, message) {
+        let currentSelectedSymptoms = state.selectedSymptomsList;
+        if (!currentSelectedSymptoms.includes(message)) {
+            currentSelectedSymptoms.push(message);
+            state.selectedSymptomsList = currentSelectedSymptoms;
+        }
+    },
+    async clearSelectedSymptom(state, message) {
+        let currentSelectedSymptoms = state.selectedSymptomsList;
+        let index = currentSelectedSymptoms.indexOf(message);
+        currentSelectedSymptoms.splice(index, 1);
+        state.selectedSymptomsList = currentSelectedSymptoms;
+    },
 };
 
 export default {

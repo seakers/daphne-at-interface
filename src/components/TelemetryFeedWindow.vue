@@ -65,6 +65,7 @@
                 plotData: 'getPlotData',
                 selectedVariables: 'getSelectedVariables',
                 inputVariables: 'getInputVariables',
+                inputVariablesUnits: 'getInputVariablesUnits',
             }),
             value ()  {
                 let variables = this.selectedVariables;
@@ -83,7 +84,7 @@
                 return aux;
             },
             plotLayout () {
-                return setLayout(this.selectedVariables);
+                return setLayout(this.selectedVariables, this.inputVariablesUnits);
             }
         },
 
