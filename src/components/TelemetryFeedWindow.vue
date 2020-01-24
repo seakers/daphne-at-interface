@@ -1,11 +1,11 @@
 <template>
     <div id="telemetry-feed">
-        <div class="title">Telemetry Feed</div>
-        <div class="is-centered">
+        <div class="is-title">Telemetry Feed</div>
+        <div class="is-centered is-content">
             <div class="columns">
                 <div class="column is-10">
                     <div class="box is-stretched space-marker">
-                        <label class="typo__label">Select the telemetry feed variables to be displayed</label>
+<!--                        <label class="typo__label">Select the telemetry feed variables to be displayed</label>-->
                         <multiselect
                                 :value="value"
                                 :options="options"
@@ -28,14 +28,13 @@
                 </div>
                 <div class="column is-2">
                     <div class="box is-stretched space-marker">
-                        <a class="button is-custom-button is-green" v-on:click.prevent="startTelemetry">
+                        <a v-if="!this.telemetryIsOngoing"
+                           class="button is-telemetry-button is-green" v-on:click.prevent="startTelemetry">
                             START TELEMETRY
                         </a>
-                        <a class="button is-custom-button is-red" v-on:click.prevent="stopTelemetry">
+                        <a v-else
+                           class="button is-telemetry-button is-red" v-on:click.prevent="stopTelemetry">
                             STOP TELEMETRY
-                        </a>
-                        <a class="button is-custom-button is-blue" v-on:click.prevent="startSeclssFeed">
-                            SECLSS FEED
                         </a>
                     </div>
                 </div>
@@ -66,6 +65,7 @@
                 selectedVariables: 'getSelectedVariables',
                 inputVariables: 'getInputVariables',
                 inputVariablesUnits: 'getInputVariablesUnits',
+                telemetryIsOngoing: 'getTelemetryIsOngoing',
             }),
             value ()  {
                 let variables = this.selectedVariables;
@@ -90,14 +90,13 @@
 
         methods: {
             startTelemetry() {
+                this.$store.commit('switchTelemetryStatus');
                 this.$store.dispatch('startTelemetry');
             },
             stopTelemetry() {
+                this.$store.commit('switchTelemetryStatus');
                 this.$store.dispatch('stopTelemetry');
                 this.$store.commit('clearTelemetry');
-            },
-            startSeclssFeed() {
-                this.$store.dispatch('startSeclssFeed');
             },
             newSelection(newElement) {
                 let newSelectedVariables = [];

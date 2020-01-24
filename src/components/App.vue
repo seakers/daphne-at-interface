@@ -1,18 +1,29 @@
 <template>
-    <div>
+    <div style="background: white">
         <div class="horizontal-divider"></div>
-        <div class="columns">
+        <div class="columns" style="margin-bottom: 5px">
             <div class="column is-8.9">
-                <div class="box is-main">
+                <div class="box is-main" style="margin-bottom: 5px">
                     <telemetry-feed-window></telemetry-feed-window>
                 </div>
-                <div class="box is-main">
+                <div class="columns" style="margin: 5px">
+                    <div class="column is-6" style="padding: 0px">
+                        <div class="box is-main" style="margin-left: 0px">
+                            <symptoms-window></symptoms-window>
+                        </div>
+                    </div>
+                    <div class="column is-6" style="padding: 0px">
+                        <div class="box is-main" style="margin-right: 0px">
+                            <diagnosis-request-window></diagnosis-request-window>
+                        </div>
+                    </div>
+                </div>
+                <div class="box is-main" style="margin-bottom: 5px">
                     <anomaly-treatment-window></anomaly-treatment-window>
                 </div>
-                <div class="box is-main">
-                    <other-stuff-window></other-stuff-window>
+                <div style="margin-top: 20px">
+                    <the-footer></the-footer>
                 </div>
-                <the-footer></the-footer>
             </div>
             <div class="vertical-divider"></div>
             <div class="column is-3">
@@ -32,12 +43,13 @@
     import QuestionBar from './QuestionBar';
     import DaphneAnswer from "./DaphneAnswer";
     import TelemetryFeedWindow from "./TelemetryFeedWindow";
-    import AnomalyTreatmentWindow from "./AnomalyTreatmentWindow";
-    import DaphneAnswerWindow from "./DaphneAnswerWindow";
+    import SymptomsWindow from "./SymptomsWindow";
+    import DiagnosisRequestWindow from "./DiagnosisRequestWindow";
     import AnomalyDetection from "./ZZZAnomalyDetection";
     import ChatWindow from "./ChatWindow";
     import TheFooter from "./TheFooter";
     import {fetchPost} from "../scripts/fetch-helpers";
+    import AnomalyTreatmentWindow from "./AnomalyTreatmentWindow";
 
     export default {
         name: 'app',
@@ -73,11 +85,13 @@
             },
         },
         components: {
+            AnomalyTreatmentWindow,
+            DiagnosisRequestWindow,
+            SymptomsWindow,
             ChatWindow,
             AnomalyDetection,
             TelemetryFeedWindow,
-            AnomalyTreatmentWindow,
-            OtherStuffWindow: DaphneAnswerWindow,
+            // OtherStuffWindow: DaphneAnswerWindow,
             DaphneAnswer,
             QuestionBar,
             TheFooter

@@ -50,6 +50,9 @@ export default new Vuex.Store({
             } else if (received_info['type'] === 'symptoms_report') {
                 let symptoms_report = received_info['content'];
                 commit('updateSymptomsReport', symptoms_report);
+            } else if (received_info['type'] === 'diagnosis_report') {
+                let diagnosis_report = received_info['content'];
+                commit('updateDiagnosisReport', diagnosis_report);
             }
         },
     },

@@ -7,6 +7,8 @@ const state = {
     telemetryPlotSelectedVariables: [],
     symptomsList: [],
     selectedSymptomsList: [],
+    diagnosisReport: '',
+    telemetryIsOngoing: false,
 };
 
 const getters = {
@@ -28,24 +30,34 @@ const getters = {
     getSelectedSymptomsList(state) {
         return state.selectedSymptomsList;
     },
+    getDiagnosisReport(state) {
+        return state.diagnosisReport;
+    },
+    getTelemetryIsOngoing(state) {
+        return state.telemetryIsOngoing;
+    },
 };
 
 const actions = {
-    async startTelemetry() {
+    async startTelemetry(state) {
         let reqData = new FormData();
-        await fetchPost('/api/at/simulate', reqData);
+        await fetchPost('/api/at/startTelemetry', reqData);
     },
-    async stopTelemetry() {
+    async stopTelemetry(state) {
         let reqData = new FormData();
         await fetchPost('/api/at/stop', reqData);
     },
-    async startSeclssFeed() {
+    async requestDiagnosis(state, selectedSymptomsList) {
         let reqData = new FormData();
-        await fetchPost('/api/at/startSeclssFeed', reqData);
+        reqData.append('symptomsList',  JSON.stringify(selectedSymptomsList));
+        await fetchPost('/api/at/requestDiagnosis', reqData);
     },
 };
 
 const mutations = {
+    async switchTelemetryStatus(state) {
+        state.telemetryIsOngoing = !state.telemetryIsOngoing;
+    },
     async updateTelemetryPlotData(state, telemetryData) {
         state.telemetryPlotData = telemetryData;
     },
@@ -65,26 +77,42 @@ const mutations = {
         state.telemetryPlotSelectedVariables = [];
     },
     async updateSymptomsReport(state, symptomsReport) {
-        let symptomsList = [];
-        for (let index in symptomsReport) {
-            let event = symptomsReport[index];
-            let message = event['text'];
-            symptomsList.push(message);
-        }
-        state.symptomsList = symptomsList;
+        state.symptomsList = symptomsReport;
     },
-    async addSelectedSymptom(state, message) {
+    async addSelectedSymptom(state, symptom) {
         let currentSelectedSymptoms = state.selectedSymptomsList;
-        if (!currentSelectedSymptoms.includes(message)) {
-            currentSelectedSymptoms.push(message);
+        let already_in_list = false;
+        for (let index in currentSelectedSymptoms) {
+            let item = currentSelectedSymptoms[index];
+            if (JSON.stringify(item) === JSON.stringify(symptom)) {
+                already_in_list = true;
+            }
+        }
+        if (!already_in_list) {
+            currentSelectedSymptoms.push(symptom);
             state.selectedSymptomsList = currentSelectedSymptoms;
         }
     },
-    async clearSelectedSymptom(state, message) {
+    async clearSelectedSymptom(state, symptom) {
         let currentSelectedSymptoms = state.selectedSymptomsList;
-        let index = currentSelectedSymptoms.indexOf(message);
+        let index = currentSelectedSymptoms.indexOf(symptom);
         currentSelectedSymptoms.splice(index, 1);
         state.selectedSymptomsList = currentSelectedSymptoms;
+    },
+    async updateDiagnosisReport(state, diagnosis_report) {
+        let symptoms_list = diagnosis_report['symptoms_list'];
+        let diagnosis_list = diagnosis_report['diagnosis_list'];
+        let parsed_symptoms_list = [];
+        for (let index in symptoms_list) {
+            let symptom = symptoms_list[index];
+            let text = symptom['measurement'] + ' exceeds ' + symptom['relationship'];
+            parsed_symptoms_list.push(text);
+        }
+        let parsed_diagnosis_report = 'The set of symptoms [' +
+                                       parsed_symptoms_list +
+                                      '] could be caused by [' +
+                                       diagnosis_list + '].';
+        state.diagnosisReport = parsed_diagnosis_report;
     },
 };
 
