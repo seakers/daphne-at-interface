@@ -2,7 +2,7 @@
     <div style="background: white">
         <div class="horizontal-divider"></div>
         <div class="columns" style="margin-bottom: 5px">
-            <div class="column is-8.9">
+            <div class="column is-8.9" style="background: #fafafa">
                 <div class="box is-main" style="margin-bottom: 5px">
                     <telemetry-feed-window></telemetry-feed-window>
                 </div>
@@ -17,6 +17,9 @@
                             <diagnosis-request-window></diagnosis-request-window>
                         </div>
                     </div>
+                </div>
+                <div class="box is-main" style="margin-bottom: 5px">
+                    <diagnosis-report-window></diagnosis-report-window>
                 </div>
                 <div class="box is-main" style="margin-bottom: 5px">
                     <anomaly-treatment-window></anomaly-treatment-window>
@@ -45,11 +48,11 @@
     import TelemetryFeedWindow from "./TelemetryFeedWindow";
     import SymptomsWindow from "./SymptomsWindow";
     import DiagnosisRequestWindow from "./DiagnosisRequestWindow";
-    import AnomalyDetection from "./ZZZAnomalyDetection";
     import ChatWindow from "./ChatWindow";
     import TheFooter from "./TheFooter";
-    import {fetchPost} from "../scripts/fetch-helpers";
+    import DiagnosisReportWindow from "./DiagnosisReportWindow";
     import AnomalyTreatmentWindow from "./AnomalyTreatmentWindow";
+    import {fetchPost} from "../scripts/fetch-helpers";
 
     export default {
         name: 'app',
@@ -86,12 +89,11 @@
         },
         components: {
             AnomalyTreatmentWindow,
+            DiagnosisReportWindow,
             DiagnosisRequestWindow,
             SymptomsWindow,
             ChatWindow,
-            AnomalyDetection,
             TelemetryFeedWindow,
-            // OtherStuffWindow: DaphneAnswerWindow,
             DaphneAnswer,
             QuestionBar,
             TheFooter

@@ -40,7 +40,7 @@
                 this.$store.commit('clearSelectedSymptom', symptom);
             },
             requestDiagnosis() {
-                this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
+                this.$store.commit('requestDiagnosis', this.selectedSymptomsList);
             }
         }
     }

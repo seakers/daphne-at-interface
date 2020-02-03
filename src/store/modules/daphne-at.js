@@ -7,35 +7,23 @@ const state = {
     telemetryPlotSelectedVariables: [],
     symptomsList: [],
     selectedSymptomsList: [],
-    diagnosisReport: '',
+    diagnosisReport: [],
     telemetryIsOngoing: false,
+    selectedAnomalies: [],
+    allAnomaliesList: [],
 };
 
 const getters = {
-    getPlotData(state) {
-        return state.telemetryPlotData;
-    },
-    getSelectedVariables(state) {
-        return state.telemetryPlotSelectedVariables;
-    },
-    getInputVariables(state) {
-        return state.telemetryInputVariables;
-    },
-    getInputVariablesUnits(state) {
-        return state.telemetryInputVariablesUnits;
-    },
-    getSymptomsList(state) {
-        return state.symptomsList;
-    },
-    getSelectedSymptomsList(state) {
-        return state.selectedSymptomsList;
-    },
-    getDiagnosisReport(state) {
-        return state.diagnosisReport;
-    },
-    getTelemetryIsOngoing(state) {
-        return state.telemetryIsOngoing;
-    },
+    getPlotData(state) {return state.telemetryPlotData},
+    getSelectedVariables(state) {return state.telemetryPlotSelectedVariables},
+    getInputVariables(state) {return state.telemetryInputVariables},
+    getInputVariablesUnits(state) {return state.telemetryInputVariablesUnits},
+    getSymptomsList(state) {return state.symptomsList},
+    getSelectedSymptomsList(state) {return state.selectedSymptomsList},
+    getDiagnosisReport(state) {return state.diagnosisReport},
+    getTelemetryIsOngoing(state) {return state.telemetryIsOngoing},
+    getSelectedAnomaliesDict(state) {return state.selectedAnomalies},
+    getAllAnomaliesList(state) {return state.allAnomaliesList},
 };
 
 const actions = {
@@ -47,10 +35,29 @@ const actions = {
         let reqData = new FormData();
         await fetchPost('/api/at/stop', reqData);
     },
-    async requestDiagnosis(state, selectedSymptomsList) {
+    async retrieveProcedureFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
-        reqData.append('symptomsList',  JSON.stringify(selectedSymptomsList));
-        await fetchPost('/api/at/requestDiagnosis', reqData);
+        reqData.append('anomaly_name',  JSON.stringify(anomalyName));
+        let response = await fetchPost('/api/at/retrieveProcedureFromAnomaly', reqData);
+        if (response.ok) {
+            let procedureName = await response.json();
+            return procedureName;
+        } else {
+            console.log('Error retrieving the procedure name.');
+            return 'ERROR'
+        }
+    },
+    async retrieveStepsFromProcedure(state, procedureName) {
+        let reqData = new FormData();
+        reqData.append('procedure_name',  JSON.stringify(procedureName));
+        let response = await fetchPost('/api/at/retrieveStepsFromProcedure', reqData);
+        if (response.ok) {
+            let stepsList = await response.json();
+            return stepsList;
+        } else {
+            console.log('Error retrieving the procedure name.');
+            return ['ERROR']
+        }
     },
 };
 
@@ -99,20 +106,29 @@ const mutations = {
         currentSelectedSymptoms.splice(index, 1);
         state.selectedSymptomsList = currentSelectedSymptoms;
     },
-    async updateDiagnosisReport(state, diagnosis_report) {
-        let symptoms_list = diagnosis_report['symptoms_list'];
-        let diagnosis_list = diagnosis_report['diagnosis_list'];
-        let parsed_symptoms_list = [];
-        for (let index in symptoms_list) {
-            let symptom = symptoms_list[index];
-            let text = symptom['measurement'] + ' exceeds ' + symptom['relationship'];
-            parsed_symptoms_list.push(text);
+    async requestDiagnosis(state, selectedSymptomsList) {
+        let reqData = new FormData();
+        reqData.append('symptomsList',  JSON.stringify(selectedSymptomsList));
+        let response = await fetchPost('/api/at/requestDiagnosis', reqData);
+        if (response.ok) {
+            let diagnosis_report = await response.json();
+            state.diagnosisReport = diagnosis_report;
+        } else {
+            console.log('Error requesting a diagnosis report.')
         }
-        let parsed_diagnosis_report = 'The set of symptoms [' +
-                                       parsed_symptoms_list +
-                                      '] could be caused by [' +
-                                       diagnosis_list + '].';
-        state.diagnosisReport = parsed_diagnosis_report;
+    },
+    async loadAllAnomalies(state) {
+        let reqData = new FormData();
+        let response = await fetchPost('/api/at/loadAllAnomalies', reqData);
+        if (response.ok) {
+            let anomaly_list = await response.json();
+            state.allAnomaliesList = anomaly_list;
+        } else {
+            console.log('Error loading the anomalies list.');
+        }
+    },
+    async updateSelectedAnomalies(state, newAnomaly) {
+        state.selectedAnomalies.push(newAnomaly);
     },
 };
 
