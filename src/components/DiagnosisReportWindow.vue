@@ -23,7 +23,7 @@
                 </div>
                 <div class="column is-3">
                     <ul>
-                        <li  v-for="anomaly in diagnosisReport['diagnosis_list']">
+                        <li  v-on:click="selectAnomaly(anomaly)" v-for="anomaly in diagnosisReport['diagnosis_list']">
                             {{anomaly}}
                         </li>
                     </ul>
@@ -44,6 +44,12 @@
                 diagnosisReport: 'getDiagnosisReport',
             }),
         },
+
+        methods: {
+            selectAnomaly(anomalyName) {
+                this.$store.dispatch('parseAndAddSelectedAnomaly', anomalyName);
+            }
+        }
     }
 </script>
 

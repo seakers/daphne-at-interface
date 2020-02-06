@@ -1,28 +1,38 @@
 import {fetchPost} from "../../scripts/fetch-helpers";
 
 const state = {
+    // Telemetry slot variables
     telemetryPlotData: [],
     telemetryInputVariables: [],
     telemetryInputVariablesUnits: {},
     telemetryPlotSelectedVariables: [],
+    telemetryIsOngoing: false,
+
+    // Symptoms detection and diagnosis slots variables
     symptomsList: [],
     selectedSymptomsList: [],
+
+    // Diagnosis report slot variables
     diagnosisReport: [],
-    telemetryIsOngoing: false,
-    selectedAnomalies: [],
+
+    // Anomaly treatment slot variables
+    selectedAnomaliesList: [],
+    selectedAnomaliesInfo: {},
     allAnomaliesList: [],
 };
 
 const getters = {
+    // A getter for each state variable
     getPlotData(state) {return state.telemetryPlotData},
     getSelectedVariables(state) {return state.telemetryPlotSelectedVariables},
     getInputVariables(state) {return state.telemetryInputVariables},
     getInputVariablesUnits(state) {return state.telemetryInputVariablesUnits},
+    getTelemetryIsOngoing(state) {return state.telemetryIsOngoing},
     getSymptomsList(state) {return state.symptomsList},
     getSelectedSymptomsList(state) {return state.selectedSymptomsList},
     getDiagnosisReport(state) {return state.diagnosisReport},
-    getTelemetryIsOngoing(state) {return state.telemetryIsOngoing},
-    getSelectedAnomaliesDict(state) {return state.selectedAnomalies},
+    getSelectedAnomaliesList(state) {return state.selectedAnomaliesList},
+    getSelectedAnomaliesInfo(state) {return state.selectedAnomaliesInfo},
     getAllAnomaliesList(state) {return state.allAnomaliesList},
 };
 
@@ -59,6 +69,14 @@ const actions = {
             return ['ERROR']
         }
     },
+    async parseAndAddSelectedAnomaly({state, commit}, anomalyName) {
+        let procedure = await Promise.resolve(this.dispatch('retrieveProcedureFromAnomaly', anomalyName));
+        let stepsList = await Promise.resolve(this.dispatch('retrieveStepsFromProcedure', procedure));
+        let currentStep = 0;
+        let anomalyInfo = {'procedure': procedure, 'stepsList': stepsList, 'currentStep': currentStep};
+        let newAnomalyDict = {'anomalyName': anomalyName, 'anomalyInfo': anomalyInfo};
+        commit('addSelectedAnomaly', newAnomalyDict);
+    }
 };
 
 const mutations = {
@@ -127,9 +145,24 @@ const mutations = {
             console.log('Error loading the anomalies list.');
         }
     },
-    async updateSelectedAnomalies(state, newAnomaly) {
-        state.selectedAnomalies.push(newAnomaly);
+    async addSelectedAnomaly(state, newAnomalyDict) {
+        let anomalyName = newAnomalyDict['anomalyName'];
+        let anomalyInfo = newAnomalyDict['anomalyInfo'];
+        state.selectedAnomaliesList.push(anomalyName);
+        state.selectedAnomaliesInfo[anomalyName] = anomalyInfo;
     },
+    async removeSelectedAnomaly(state, anomalyName) {
+        let selectedAnomaliesList = state.selectedAnomaliesList;
+        let indexToDelete = 0;
+        for (let index in selectedAnomaliesList) {
+            let anomaly = selectedAnomaliesList[index];
+            if (anomaly === anomalyName) {
+                indexToDelete = index;
+            }
+        }
+        state.selectedAnomaliesList.splice(indexToDelete, 1);
+        delete state.selectedAnomaliesInfo[anomalyName];
+    }
 };
 
 export default {

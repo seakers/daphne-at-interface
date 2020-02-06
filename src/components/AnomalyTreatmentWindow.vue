@@ -18,24 +18,23 @@
                     openDirection="below"
                     track-by="name"
                     :preselect-first="true"
-                    @select="newSelection">
+                    @select="newSelection"
+                    @remove="newDeselection">
             </multiselect>
         </div>
-        <div v-if="selectedAnomalies.length > 0">
-            <div v-for="anomaly in selectedAnomalies" class="is-content">
-                <div class="columns">
-                    <div class="column is-3">
-                        <u>ANOMALY</u>
-                        <p>{{anomaly['name']}}</p>
-                    </div>
-                    <div class="column is-3">
-                        <u>PROCEDURE(S)</u>
-                        <p>{{anomaly['procedure']}}</p>
-                    </div>
-                    <div class="column is-6">
-                        <u>STEPS</u>
-                        <p><- {{anomaly['steps'][0]}} -></p>
-                    </div>
+        <div v-for="(Info, anomalyName) in selectedAnomaliesInfo" class="is-content">
+            <div class="columns">
+                <div class="column is-4">
+                    <u>Anomaly name</u>
+                    <p>{{anomalyName}}</p>
+                </div>
+                <div class="column is-4">
+                    <u>Procedure to be followed</u>
+                    <p>{{Info['procedure']}}</p>
+                </div>
+                <div class="column is-6">
+                    <u>Current procedure step</u>
+                    <p>{{Info['stepsList'][Info['currentStep']]}}</p>
                 </div>
             </div>
         </div>
@@ -50,22 +49,17 @@
     export default {
         name: "AnomalyTreatmentWindow",
 
-        data() {
-            return {
-                counterDict: {},
-            }
-        },
-
         computed: {
             ...mapGetters({
-                selectedAnomalies: 'getSelectedAnomaliesDict',
+                selectedAnomaliesList: 'getSelectedAnomaliesList',
+                selectedAnomaliesInfo: 'getSelectedAnomaliesInfo',
                 allAnomalies: 'getAllAnomaliesList',
             }),
             value ()  {
-                let anomalies = this.selectedAnomalies;
+                let anomalies = this.selectedAnomaliesList;
                 let aux = [];
                 for (let index in anomalies) {
-                    let anomaly = anomalies[index]['name'];
+                    let anomaly = anomalies[index];
                     aux.push({'name': anomaly});
                 }
                 return aux;
@@ -81,13 +75,13 @@
         },
 
         methods: {
-            async newSelection(newSelectedAnomaly) {
-                let anomaly = newSelectedAnomaly['name'];
-                let procedure = await Promise.resolve(this.$store.dispatch('retrieveProcedureFromAnomaly', anomaly));
-                let steps = await Promise.resolve(this.$store.dispatch('retrieveStepsFromProcedure', procedure));
-                let newAnomaly = {'name': anomaly, 'procedure': procedure, 'steps': steps};
-                this.$store.commit('updateSelectedAnomalies', newAnomaly);
-                console.log(this.selectedAnomalies);
+            async newSelection(selectedAnomaly) {
+                let anomalyName = selectedAnomaly['name'];
+                await this.$store.dispatch('parseAndAddSelectedAnomaly', anomalyName);
+            },
+            async newDeselection(deselectedAnomaly) {
+                let anomalyName = deselectedAnomaly['name'];
+                this.$store.commit('removeSelectedAnomaly', anomalyName)
             },
             loadAnomalies() {
                 this.$store.commit('loadAllAnomalies');
@@ -96,13 +90,6 @@
 
         mounted: function() {
             this.loadAnomalies()
-        },
-
-        watch: {
-            // selectedAnomalies(newValue, oldValue) {
-            //     console.log(oldValue);
-            //     console.log(newValue);
-            // }
         },
 
         components: {
