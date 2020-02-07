@@ -1,6 +1,8 @@
 <template>
     <div id="telemetry-feed">
-        <div class="is-title">Telemetry Feed</div>
+        <div class="is-title">
+            Sensor Data
+        </div>
         <div class="is-centered is-content">
             <div class="columns">
                 <div class="column is-10">
@@ -27,19 +29,19 @@
                     </div>
                 </div>
                 <div class="column is-2">
-                    <div class="box is-stretched space-marker">
+                    <div class="box is-stretched space-marker" style="background: #111111 !important">
                         <a v-if="!this.telemetryIsOngoing"
                            class="button is-telemetry-button is-green" v-on:click.prevent="startTelemetry">
-                            START TELEMETRY
+                            START RECEIVING
                         </a>
                         <a v-else
                            class="button is-telemetry-button is-red" v-on:click.prevent="stopTelemetry">
-                            STOP TELEMETRY
+                            STOP RECEIVING
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="box is-stretched is-centered space-marker">
+            <div class="box is-stretched is-centered space-marker" style="background: #111111">
                 <vue-plotly
                         :data="plotData"
                         :layout="plotLayout"
@@ -57,15 +59,15 @@
 
 
     export default {
-        name: "TelemetryFeedWindow",
+        name: "SensorDataWindow",
 
         computed: {
             ...mapGetters({
                 plotData: 'getPlotData',
                 selectedVariables: 'getSelectedVariables',
                 inputVariables: 'getInputVariables',
-                inputVariablesUnits: 'getInputVariablesUnits',
                 telemetryIsOngoing: 'getTelemetryIsOngoing',
+                telemetryInfo: 'getTelemetryInfo',
             }),
             value ()  {
                 let variables = this.selectedVariables;
@@ -84,7 +86,7 @@
                 return aux;
             },
             plotLayout () {
-                return setLayout(this.selectedVariables, this.inputVariablesUnits);
+                return setLayout(this.selectedVariables, this.telemetryInfo, this.plotData);
             }
         },
 

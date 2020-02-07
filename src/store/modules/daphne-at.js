@@ -4,15 +4,14 @@ const state = {
     // Telemetry slot variables
     telemetryPlotData: [],
     telemetryInputVariables: [],
-    telemetryInputVariablesUnits: {},
     telemetryPlotSelectedVariables: [],
     telemetryIsOngoing: false,
+    telemetryValues: '',
+    telemetryInfo: '',
 
     // Symptoms detection and diagnosis slots variables
     symptomsList: [],
     selectedSymptomsList: [],
-
-    // Diagnosis report slot variables
     diagnosisReport: [],
 
     // Anomaly treatment slot variables
@@ -26,8 +25,9 @@ const getters = {
     getPlotData(state) {return state.telemetryPlotData},
     getSelectedVariables(state) {return state.telemetryPlotSelectedVariables},
     getInputVariables(state) {return state.telemetryInputVariables},
-    getInputVariablesUnits(state) {return state.telemetryInputVariablesUnits},
     getTelemetryIsOngoing(state) {return state.telemetryIsOngoing},
+    getTelemetryValues(state) {return state.telemetryValues},
+    getTelemetryInfo(state) {return state.telemetryInfo},
     getSymptomsList(state) {return state.symptomsList},
     getSelectedSymptomsList(state) {return state.selectedSymptomsList},
     getDiagnosisReport(state) {return state.diagnosisReport},
@@ -86,12 +86,20 @@ const mutations = {
     async updateTelemetryPlotData(state, telemetryData) {
         state.telemetryPlotData = telemetryData;
     },
-    async initializeTelemetry(state, telemetryVariablesInfo) {
-        let telemetryVariablesNames = telemetryVariablesInfo['names'];
-        let telemetryVariablesUnits = telemetryVariablesInfo['units'];
+    async updateTelemetryValuesAndInfo(state, telemetryDict) {
+        let telemetryValues = JSON.parse(telemetryDict['values']);
+        let telemetryInfo = JSON.parse(telemetryDict['info']);
+        state.telemetryValues = telemetryValues;
+        state.telemetryInfo = telemetryInfo;
+    },
+    async initializeTelemetry(state, telemetryDict) {
+        let telemetryVariablesNames = telemetryDict['variables_names'];
+        let telemetryValues = JSON.parse(telemetryDict['values']);
+        let telemetryInfo = JSON.parse(telemetryDict['info']);
         state.telemetryInputVariables = telemetryVariablesNames;
         state.telemetryPlotSelectedVariables = [telemetryVariablesNames[0]];
-        state.telemetryInputVariablesUnits = telemetryVariablesUnits;
+        state.telemetryValues = telemetryValues;
+        state.telemetryInfo = telemetryInfo;
     },
     async updateSelectedVariables(state, newVariables) {
         state.telemetryPlotSelectedVariables = newVariables;

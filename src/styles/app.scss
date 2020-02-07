@@ -15,27 +15,31 @@ body {
 }
 
 .is-title {
-    background: darkgray;
+    background: #002E2E;
     font-size: 18px;
     font-weight: bold;
-    color: black;
+    color: #0AFEFF;
     padding: 3px 3px 3px 3px;
-    border: 0px;
     margin: 0px 0px 0px 0px;
+    border-width: 0px 0px 1px 0px !important;
+    border-color: #0AFEFF !important;
+    border-style: solid !important;
     border-radius: 5px 5px 0px 0px;
 }
 
 .is-main {
+    background: black;
     margin: 5px 5px 5px 5px;
     padding: 0px;
     border-radius: 5px;
-    border-width: 0px !important;
+    border-width: 1px !important;
     border-style: solid !important;
-    border-color: black !important;
+    border-color: #0AFEFF !important;
 }
 
 .is-content {
     padding: 10px;
+    color: white;
 }
 
 .is-stretched {
@@ -81,6 +85,10 @@ body {
 
 .is-grey {
     background: grey;
+}
+
+.is-seclss-background-black {
+    background: #111111;
 }
 
 .space-marker {

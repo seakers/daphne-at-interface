@@ -33,16 +33,14 @@ export default new Vuex.Store({
             } else if (received_info['type'] === 'console_text') {
                 console.log(received_info['text']);
             } else if (received_info['type'] === 'initialize_telemetry') {
-                let telemetryVariablesNames = received_info['variables_names'];
-                let telemetryVariablesUnits = received_info['variables_units'];
-                let telemetryVariablesInfo = {'names': telemetryVariablesNames, 'units': telemetryVariablesUnits};
-                commit('initializeTelemetry', telemetryVariablesInfo);
+                let telemetryDict = received_info['content'];
+                commit('initializeTelemetry', telemetryDict);
             } else if (received_info['type'] === 'telemetry_update') {
-                let rawTelemetryValues = received_info['values'];
-                let telemetryInfo = received_info['info'];
+                let telemetryDict = received_info['content'];
                 let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
-                let plotData = processedPlotData(rawTelemetryValues, telemetryInfo, selectedVariables);
+                let plotData = processedPlotData(telemetryDict, selectedVariables);
                 commit('updateTelemetryPlotData', plotData);
+                commit('updateTelemetryValuesAndInfo', telemetryDict);
             } else if (received_info['type'] === 'symptoms_report') {
                 let symptoms_report = received_info['content'];
                 commit('updateSymptomsReport', symptoms_report);

@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="is-title">Anomaly Treatment</div>
+        <div class="is-title">
+            Anomaly Response
+        </div>
         <div class="is-content">
             <multiselect
                     :value="value"
@@ -47,7 +49,7 @@
 
 
     export default {
-        name: "AnomalyTreatmentWindow",
+        name: "AnomalyResponseWindow",
 
         computed: {
             ...mapGetters({

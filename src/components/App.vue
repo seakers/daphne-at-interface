@@ -1,28 +1,19 @@
 <template>
-    <div style="background: white">
+    <div class="is-seclss-background-black">
         <div class="horizontal-divider"></div>
         <div class="columns" style="margin-bottom: 5px">
-            <div class="column is-8.9" style="background: #fafafa">
+            <div class="column is-8.9">
                 <div class="box is-main" style="margin-bottom: 5px">
-                    <telemetry-feed-window></telemetry-feed-window>
-                </div>
-                <div class="columns" style="margin: 5px">
-                    <div class="column is-6" style="padding: 0px">
-                        <div class="box is-main" style="margin-left: 0px">
-                            <symptoms-window></symptoms-window>
-                        </div>
-                    </div>
-                    <div class="column is-6" style="padding: 0px">
-                        <div class="box is-main" style="margin-right: 0px">
-                            <diagnosis-request-window></diagnosis-request-window>
-                        </div>
-                    </div>
+                    <anomaly-detection-window></anomaly-detection-window>
                 </div>
                 <div class="box is-main" style="margin-bottom: 5px">
-                    <diagnosis-report-window></diagnosis-report-window>
+                    <sensor-data-window></sensor-data-window>
                 </div>
                 <div class="box is-main" style="margin-bottom: 5px">
-                    <anomaly-treatment-window></anomaly-treatment-window>
+                    <anomaly-diagnosis-window></anomaly-diagnosis-window>
+                </div>
+                <div class="box is-main" style="margin-bottom: 5px">
+                    <anomaly-response-window></anomaly-response-window>
                 </div>
                 <div style="margin-top: 20px">
                     <the-footer></the-footer>
@@ -45,13 +36,12 @@
 
     import QuestionBar from './QuestionBar';
     import DaphneAnswer from "./DaphneAnswer";
-    import TelemetryFeedWindow from "./TelemetryFeedWindow";
-    import SymptomsWindow from "./SymptomsWindow";
-    import DiagnosisRequestWindow from "./DiagnosisRequestWindow";
+    import SensorDataWindow from "./SensorDataWindow";
+    import AnomalyDetectionWindow from "./AnomalyDetectionWindow";
+    import AnomalyDiagnosisWindow from "./AnomalyDiagnosisWindow";
     import ChatWindow from "./ChatWindow";
     import TheFooter from "./TheFooter";
-    import DiagnosisReportWindow from "./DiagnosisReportWindow";
-    import AnomalyTreatmentWindow from "./AnomalyTreatmentWindow";
+    import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import {fetchPost} from "../scripts/fetch-helpers";
 
     export default {
@@ -88,12 +78,11 @@
             },
         },
         components: {
-            AnomalyTreatmentWindow,
-            DiagnosisReportWindow,
-            DiagnosisRequestWindow,
-            SymptomsWindow,
+            AnomalyResponseWindow,
+            AnomalyDiagnosisWindow,
+            AnomalyDetectionWindow,
             ChatWindow,
-            TelemetryFeedWindow,
+            SensorDataWindow,
             DaphneAnswer,
             QuestionBar,
             TheFooter

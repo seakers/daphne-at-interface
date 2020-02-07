@@ -1,3 +1,32 @@
+export function detectionColorStyle(symptomsList) {
+    if (symptomsList.length === 0) {
+        let theColors = {'background': '#002E2E', 'font': '#0AFEFF'};
+        return theColors
+    }
+    else {
+        let topThresholdTag = '';
+        for (let index in symptomsList) {
+            if (topThresholdTag !== 'criticLevel') {
+                let thresholdTag = symptomsList[index]['threshold_tag'];
+                if (thresholdTag === 'LCL' || thresholdTag === 'UCL') {
+                    topThresholdTag = 'criticLevel'
+                }
+                else {
+                    topThresholdTag = 'warningLevel'
+                }
+            }
+        }
+        if (topThresholdTag === 'criticLevel') {
+            let theColors = {'background': '#3A0000', 'font': '#FF0000'};
+            return theColors
+        }
+        else {
+            let theColors = {'background': '#342E00', 'font': '#FFBF00'};
+            return theColors
+        }
+    }
+}
+
 function dataframeToArray(df) {
     let array = [];
     for (let value in df) {
@@ -17,11 +46,12 @@ function buildTrace(variable, values, xaxis) {
     return trace
 }
 
-function buildThresholdTrace(xaxis, yval, the_color, the_style) {
+function buildThresholdTrace(xaxis, yval, the_color, the_style, the_name, the_bool) {
     let trace = {
         x: [xaxis[0], xaxis[xaxis.length - 1]],
         y: [yval, yval],
-        showlegend: false,
+        name: the_name,
+        showlegend: the_bool,
         mode: 'lines',
         line: {
             color: the_color,
@@ -51,21 +81,44 @@ function normalizeTrace(rawTrace, info) {
     return rawTrace
 }
 
-let green = 'rgb(0, 255, 0)';
-let red = 'rgb(255, 0, 0)';
-let blue = 'rgb(0, 0, 255)';
-let orange = 'rgb(196,126,0)';
+function buildRange(plotData, variable, telemetryInfo) {
+    let variableIndex = 0;
+    for (let index in plotData) {
+        let traceInfo = plotData[index];
+        if (traceInfo['name'] === variable) {
+            variableIndex = index;
+        }
+    }
 
-export function processedPlotData(values_df, info_df, selectedVariables) {
+    let yaxis = plotData[variableIndex]['y'];
+    let lastValue = yaxis[yaxis.length - 1];
+
+    let upperLimit = telemetryInfo[variable]['high_critic_threshold'];
+    let lowerLimit = telemetryInfo[variable]['low_critic_threshold'];
+
+    let upperRange = Math.max(lastValue, upperLimit);
+    let lowerRange = Math.min(lastValue, lowerLimit);
+    let delta = upperRange - lowerRange;
+    let margin = 0.05 * delta;
+    let range = [lowerRange - margin, upperRange + margin];
+
+    return range
+}
+
+let blue = '#0AFEFF';
+let red = 'rgba(255,0,0,0.8)';
+let orange = 'rgba(196,126,0,0.8)';
+
+let green = 'rgb(33,255,0)';
+let pink = 'rgb(255,0,240)';
+
+export function processedPlotData(telemetryDict, selectedVariables) {
     // Parse de jsoned dataframe to a javascript object
-    let values = JSON.parse(values_df);
-    let info = JSON.parse(info_df);
+    let values = JSON.parse(telemetryDict['values']);
+    let info = JSON.parse(telemetryDict['info']);
 
-    // Parse the timestamp and convert it to an array object
-    // let timestamp = values['timestamp'];
-    // delete values['timestamp'];
+    // Build a time array for the xaxis
     let xaxis = [];
-    // xaxis = dataframeToArray(timestamp);
     for (let i = 0; i < 60; i++) {
         let stamp = i - 59;
         xaxis.push(stamp.toString());
@@ -80,19 +133,19 @@ export function processedPlotData(values_df, info_df, selectedVariables) {
 
         // Build main trace
         let trace = buildTrace(variable, values, xaxis);
-        trace['line'] = {color: blue};
+       // trace['line'] = {color: pink};
         processedData.push(trace);
 
         // Build threshold and nominal traces
-        trace = buildThresholdTrace(xaxis, info[variable]['low_critic_threshold'], red, 'solid');
+        trace = buildThresholdTrace(xaxis, info[variable]['low_critic_threshold'], red, 'dot', 'Critical Limits', true);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['low_warning_threshold'], red, 'dot');
+        trace = buildThresholdTrace(xaxis, info[variable]['low_warning_threshold'], orange, 'dot', 'Warning Limits', true);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['nominal'], green, 'solid');
+        trace = buildThresholdTrace(xaxis, info[variable]['nominal'], blue, 'dot', 'Nominal value', true);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['high_warning_threshold'], red, 'dot');
+        trace = buildThresholdTrace(xaxis, info[variable]['high_warning_threshold'], orange, 'dot', 'Warning Limits', false);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['high_critic_threshold'], red, 'solid');
+        trace = buildThresholdTrace(xaxis, info[variable]['high_critic_threshold'], red, 'dot', 'Critical Limits', false);
         processedData.push(trace);
     }
     else if (selectedVariables.length === 2) {
@@ -101,12 +154,12 @@ export function processedPlotData(values_df, info_df, selectedVariables) {
 
         // Build first variable trace
         trace = buildTrace(selectedVariables[0], values,  xaxis);
-        trace['line'] = {color: blue};
+        // trace['line'] = {color: pink};
         processedData.push(trace);
 
         // Build second variable trace
         trace = buildTrace(selectedVariables[1], values,  xaxis);
-        trace['line'] = {color: orange};
+        // trace['line'] = {color: green};
         trace['yaxis'] = 'y2';
         processedData.push(trace);
     }
@@ -122,53 +175,66 @@ export function processedPlotData(values_df, info_df, selectedVariables) {
     return processedData
 }
 
-export function setLayout(selectedVariables, selectedVariablesUnits) {
+export function setLayout(selectedVariables, telemetryInfo, plotData) {
+    let selectedVariablesUnits = {};
+    for (let index in selectedVariables) {
+        let variable = selectedVariables[index];
+        let units = telemetryInfo[variable]['units'];
+        selectedVariablesUnits[variable] = units;
+    }
+
     let layout = {
         height: 200,
-        margin: {l: 20, r: 50, b: 20, t: 20, pad: 0},
-        showlegend: false,
-        side: 'right',
+        margin: {l: 60, r: 20, b: 20, t: 20, pad: 0},
+        showlegend: true,
+        legend: {orientation: 'h'},
+        plot_bgcolor: '#111111',
+        paper_bgcolor: '#111111',
+        xaxis: {
+            tickcolor: '#666666',
+            showgrid: false,
+        },
+        yaxis: {
+            side: 'left',
+            title: '',
+            titlefont: {color: '#0AFEFF',},
+            tickfont: {color: '#0AFEFF',},
+            tickcolor: '#0AFEFF',
+            gridcolor: '#666666',
+            linecolor: '#666666',
+        }
     };
 
     if (selectedVariables.length === 1) {
         let variable = selectedVariables[0];
         let units = selectedVariablesUnits[variable];
         let label = variable + ' [' + units + ']';
-        layout['yaxis'] = {
-            title: label,
-            side: 'right'
-        };
+        layout['yaxis']['title'] = label;
     }
     else if (selectedVariables.length === 2) {
-        layout['margin']['l'] = 50;
-        let variableRight = selectedVariables[0];
-        let unitsRight = selectedVariablesUnits[variableRight];
-        let labelRight = variableRight + ' [' + unitsRight + ']';
-        let variableLeft = selectedVariables[1];
+        layout['margin']['r'] = 60;
+
+        let variableLeft = selectedVariables[0];
         let unitsLeft = selectedVariablesUnits[variableLeft];
         let labelLeft = variableLeft + ' [' + unitsLeft + ']';
 
-        layout['yaxis'] = {
-            title: labelRight,
-            side: 'right',
-            titlefont: {color: blue},
-            tickfont: {color: blue},
-        };
-        layout['yaxis2'] = {
-            title: labelLeft,
-            side: 'left',
-            titlefont: {color: orange},
-            tickfont: {color: orange},
-            overlaying: 'y',
-        }
+        let variableRight = selectedVariables[1];
+        let unitsRight = selectedVariablesUnits[variableRight];
+        let labelRight = variableRight + ' [' + unitsRight + ']';
+
+        layout['yaxis']['title'] = labelLeft;
+        layout['yaxis']['range'] = buildRange(plotData, variableLeft, telemetryInfo);
+
+        layout['yaxis2'] = JSON.parse(JSON.stringify(layout['yaxis']));
+        layout['yaxis2']['title'] = labelRight;
+        layout['yaxis2']['range'] = buildRange(plotData, variableRight, telemetryInfo);
+        layout['yaxis2']['side'] = 'right';
+        layout['yaxis2']['overlaying'] = 'y';
+
+        layout['showlegend'] = true;
     }
     else if (selectedVariables.length > 2) {
-        layout['yaxis'] = {
-            title: 'Deviation from nominal (%)',
-            side: 'right',
-            // range: [-5, 5],
-        };
-        layout['showlegend'] = true;
+        layout['yaxis']['title'] = 'Nominal deviation [%]';
     }
 
     return layout
