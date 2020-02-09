@@ -219,13 +219,13 @@ instrument-orbits pairings appear most often in the best architectures you can f
                 }
             ],
         },
-        no_daphne: {
+        with_daphne: {
             restrictedQuestions: null,
             nextStage: '',
             startTime: 0,
             stageDuration: 60*20
         },
-        daphne_assistant: {
+        without_daphne: {
             restrictedQuestions: {
             },
             nextStage: '',
@@ -244,7 +244,7 @@ const actions = {
     async startExperiment({ state, commit }) {
         // Call server to start experiment
         try {
-            let response = await fetchGet(API_URL + 'experiment/start-experiment');
+            let response = await fetchGet(API_URL + 'experiment-at/start-experiment');
             if (response.ok) {
                 let experimentStages = await response.json();
                 // Start the experiment: set the order of the conditions after the tutorial
@@ -252,8 +252,6 @@ const actions = {
                 for (let i = 0; i < experimentStages.length - 1; ++i) {
                     commit('setNextStage', { experimentStage: experimentStages[i], nextStage: experimentStages[i+1] });
                 }
-                // Start the websockets after completing the request so the session cookie is already set
-                await wsTools.experimentWsConnect();
             }
             else {
                 console.error('Error starting the experiment.');
@@ -268,7 +266,7 @@ const actions = {
         // Call server to start stage
         try {
             let nextStage = state.currentStageNum;
-            let response = await fetchGet(API_URL + 'experiment/start-stage/' + nextStage);
+            let response = await fetchGet(API_URL + 'experiment-at/start-stage/' + nextStage);
             if (response.ok) {
                 let startDateData = await response.json();
                 // Start the stage: get the starting time from the server information
@@ -290,7 +288,7 @@ const actions = {
         // Call server to finish stage
         try {
             let currentStage = state.currentStageNum - 1;
-            let response = await fetchGet(API_URL + 'experiment/finish-stage/' + currentStage);
+            let response = await fetchGet(API_URL + 'experiment-at/finish-stage/' + currentStage);
             if (response.ok) {
                 let experimentInformation = await response.json();
                 // Stage is finished!
@@ -308,7 +306,7 @@ const actions = {
     async finishExperiment({ state, commit }) {
         // Call server to finish experiment
         try {
-            let response = await fetchGet(API_URL + 'experiment/finish-experiment');
+            let response = await fetchGet(API_URL + 'experiment-at/finish-experiment');
             if (response.ok) {
                 let experimentInformation = await response.json();
                 // Finish the experiment: set inExperiment to false
@@ -327,7 +325,7 @@ const actions = {
     async recoverExperiment({ state, commit, rootState, dispatch }) {
         // Call server to see if there is an experiment already running
         try {
-            let response = await fetchGet(API_URL + 'experiment/reload-experiment');
+            let response = await fetchGet(API_URL + 'experiment-at/reload-experiment');
             if (response.ok) {
                 let experimentInformation = await response.json();
                 if (experimentInformation.is_running) {
@@ -335,27 +333,11 @@ const actions = {
                     commit('setIsRecovering', true);
                     commit('restoreAuth', experimentInformation.experiment_data.auth);
                     // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
-                    commit('restoreProblem', experimentInformation.experiment_data.problem);
-                    let problemInfo = chooseProblem(rootState.problem.problemName);
-                    commit('setProblemFunctions', problemInfo.problem);
-                    commit('restoreFilter', experimentInformation.experiment_data.filter);
-                    commit('setFilterFunctions', problemInfo.filter);
-                    commit('restoreTradespacePlot', experimentInformation.experiment_data.tradespacePlot);
                     commit('restoreDaphne', experimentInformation.experiment_data.daphne);
-                    commit('restoreFunctionalityList', experimentInformation.experiment_data.functionalityList);
-                    commit('restoreDataMining', experimentInformation.experiment_data.dataMining);
-                    commit('restoreFeatureApplication', experimentInformation.experiment_data.featureApplication);
-                    commit('restoreActive', experimentInformation.experiment_data.active);
                     commit('restoreExperiment', experimentInformation.experiment_data.experiment);
                     // Start the websockets after completing the request so the session cookie is already set
                     await wsTools.experimentWsConnect();
-                    // Start the Websocket
                     await wsTools.wsConnect(this);
-                    await dispatch('stopBackgroundTasks');
-                    if (state.stageInformation[state.experimentStage].availableFunctionalities.includes('BackgroundSearch')) {
-                        dispatch("startBackgroundSearch");
-                    }
-                    dispatch('setProblemParameters');
                 }
             }
             else {

@@ -31,6 +31,22 @@ class WebsocketTools {
             websocket.onmessage = (event) => store.dispatch("onWebsocketsMessage", event);
         });
     }
+
+    async experimentWsConnect() {
+        this.experimentWebsocket = new WebSocket(WS_URL + 'at/experiment');
+        this.experimentWebsocket.onopen = function() {
+            console.log('Experiment Web Socket Connection Made');
+        };
+        this.experimentWebsocket.onmessage = function (data) {};
+    }
+
+    async wsRefresh() {
+        this.websocket.refresh();
+    }
+
+    async experimentWsRefresh() {
+        this.experimentWebsocket.refresh();
+    }
 }
 
 export let wsTools = new WebsocketTools();
