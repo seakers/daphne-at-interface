@@ -15,7 +15,7 @@
 <script>
     import QuestionBar from "./QuestionBar";
     import TextResponse from './TextResponse';
-    // import ListResponse from './ListResponse';
+    import ListResponse from './ListResponse';
     // import TimelineResponse from './TimelineResponse';
     // import ActiveMessage from "./ActiveMessage";
     import {mapState} from "vuex";
@@ -24,7 +24,7 @@
         components: {
             QuestionBar,
             TextResponse,
-            // ListResponse,
+            ListResponse,
             // TimelineResponse,
             // ActiveMessage
         },
@@ -32,7 +32,7 @@
             return {
                 responseTypes: {
                     text: 'TextResponse',
-                    // list: 'ListResponse',
+                    list: 'ListResponse',
                     // timeline_plot: 'TimelineResponse',
                     // active_message: 'ActiveMessage'
                 }
