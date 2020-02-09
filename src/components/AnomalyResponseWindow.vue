@@ -25,20 +25,25 @@
             </multiselect>
         </div>
         <div v-for="(Info, anomalyName) in selectedAnomaliesInfo" class="is-content">
+            <div class="horizontal-divider"></div>
             <div class="columns">
-                <div class="column is-4">
+                <div class="column is-5">
                     <u>Anomaly name</u>
                     <p>{{anomalyName}}</p>
-                </div>
-                <div class="column is-4">
-                    <u>Procedure to be followed</u>
+                    <br>
+                    <u>Name of the procedure to be followed</u>
                     <p>{{Info['procedure']}}</p>
                 </div>
-                <div class="column is-6">
-                    <u>Current procedure step</u>
-                    <p>{{Info['stepsList'][Info['currentStep']]}}</p>
+                <div class="column is-7">
+                    <u>Steps to be followed</u>
+                    <div class="scrollable-container">
+                        <div v-for="step in Info['stepsList']">
+                            <input type="checkbox" /> {{step}} <br />
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="horizontal-divider"></div>
         </div>
     </div>
 </template>
