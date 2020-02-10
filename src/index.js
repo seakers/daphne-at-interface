@@ -71,6 +71,9 @@ store.subscribe(async (mutation, state) => {
 let app = new Vue({
     el: '#app',
     store,
+    propsData: {
+        isViewer: false
+    },
     render: h => h(App)
 });
 
