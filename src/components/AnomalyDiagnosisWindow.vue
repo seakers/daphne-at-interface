@@ -74,7 +74,7 @@
                 this.$store.commit('clearSelectedSymptom', symptom);
             },
             requestDiagnosis() {
-                this.$store.commit('requestDiagnosis', this.selectedSymptomsList);
+                this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
             },
             selectAnomaly(anomalyName) {
                 if (!this.selectedAnomalies.includes(anomalyName)) {

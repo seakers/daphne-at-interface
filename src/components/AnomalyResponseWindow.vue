@@ -132,7 +132,7 @@
                 this.$store.commit('removeSelectedAnomaly', anomalyName)
             },
             loadAnomalies() {
-                this.$store.commit('loadAllAnomalies');
+                this.$store.dispatch('loadAllAnomalies');
             },
             isChecked(procedure, index) {
                 let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
