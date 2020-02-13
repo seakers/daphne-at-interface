@@ -81,7 +81,7 @@ const actions = {
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
-                console.log(data['response']['visual_answer_type']);
+                console.log(data['response']['visual_message_type']);
                 commit('addDialoguePiece', data['response']);
             }
             else {
