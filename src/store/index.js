@@ -1,12 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import auth from './modules/auth';
 import daphne from './modules/daphne';
-import experiment from './modules/experiment';
-
-// Anomaly code
 import telemetryFeed from './modules/daphne-at';
+import experiment from './modules/experiment';
 import {processedPlotData} from "../scripts/at-display-builders";
-import { mapGetters, mapMutations } from 'vuex';
 
 Vue.use(Vuex);
 
@@ -48,6 +46,7 @@ export default new Vuex.Store({
         },
     },
     modules: {
+        auth,
         daphne,
         experiment,
         telemetryFeed

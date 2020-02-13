@@ -12,7 +12,7 @@ let SpeechKITT = window.SpeechKITT;
 let responsiveVoice = window.responsiveVoice;
 
 // Styles
-import 'intro.js/introjs.css';
+import 'shepherd.js/dist/css/shepherd.css';
 import './styles/app.scss';
 
 // Record state and mutations when inside an experiment
@@ -22,14 +22,14 @@ let mutationBlackList = ['setIsLoading', 'resetDaphne', 'clearFeatures',
     'restoreDaphne', 'restoreExperiment', 'setIsRecovering'];
 let updatesContextList = ['updateTelemetryValuesAndInfo'];
 
-// Experiment Websocket connection
+
 store.subscribe(async (mutation, state) => {
     // Only update if inside experiment
     if (state.experiment.inExperiment) {
         // Only update mutations if after tutorial (currentStageNum > 0)
         if (state.experiment.currentStageNum > 0 && !mutationBlackList.includes(mutation.type)) {
             // Upload mutation to server
-            state.experiment.experimentWebsocket.send(JSON.stringify({
+            wsTools.experimentWebsocket.send(JSON.stringify({
                 msg_type: 'add_action',
                 stage: state.experiment.currentStageNum - 1,
                 action: mutation
@@ -39,7 +39,7 @@ store.subscribe(async (mutation, state) => {
         // Upload new state to server
         if (stateTimer === 0) {
             stateTimer = window.setInterval(async () => {
-                state.experiment.experimentWebsocket.send(JSON.stringify({
+                wsTools.experimentWebsocket.send(JSON.stringify({
                     msg_type: 'update_state',
                     state: state
                 }));
@@ -74,6 +74,9 @@ store.subscribe(async (mutation, state) => {
 let app = new Vue({
     el: '#app',
     store,
+    propsData: {
+        isViewer: false
+    },
     render: h => h(App)
 });
 
