@@ -6,7 +6,7 @@
         <div class="is-centered is-content">
             <div class="columns">
                 <div class="column is-10">
-                    <div class="box is-stretched space-marker">
+                    <div class="box is-stretched space-marker" style="background-color: #111111">
 <!--                        <label class="typo__label">Select the telemetry feed variables to be displayed</label>-->
                         <multiselect
                                 :value="value"

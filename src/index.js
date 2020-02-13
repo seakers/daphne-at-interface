@@ -62,7 +62,6 @@ store.subscribe(async (mutation, state) => {
                 new_context: {
                     atcontext: {
                         current_telemetry_values: mutation.payload['values'],
-                        current_telemetry_info: mutation.payload['info']
                     }
                 }
             }));

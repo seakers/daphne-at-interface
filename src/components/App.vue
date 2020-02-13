@@ -1,8 +1,8 @@
 <template>
-    <div class="is-seclss-background-black">
+    <div class="is-seclss-background-black is-vertical-filler">
         <div class="horizontal-divider"></div>
-        <div class="columns" style="margin-bottom: 5px">
-            <div class="column is-8.9">
+        <div class="columns is-vertical-filler" style="margin-bottom: 5px">
+            <div class="column is-8.9 is-vertical-filler">
                 <div class="box is-main" style="margin-bottom: 5px">
                     <anomaly-detection-window></anomaly-detection-window>
                 </div>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="vertical-divider"></div>
-            <div class="column is-3">
+            <div class="column is-3 is-vertical-filler">
                 <chat-window class="column"></chat-window>
             </div>
         </div>

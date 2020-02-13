@@ -1,23 +1,25 @@
 import {fetchPost} from "../../scripts/fetch-helpers";
 
 const state = {
-    // Telemetry slot variables
-    telemetryPlotData: [],
-    telemetryInputVariables: [],
-    telemetryPlotSelectedVariables: [],
-    telemetryIsOngoing: false,
-    telemetryValues: '',
-    telemetryInfo: '',
+    // Telemetry related variables
+    telemetryInputVariables: [], // A list of all the telemetry variables. Used for the telemetry plot dropdown menu.
+    telemetryPlotSelectedVariables: [], // A list of the telemetry variables selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
+    telemetryPlotData: [], // Contains formatted telemetry feed values so that they can be properly plotted using vue.plotly.
+    telemetryIsOngoing: false, // Self descriptive.
+    telemetryValues: '', // A string that stores the telemetry values as a jsoned dataframe.
+    telemetryInfo: '', // A string that stores the telemetry info as a jsoned dataframe. To be deprecated.
 
-    // Symptoms detection and diagnosis slots variables
-    symptomsList: [],
-    selectedSymptomsList: [],
-    diagnosisReport: [],
+    // Symptoms detection and diagnosis related variables
+    symptomsList: [], // A list of all the currently detected symptoms.
+    selectedSymptomsList: [], // A list of the symptoms selected by the user to be diagnosed.
+    diagnosisReport: [], // Contains the information related to a requested diagnosis.
 
-    // Anomaly treatment slot variables
-    selectedAnomaliesList: [],
-    selectedAnomaliesInfo: {},
-    allAnomaliesList: [],
+    // Anomaly treatment related variables
+    selectedAnomaliesList: [], // A list of the anomalies selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
+    selectedAnomaliesInfo: {}, // A dictionary with all the information of each of the selected anomalies.
+    allAnomaliesList: [], // A list of all the anomalies that are present in the knowledge graph. Used for the telemetry plot dropdown menu.
+    selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies.
+    selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
 };
 
 const getters = {
@@ -34,6 +36,8 @@ const getters = {
     getSelectedAnomaliesList(state) {return state.selectedAnomaliesList},
     getSelectedAnomaliesInfo(state) {return state.selectedAnomaliesInfo},
     getAllAnomaliesList(state) {return state.allAnomaliesList},
+    getSelectedProceduresList(state) {return state.selectedProceduresList},
+    getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
 };
 
 const actions = {
@@ -70,11 +74,15 @@ const actions = {
         }
     },
     async parseAndAddSelectedAnomaly({state, commit}, anomalyName) {
-        let procedure = await Promise.resolve(this.dispatch('retrieveProcedureFromAnomaly', anomalyName));
-        let stepsList = await Promise.resolve(this.dispatch('retrieveStepsFromProcedure', procedure));
-        let currentStep = 0;
-        let anomalyInfo = {'procedure': procedure, 'stepsList': stepsList, 'currentStep': currentStep};
-        let newAnomalyDict = {'anomalyName': anomalyName, 'anomalyInfo': anomalyInfo};
+        let procedures = await Promise.resolve(this.dispatch('retrieveProcedureFromAnomaly', anomalyName));
+        let proceduresList = [];
+        for (let index in procedures) {
+            let procedure = procedures[index];
+            let stepsList = await Promise.resolve(this.dispatch('retrieveStepsFromProcedure', procedure));
+            let procedureInfo = {'procedureName': procedure, 'procedureStepsList': stepsList};
+            proceduresList.push(procedureInfo)
+        }
+        let newAnomalyDict = {'anomalyName': anomalyName, 'anomalyProceduresList': proceduresList};
         commit('addSelectedAnomaly', newAnomalyDict);
     }
 };
@@ -155,9 +163,21 @@ const mutations = {
     },
     async addSelectedAnomaly(state, newAnomalyDict) {
         let anomalyName = newAnomalyDict['anomalyName'];
-        let anomalyInfo = newAnomalyDict['anomalyInfo'];
+        let anomalyProceduresInfoList = newAnomalyDict['anomalyProceduresList'];
+        let proceduresNameList = [];
+        for (let index in anomalyProceduresInfoList) {
+            let procedure = anomalyProceduresInfoList[index];
+            let procedureName = procedure['procedureName'];
+            if (!state.selectedProceduresList.includes(procedureName)) {
+                let procedureStepsList = procedure['procedureStepsList'];
+                let procedureInfo = {'procedureStepsList': procedureStepsList, 'currentStep': 0};
+                state.selectedProceduresList.push(procedureName);
+                state.selectedProceduresInfo[procedureName] = procedureInfo;
+            }
+            proceduresNameList.push(procedureName)
+        }
         state.selectedAnomaliesList.push(anomalyName);
-        state.selectedAnomaliesInfo[anomalyName] = anomalyInfo;
+        state.selectedAnomaliesInfo[anomalyName] = {'anomalyProceduresList': proceduresNameList};
     },
     async removeSelectedAnomaly(state, anomalyName) {
         let selectedAnomaliesList = state.selectedAnomaliesList;
@@ -170,6 +190,12 @@ const mutations = {
         }
         state.selectedAnomaliesList.splice(indexToDelete, 1);
         delete state.selectedAnomaliesInfo[anomalyName];
+    },
+    updateProcedureCurrentStep(state, commitInfo) {
+        console.log('Updating procedure step!');
+        let procedureName = commitInfo['procedureName'];
+        let newCurrentStep = commitInfo['newCurrentStep'];
+        state.selectedProceduresInfo[procedureName]['currentStep'] = newCurrentStep;
     }
 };
 

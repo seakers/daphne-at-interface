@@ -24,21 +24,38 @@
                     @remove="newDeselection">
             </multiselect>
         </div>
-        <div v-for="(Info, anomalyName) in selectedAnomaliesInfo" class="is-content">
+        <div v-for="anomaly in selectedAnomaliesList" class="is-content">
             <div class="horizontal-divider"></div>
             <div class="columns">
                 <div class="column is-5">
-                    <u>Anomaly name</u>
-                    <p>{{anomalyName}}</p>
+                    <p class="is-mini-title">Anomaly name</p>
+                    <p>{{anomaly}}</p>
                     <br>
-                    <u>Name of the procedure to be followed</u>
-                    <p>{{Info['procedure']}}</p>
+                    <p class="is-mini-title">Name of the procedure(s) to be followed</p>
+                    <ul v-for="procedure in selectedAnomaliesInfo[anomaly]['anomalyProceduresList']">
+                        <li style="list-style-type: disc; margin-left: 30px">
+                            {{procedure}}
+                        </li>
+                    </ul>
                 </div>
                 <div class="column is-7">
-                    <u>Steps to be followed</u>
-                    <div class="scrollable-container">
-                        <div v-for="step in Info['stepsList']">
-                            <input type="checkbox" /> {{step}} <br />
+                    <p class="is-mini-title">Steps to be followed for each procedure</p>
+                    <div v-for="(procedure in selectedAnomaliesInfo[anomaly]['anomalyProceduresList']">
+                        <br><b>
+                            {{procedure}}
+                            ({{selectedProceduresInfo[procedure]['currentStep']}}
+                            out of
+                            {{selectedProceduresInfo[procedure]['procedureStepsList'].length}}
+                        steps completed)
+                        </b>
+                        <div  class="scrollable-container">
+                            <div v-for="(stepName, index) in selectedProceduresInfo[procedure]['procedureStepsList']">
+                                <input type="checkbox" v-on:click="checkIt(procedure)"
+                                       :checked="checkBoxInfo[procedure]['isDone'][index]"
+                                       :disabled="!checkBoxInfo[procedure]['isEnabled'][index]">
+                                {{stepName}}
+                                <br />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,6 +78,8 @@
                 selectedAnomaliesList: 'getSelectedAnomaliesList',
                 selectedAnomaliesInfo: 'getSelectedAnomaliesInfo',
                 allAnomalies: 'getAllAnomaliesList',
+                selectedProceduresList: 'getSelectedProceduresList',
+                selectedProceduresInfo: 'getSelectedProceduresInfo',
             }),
             value ()  {
                 let anomalies = this.selectedAnomaliesList;
@@ -79,6 +98,28 @@
                 }
                 return aux;
             },
+            checkBoxInfo () {
+                let procedures = this.selectedProceduresList;
+                let proceduresInfo = this.selectedProceduresInfo;
+                let checkBoxInfo = {};
+                for (let index in procedures) {
+                    let procedureName = procedures[index];
+                    let totalSteps = proceduresInfo[procedureName]['procedureStepsList'].length;
+                    let currentStep = proceduresInfo[procedureName]['currentStep'];
+                    let isDone = new Array(totalSteps).fill(false);
+                    let isEnabled = new Array(totalSteps).fill(false);
+                    for (let i = 0; i < totalSteps; i++) {
+                        if (i < currentStep) {
+                            isDone[i] = true;
+                        }
+                        if (currentStep - 1 <= i && i <= currentStep) {
+                            isEnabled[i] = true;
+                        }
+                    }
+                    checkBoxInfo[procedureName] = {'isDone': isDone, 'isEnabled': isEnabled};
+                }
+                return checkBoxInfo;
+            }
         },
 
         methods: {
@@ -93,6 +134,19 @@
             loadAnomalies() {
                 this.$store.commit('loadAllAnomalies');
             },
+            isChecked(procedure, index) {
+                let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
+                return index < currentStep;
+            },
+            isEnabled(procedure, index) {
+                let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
+                return index === currentStep || index === currentStep - 1;
+            },
+            checkIt(procedure) {
+                let newCurrentStep = this.selectedProceduresInfo[procedure]['currentStep'] + 1;
+                let commitInfo = {'procedureName': procedure, 'newCurrentStep': newCurrentStep};
+                this.$store.commit('updateProcedureCurrentStep', commitInfo);
+            }
         },
 
         mounted: function() {
