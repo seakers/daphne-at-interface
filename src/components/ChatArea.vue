@@ -8,13 +8,14 @@
 
 <script>
     import TextResponse from "./TextResponse";
+    import ListResponse from './ListResponse';
 
     export default {
         name: "ChatArea",
         props: ["dialogueHistory"],
         components: {
             TextResponse,
-            // ListResponse,
+            ListResponse,
             // TimelineResponse,
             // ActiveMessage
         },
@@ -22,7 +23,7 @@
             return {
                 responseTypes: {
                     text: 'TextResponse',
-                    // list: 'ListResponse',
+                    list: 'ListResponse',
                     // timeline_plot: 'TimelineResponse',
                     // active_message: 'ActiveMessage'
                 }
