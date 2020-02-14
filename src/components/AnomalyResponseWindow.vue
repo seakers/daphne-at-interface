@@ -24,37 +24,37 @@
                     @remove="newDeselection">
             </multiselect>
         </div>
-        <div v-for="anomaly in selectedAnomaliesList" class="is-content">
+
+        <div v-for="anomalyDict in anomalyList" class="is-content">
             <div class="horizontal-divider"></div>
             <div class="columns">
                 <div class="column is-5">
                     <p class="is-mini-title">Anomaly name</p>
-                    <p>{{anomaly}}</p>
+                    <p>{{anomalyDict['anomalyName']}}</p>
                     <br>
                     <p class="is-mini-title">Name of the procedure(s) to be followed</p>
-                    <ul v-for="procedure in selectedAnomaliesInfo[anomaly]['anomalyProceduresList']">
+                    <ul v-for="procedureDict in anomalyDict['anomalyProcedures']">
                         <li style="list-style-type: disc; margin-left: 30px">
-                            {{procedure}}
+                            {{procedureDict['procedureName']}}
                         </li>
                     </ul>
                 </div>
                 <div class="column is-7">
                     <p class="is-mini-title">Steps to be followed for each procedure</p>
-                    <div v-for="(procedure in selectedAnomaliesInfo[anomaly]['anomalyProceduresList']">
+                    <div v-for="procedureDict in anomalyDict['anomalyProcedures']">
                         <br><b>
-                            {{procedure}}
-                            ({{selectedProceduresInfo[procedure]['currentStep']}}
-                            out of
-                            {{selectedProceduresInfo[procedure]['procedureStepsList'].length}}
-                            steps performed)
-                            <span v-if="isComplete(procedure)" style="color: greenyellow"> COMPLETED</span>
-                            <span v-else style="color: red"> PENDING</span>
-                        </b>
+                        {{procedureDict['procedureName']}}
+                        ({{procedureDict['procedureCurrentStep']}}
+                        out of
+                        {{procedureDict['procedureSteps'].length}}
+                        steps performed)
+                        <span v-if="isComplete(procedureDict)" style="color: greenyellow"> COMPLETED</span>
+                        <span v-else style="color: red"> PENDING</span>
+                    </b>
                         <div  class="scrollable-container">
-                            <div v-for="(stepName, index) in selectedProceduresInfo[procedure]['procedureStepsList']">
-                                <input type="checkbox" v-on:click="checkIt(procedure, index)"
-                                       :checked="isChecked(procedure, index)" :disabled="!isEnabled(procedure, index)"
-                                       :key="componentKey">
+                            <div v-for="(stepName, index) in procedureDict['procedureSteps']">
+                                <input type="checkbox" v-on:click="checkIt(procedureDict, index)"
+                                       :checked="isChecked(procedureDict, index)" :disabled="!isEnabled(procedureDict, index)">
                                 {{stepName}}
                                 <br />
                             </div>
@@ -64,6 +64,7 @@
             </div>
             <div class="horizontal-divider"></div>
         </div>
+
     </div>
 </template>
 
@@ -77,7 +78,7 @@
 
         data() {
             return {
-                componentKey: false,
+                dodgeThis: false,
             }
         },
 
@@ -106,12 +107,50 @@
                 }
                 return aux;
             },
+            anomalyList() {
+                // **************************************************
+                // The idea is to build a list object named anomalyList where each element is a dictionary with the information of each selected anomaly:
+                //     anomalyList = [anomalyDict1, anomalyDict2, ...]
+                //     Where the anomalyDict dictionary is as follows:
+                //          anomalyDict = {'anomalyName': string, 'anomalyProcedures': procedureList}
+                //          Where the procedureList list is as follows:
+                //               procedureList = [procedureDict1, procedureDict2, ...]
+                //               Where the procedureDict dictionary is as follows:
+                //                    procedureDict = {'procedureName': string, 'procedureSteps': procedureList, 'procedureCurrentStep': int}
+                // **************************************************
+
+                // Do it
+                let dodgeThis = this.dodgeThis;
+                let anomalyList = [];
+                for (let anomalyIndex in this.selectedAnomaliesList) {
+                    let anomalyDict = {};
+                    let anomalyName = this.selectedAnomaliesList[anomalyIndex];
+                    let procedureList = [];
+                    for (let procedureIndex in this.selectedAnomaliesInfo[anomalyName]['anomalyProcedures']) {
+                        let procedureDict = {};
+                        let procedureName = this.selectedAnomaliesInfo[anomalyName]['anomalyProcedures'][procedureIndex];
+                        let procedureSteps = this.selectedProceduresInfo[procedureName]['procedureStepsList'];
+                        let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['currentStep'];
+                        procedureDict['procedureName'] = procedureName;
+                        procedureDict['procedureSteps'] = procedureSteps;
+                        procedureDict['procedureCurrentStep'] = procedureCurrentStep;
+                        procedureList.push(procedureDict);
+                    }
+                    anomalyDict['anomalyName'] = anomalyName;
+                    anomalyDict['anomalyProcedures'] = procedureList;
+                    anomalyList.push(anomalyDict);
+                }
+                console.log(anomalyList);
+                return anomalyList;
+            }
         },
 
         methods: {
             async newSelection(selectedAnomaly) {
                 let anomalyName = selectedAnomaly['name'];
-                await this.$store.dispatch('parseAndAddSelectedAnomaly', anomalyName);
+                if (!this.selectedAnomaliesList.includes(anomalyName)) {
+                    await this.$store.dispatch('parseAndAddSelectedAnomaly', anomalyName);
+                }
             },
             async newDeselection(deselectedAnomaly) {
                 let anomalyName = deselectedAnomaly['name'];
@@ -120,31 +159,31 @@
             loadAnomalies() {
                 this.$store.dispatch('loadAllAnomalies');
             },
-            isChecked(procedure, index) {
-                let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
+            isChecked(procedureDict, index) {
+                let currentStep = procedureDict['procedureCurrentStep'];
                 return index < currentStep;
             },
-            isEnabled(procedure, index) {
-                let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
+            isEnabled(procedureDict, index) {
+                let currentStep = procedureDict['procedureCurrentStep'];
                 return index === currentStep || index === currentStep - 1;
             },
-            checkIt(procedure, index) {
-                let isChecked = this.isChecked(procedure, index);
+            isComplete(procedureDict) {
+                let currentStep = procedureDict['procedureCurrentStep'];
+                let totalSteps = procedureDict['procedureSteps'].length;
+                return currentStep === totalSteps;
+            },
+            checkIt(procedureDict, index) {
+                let isChecked = this.isChecked(procedureDict, index);
                 let stepIncrement = 0;
                 if (isChecked) {stepIncrement = -1}
                 else {stepIncrement = 1}
-                let newCurrentStep = this.selectedProceduresInfo[procedure]['currentStep'] + stepIncrement;
-                let commitInfo = {'procedureName': procedure, 'newCurrentStep': newCurrentStep};
+                let newCurrentStep = procedureDict['procedureCurrentStep'] + stepIncrement;
+                let commitInfo = {'procedureName': procedureDict['procedureName'], 'newCurrentStep': newCurrentStep};
                 this.$store.commit('updateProcedureCurrentStep', commitInfo);
-                this.forceRerender();
+                this.shoot();
             },
-            forceRerender() {
-                this.componentKey = !this.componentKey;
-            },
-            isComplete(procedure) {
-                let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
-                let totalSteps = this.selectedProceduresInfo[procedure]['procedureStepsList'].length;
-                return currentStep === totalSteps;
+            shoot() {
+                this.dodgeThis = !this.dodgeThis;
             }
         },
 

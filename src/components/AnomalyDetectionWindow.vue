@@ -38,7 +38,7 @@
 
         methods: {
             selectSymptom(symptom) {
-                this.$store.commit('addSelectedSymptom', symptom);
+                this.$store.dispatch('addSelectedSymptom', symptom);
             }
         },
 

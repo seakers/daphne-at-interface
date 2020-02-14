@@ -71,7 +71,7 @@
 
         methods: {
             deselectSymptom(symptom) {
-                this.$store.commit('clearSelectedSymptom', symptom);
+                this.$store.dispatch('removeSelectedSymptom', symptom);
             },
             requestDiagnosis() {
                 this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);

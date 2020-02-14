@@ -133,7 +133,7 @@ export function processedPlotData(telemetryDict, selectedVariables) {
 
         // Build main trace
         let trace = buildTrace(variable, values, xaxis);
-       // trace['line'] = {color: pink};
+        // trace['line'] = {color: pink};
         processedData.push(trace);
 
         // Build threshold and nominal traces

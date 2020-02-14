@@ -92,20 +92,17 @@
 
         methods: {
             startTelemetry() {
-                this.$store.commit('switchTelemetryStatus');
                 this.$store.dispatch('startTelemetry');
             },
             stopTelemetry() {
-                this.$store.commit('switchTelemetryStatus');
                 this.$store.dispatch('stopTelemetry');
-                this.$store.commit('clearTelemetry');
             },
             newSelection(newElement) {
                 let newSelectedVariables = [];
                 for (let i = 0; i < newElement.length; i++) {
                     newSelectedVariables[i] = newElement[i]['name'];
                 }
-                this.$store.commit('updateSelectedVariables', newSelectedVariables);
+                this.$store.dispatch('updateSelectedVariables', newSelectedVariables);
             }
         },
 

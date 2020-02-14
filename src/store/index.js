@@ -32,16 +32,16 @@ export default new Vuex.Store({
                 console.log(received_info['text']);
             } else if (received_info['type'] === 'initialize_telemetry') {
                 let telemetryDict = received_info['content'];
-                commit('initializeTelemetry', telemetryDict);
+                dispatch('initializeTelemetry', telemetryDict);
             } else if (received_info['type'] === 'telemetry_update') {
                 let telemetryDict = received_info['content'];
                 let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(telemetryDict, selectedVariables);
-                commit('updateTelemetryPlotData', plotData);
-                commit('updateTelemetryValuesAndInfo', telemetryDict);
+                dispatch('updateTelemetryPlotData', plotData);
+                dispatch('updateTelemetryValuesAndInfo', telemetryDict);
             } else if (received_info['type'] === 'symptoms_report') {
                 let symptoms_report = received_info['content'];
-                commit('updateSymptomsReport', symptoms_report);
+                dispatch('updateSymptomsList', symptoms_report);
             }
         },
     },
