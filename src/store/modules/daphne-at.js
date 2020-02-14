@@ -122,40 +122,106 @@ const actions = {
             return ['ERROR']
         }
     },
-    async parseAndAddSelectedAnomaly({state, commit}, anomalyName) {
-        // This action requires making a single commit for various store variables (rendering problems otherwise). For
-        // this reason, a local copy of the each of the state variables is created and modified, and a single commit
-        // is made passing such modified copies as arguments.
-        // let selectedAnomaliesList = state.selectedAnomaliesList;
-        // let selectedAnomaliesInfo = state.selectedAnomaliesInfo;
-        // let selectedProceduresList = state.selectedProceduresList;
-        // let selectedProceduresInfo = state.selectedProceduresInfo;
-
-        // Update the selected anomalies and its info (in the state variables copy)
+    async addSelectedAnomaly({state, commit}, anomalyName) {
+        // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
+        // changes will be committed at the end of the action.
+        let newSelectedAnomaliesList = JSON.parse(JSON.stringify(state.selectedAnomaliesList));
+        let newSelectedAnomaliesInfo = JSON.parse(JSON.stringify(state.selectedAnomaliesInfo));
+        let newSelectedProceduresList = JSON.parse(JSON.stringify(state.selectedProceduresList));
+        let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
 
 
         // Retrieve a list with the names of all the procedures related to the anomaly
         let procedures = await Promise.resolve(this.dispatch('retrieveProcedureFromAnomaly', anomalyName));
 
+        // Update the copy of the state variables.
+        newSelectedAnomaliesList.push(anomalyName);
+        newSelectedAnomaliesInfo[anomalyName] = {'anomalyProcedures': procedures};
+
         // For each procedure in the list, check if it is already selected (because it may be related to an other selected anomaly)
         for (let index in procedures) {
             let procedureName = procedures[index];
-            if (!state.selectedProceduresList.includes(procedureName)) {
+            if (!newSelectedProceduresList.includes(procedureName)) {
                 // In case it is not already selected, retrieve its list of steps
                 let stepsList = await Promise.resolve(this.dispatch('retrieveStepsFromProcedure', procedureName));
                 let procedureInfo = {'procedureStepsList': stepsList, 'currentStep': 0};
 
                 // Commit the update on the procedure and its information
-                let commitInfo = {'procedureName': procedureName, 'procedureInfo': procedureInfo};
-                commit('mutateSelectedProceduresList', procedureName);
-                commit('mutateSelectedProceduresInfo', commitInfo);
+                newSelectedProceduresList.push(procedureName);
+                newSelectedProceduresInfo[procedureName] = procedureInfo;
             }
         }
 
-        // Commit the update on the anomaly and its information
-        let commitInfo = {'anomalyName': anomalyName, 'anomalyInfo': {'anomalyProcedures': procedures}};
-        commit('mutateSelectedAnomaliesList', anomalyName);
-        commit('mutateSelectedAnomaliesInfo', commitInfo);
+        // Perform the commits
+        commit('mutateSelectedAnomaliesList', newSelectedAnomaliesList);
+        commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
+        commit('mutateSelectedProceduresList', newSelectedProceduresList);
+        commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+    },
+    removeSelectedAnomaly({state, commit}, anomalyName) {
+        // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
+        // changes will be committed at the end of the action.
+        let newSelectedAnomaliesList = JSON.parse(JSON.stringify(state.selectedAnomaliesList));
+        let newSelectedAnomaliesInfo = JSON.parse(JSON.stringify(state.selectedAnomaliesInfo));
+        let newSelectedProceduresList = JSON.parse(JSON.stringify(state.selectedProceduresList));
+        let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
+
+        // For comfort, retrieve the list of procedures related to the anomaly to be removed.
+        let thisAnomalyProcedures = JSON.parse(JSON.stringify(state.selectedAnomaliesInfo[anomalyName]));
+
+        // Search the index of the anomaly to be deleted within the anomaly list
+        let indexAnomalyToDelete = 0;
+        for (let index in newSelectedAnomaliesList) {
+            let anomaly = newSelectedAnomaliesList[index];
+            if (anomaly === anomalyName) {
+                indexAnomalyToDelete = index;
+            }
+        }
+
+        // Delete the anomaly list item and the anomaly info key
+        newSelectedAnomaliesList.splice(indexAnomalyToDelete, 1);
+        delete newSelectedAnomaliesInfo[anomalyName];
+
+        // For each procedure related to the anomaly, check if it has to be deleted or not (that is, if there is any of
+        // the other selected anomalies that is also related to the procedure)
+        let proceduresToDelete = [];
+        for (let index in thisAnomalyProcedures) {
+            let procedure = thisAnomalyProcedures[index];
+            let isRelatedToAnotherAnomaly = false;
+            for (let otherAnomalyName in newSelectedAnomaliesInfo) {
+                // Note that the entry to the anomaly that has to be deleted has already been removed from the dictionary
+                let otherAnomalyProcedures = newSelectedAnomaliesInfo[otherAnomalyName];
+                if (otherAnomalyProcedures.includes(procedure)) {
+                    isRelatedToAnotherAnomaly = true;
+                }
+            }
+            if (!isRelatedToAnotherAnomaly) {
+                proceduresToDelete.push(procedure);
+            }
+        }
+
+        // For each procedure to be deleted...
+        for (let index in proceduresToDelete) {
+            // ... find the index of the procedure to be deleted from the procedure list...
+            let procedureToDelete = proceduresToDelete[index];
+            let indexProcedureToDelete = 0;
+            for (let index in newSelectedProceduresList) {
+                let procedure = newSelectedProceduresList[index];
+                if (procedure === procedureToDelete) {
+                    indexProcedureToDelete = index;
+                }
+            }
+
+            // Delete the procedure list item and the procedure info key
+            newSelectedProceduresList.splice(indexProcedureToDelete, 1);
+            delete newSelectedProceduresInfo[procedureToDelete];
+        }
+
+        // Perform the commits
+        commit('mutateSelectedAnomaliesList', newSelectedAnomaliesList);
+        commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
+        commit('mutateSelectedProceduresList', newSelectedProceduresList);
+        commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
     },
     async requestDiagnosis({state, commit}, selectedSymptomsList) {
         let reqData = new FormData();
@@ -178,44 +244,37 @@ const actions = {
             console.log('Error loading the anomalies list.');
         }
     },
+    async updateProcedureCurrentStep({state, commit}, newProcedureDict) {
+        // A copy of the state variable to be modified is made
+        let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
+
+        // The updated procedure information is parsed
+        let procedureName = newProcedureDict['procedureName'];
+        let newCurrentStep = newProcedureDict['procedureCurrentStep'];
+
+        // The copy is modified
+        newSelectedProceduresInfo[procedureName]['currentStep'] = newCurrentStep;
+
+        // Perform the commit
+        commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+    }
 };
 
 const mutations = {
     mutateTelemetryIsOngoing(state) {state.telemetryIsOngoing = !state.telemetryIsOngoing},
-    mutateTelemetryPlotData(state, telemetryData) {state.telemetryPlotData = telemetryData},
-    mutateTelemetryValues(state, telemetryValues) {state.telemetryValues = telemetryValues},
-    mutateTelemetryInfo(state, telemetryInfo) {state.telemetryInfo = telemetryInfo},
-    mutateTelemetryInputVariables(state, telemetryVariablesNames) {state.telemetryInputVariables = telemetryVariablesNames},
-    mutateTelemetryPlotSelectedVariables(state, telemetryPlotSelectedVariables) {state.telemetryPlotSelectedVariables = telemetryPlotSelectedVariables},
-    mutateSymptomsList(state, symptomsList) {state.symptomsList = symptomsList},
-    mutateSelectedSymptomsList(state, selectedSymptomsList) {state.symptomsList = selectedSymptomsList},
-    mutateDiagnosisReport(state, diagnosisReport) {state.diagnosisReport = diagnosisReport},
-    mutateAllAnomaliesList(state, allAnomaliesList) {state.allAnomaliesList = allAnomaliesList},
-
-    mutateSelectedAnomaliesList(state, anomalyName) {state.selectedAnomaliesList.push(anomalyName)},
-    mutateSelectedAnomaliesInfo(state, commitInfo) {state.selectedAnomaliesInfo[commitInfo['anomalyName']] = commitInfo['anomalyInfo']},
-    mutateSelectedProceduresList(state, procedureName) {state.selectedProceduresList.push(procedureName)},
-    mutateSelectedProceduresInfo(state, commitInfo) {state.selectedProceduresInfo[commitInfo['procedureName']] = commitInfo['procedureInfo']},
-
-    //////
-    removeSelectedAnomaly(state, anomalyName) {
-        let selectedAnomaliesList = state.selectedAnomaliesList;
-        let indexToDelete = 0;
-        for (let index in selectedAnomaliesList) {
-            let anomaly = selectedAnomaliesList[index];
-            if (anomaly === anomalyName) {
-                indexToDelete = index;
-            }
-        }
-        state.selectedAnomaliesList.splice(indexToDelete, 1);
-        delete state.selectedAnomaliesInfo[anomalyName];
-    },
-    updateProcedureCurrentStep(state, commitInfo) {
-        let procedureName = commitInfo['procedureName'];
-        let newCurrentStep = commitInfo['newCurrentStep'];
-        console.log(newCurrentStep);
-        state.selectedProceduresInfo[procedureName]['currentStep'] = newCurrentStep;
-    }
+    mutateTelemetryPlotData(state, newVal) {state.telemetryPlotData = newVal},
+    mutateTelemetryValues(state, newVal) {state.telemetryValues = newVal},
+    mutateTelemetryInfo(state, newVal) {state.telemetryInfo = newVal},
+    mutateTelemetryInputVariables(state, newVal) {state.telemetryInputVariables = newVal},
+    mutateTelemetryPlotSelectedVariables(state, newVal) {state.telemetryPlotSelectedVariables = newVal},
+    mutateSymptomsList(state, newVal) {state.symptomsList = newVal},
+    mutateSelectedSymptomsList(state, newVal) {state.symptomsList = newVal},
+    mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal},
+    mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal},
+    mutateSelectedAnomaliesList(state, newVal) {state.selectedAnomaliesList = newVal},
+    mutateSelectedAnomaliesInfo(state, newVal) {state.selectedAnomaliesInfo = newVal},
+    mutateSelectedProceduresList(state, newVal) {state.selectedProceduresList = newVal},
+    mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal},
 };
 
 export default {

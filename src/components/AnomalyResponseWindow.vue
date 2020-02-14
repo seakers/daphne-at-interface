@@ -76,12 +76,6 @@
     export default {
         name: "AnomalyResponseWindow",
 
-        data() {
-            return {
-                dodgeThis: false,
-            }
-        },
-
         computed: {
             ...mapGetters({
                 selectedAnomaliesList: 'getSelectedAnomaliesList',
@@ -108,19 +102,7 @@
                 return aux;
             },
             anomalyList() {
-                // **************************************************
-                // The idea is to build a list object named anomalyList where each element is a dictionary with the information of each selected anomaly:
-                //     anomalyList = [anomalyDict1, anomalyDict2, ...]
-                //     Where the anomalyDict dictionary is as follows:
-                //          anomalyDict = {'anomalyName': string, 'anomalyProcedures': procedureList}
-                //          Where the procedureList list is as follows:
-                //               procedureList = [procedureDict1, procedureDict2, ...]
-                //               Where the procedureDict dictionary is as follows:
-                //                    procedureDict = {'procedureName': string, 'procedureSteps': procedureList, 'procedureCurrentStep': int}
-                // **************************************************
-
-                // Do it
-                let dodgeThis = this.dodgeThis;
+                let dodgeThis = this.dodgeThis; // ref2
                 let anomalyList = [];
                 for (let anomalyIndex in this.selectedAnomaliesList) {
                     let anomalyDict = {};
@@ -140,7 +122,6 @@
                     anomalyDict['anomalyProcedures'] = procedureList;
                     anomalyList.push(anomalyDict);
                 }
-                console.log(anomalyList);
                 return anomalyList;
             }
         },
@@ -149,12 +130,12 @@
             async newSelection(selectedAnomaly) {
                 let anomalyName = selectedAnomaly['name'];
                 if (!this.selectedAnomaliesList.includes(anomalyName)) {
-                    await this.$store.dispatch('parseAndAddSelectedAnomaly', anomalyName);
+                    await this.$store.dispatch('addSelectedAnomaly', anomalyName);
                 }
             },
             async newDeselection(deselectedAnomaly) {
                 let anomalyName = deselectedAnomaly['name'];
-                this.$store.commit('removeSelectedAnomaly', anomalyName)
+                this.$store.dispatch('removeSelectedAnomaly', anomalyName)
             },
             loadAnomalies() {
                 this.$store.dispatch('loadAllAnomalies');
@@ -173,18 +154,20 @@
                 return currentStep === totalSteps;
             },
             checkIt(procedureDict, index) {
+                // Compute wether the step is increased or decrased
                 let isChecked = this.isChecked(procedureDict, index);
                 let stepIncrement = 0;
                 if (isChecked) {stepIncrement = -1}
                 else {stepIncrement = 1}
                 let newCurrentStep = procedureDict['procedureCurrentStep'] + stepIncrement;
-                let commitInfo = {'procedureName': procedureDict['procedureName'], 'newCurrentStep': newCurrentStep};
-                this.$store.commit('updateProcedureCurrentStep', commitInfo);
-                this.shoot();
+
+                // Create an updated copy of the pocedure dictionary
+                let newProcedureDict = JSON.parse(JSON.stringify(procedureDict));
+                newProcedureDict['procedureCurrentStep'] = newCurrentStep;
+
+                // Perform the update
+                this.$store.dispatch('updateProcedureCurrentStep', newProcedureDict);
             },
-            shoot() {
-                this.dodgeThis = !this.dodgeThis;
-            }
         },
 
         mounted: function() {
@@ -202,3 +185,4 @@
 <style scoped>
 
 </style>
+
