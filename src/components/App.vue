@@ -88,12 +88,12 @@
         async mounted() {
             if (!this.isViewer) {
                 // Normal init code
-                /*await fetchPost('/api/auth/generate-session', new FormData());
+                await fetchPost('/api/auth/generate-session', new FormData());
                 // Connect to Websocket
-                await wsTools.wsConnect(this.$store);*/
+                await wsTools.wsConnect(this.$store);
 
                 // This is only for experiment!!!
-                // Generate the session
+                /*// Generate the session
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
 
                 // Tutorial
@@ -125,7 +125,7 @@
                             this.$store.commit('setInExperiment', true);
                         });
                     }
-                });
+                });*/
             }
         },
         watch: {

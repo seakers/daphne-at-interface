@@ -46,13 +46,15 @@
                             ({{selectedProceduresInfo[procedure]['currentStep']}}
                             out of
                             {{selectedProceduresInfo[procedure]['procedureStepsList'].length}}
-                        steps completed)
+                            steps performed)
+                            <span v-if="isComplete(procedure)" style="color: greenyellow"> COMPLETED</span>
+                            <span v-else style="color: red"> PENDING</span>
                         </b>
                         <div  class="scrollable-container">
                             <div v-for="(stepName, index) in selectedProceduresInfo[procedure]['procedureStepsList']">
-                                <input type="checkbox" v-on:click="checkIt(procedure)"
-                                       :checked="checkBoxInfo[procedure]['isDone'][index]"
-                                       :disabled="!checkBoxInfo[procedure]['isEnabled'][index]">
+                                <input type="checkbox" v-on:click="checkIt(procedure, index)"
+                                       :checked="isChecked(procedure, index)" :disabled="!isEnabled(procedure, index)"
+                                       :key="componentKey">
                                 {{stepName}}
                                 <br />
                             </div>
@@ -72,6 +74,12 @@
 
     export default {
         name: "AnomalyResponseWindow",
+
+        data() {
+            return {
+                componentKey: false,
+            }
+        },
 
         computed: {
             ...mapGetters({
@@ -98,28 +106,6 @@
                 }
                 return aux;
             },
-            checkBoxInfo () {
-                let procedures = this.selectedProceduresList;
-                let proceduresInfo = this.selectedProceduresInfo;
-                let checkBoxInfo = {};
-                for (let index in procedures) {
-                    let procedureName = procedures[index];
-                    let totalSteps = proceduresInfo[procedureName]['procedureStepsList'].length;
-                    let currentStep = proceduresInfo[procedureName]['currentStep'];
-                    let isDone = new Array(totalSteps).fill(false);
-                    let isEnabled = new Array(totalSteps).fill(false);
-                    for (let i = 0; i < totalSteps; i++) {
-                        if (i < currentStep) {
-                            isDone[i] = true;
-                        }
-                        if (currentStep - 1 <= i && i <= currentStep) {
-                            isEnabled[i] = true;
-                        }
-                    }
-                    checkBoxInfo[procedureName] = {'isDone': isDone, 'isEnabled': isEnabled};
-                }
-                return checkBoxInfo;
-            }
         },
 
         methods: {
@@ -142,10 +128,23 @@
                 let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
                 return index === currentStep || index === currentStep - 1;
             },
-            checkIt(procedure) {
-                let newCurrentStep = this.selectedProceduresInfo[procedure]['currentStep'] + 1;
+            checkIt(procedure, index) {
+                let isChecked = this.isChecked(procedure, index);
+                let stepIncrement = 0;
+                if (isChecked) {stepIncrement = -1}
+                else {stepIncrement = 1}
+                let newCurrentStep = this.selectedProceduresInfo[procedure]['currentStep'] + stepIncrement;
                 let commitInfo = {'procedureName': procedure, 'newCurrentStep': newCurrentStep};
                 this.$store.commit('updateProcedureCurrentStep', commitInfo);
+                this.forceRerender();
+            },
+            forceRerender() {
+                this.componentKey = !this.componentKey;
+            },
+            isComplete(procedure) {
+                let currentStep = this.selectedProceduresInfo[procedure]['currentStep'];
+                let totalSteps = this.selectedProceduresInfo[procedure]['procedureStepsList'].length;
+                return currentStep === totalSteps;
             }
         },
 

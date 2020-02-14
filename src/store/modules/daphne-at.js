@@ -18,7 +18,7 @@ const state = {
     selectedAnomaliesList: [], // A list of the anomalies selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
     selectedAnomaliesInfo: {}, // A dictionary with all the information of each of the selected anomalies.
     allAnomaliesList: [], // A list of all the anomalies that are present in the knowledge graph. Used for the telemetry plot dropdown menu.
-    selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies.
+    selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies. RELEVANT FOR THE CONTEXT.
     selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
 };
 
@@ -198,9 +198,9 @@ const mutations = {
         delete state.selectedAnomaliesInfo[anomalyName];
     },
     updateProcedureCurrentStep(state, commitInfo) {
-        console.log('Updating procedure step!');
         let procedureName = commitInfo['procedureName'];
         let newCurrentStep = commitInfo['newCurrentStep'];
+        console.log('Updating procedure step!', procedureName, newCurrentStep);
         state.selectedProceduresInfo[procedureName]['currentStep'] = newCurrentStep;
     }
 };
