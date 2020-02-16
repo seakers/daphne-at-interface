@@ -239,3 +239,163 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
 
     return layout
 }
+
+function markChildrenObtainNonChildrenIndex(procedure, stepIndex, checkThis) {
+    // Retrieve and parse some useful information for comfort
+    let totalSteps = procedure['procedureSteps'].length;
+    let currentDepth = procedure['procedureSteps'][stepIndex]['depth'];
+
+    // Initialize the iteration variable, the loop condition and an index to store the non-children position,
+    let nonChildrenIndex = -1;
+    let i = stepIndex;
+    let foundNonChildren = false;
+
+    // Loop. Note that this while always breaks because we reach the end of the array at some point.
+    while (!foundNonChildren) {
+        // Update the counter
+        i += 1;
+        // If the iteration variable is outside range, switch the loop condition (to break the while, although we
+        // actually haven't found a non-children)
+        if (i >= totalSteps) {break}
+        else {
+            // Retrieve next step depth
+            let nextDepth = procedure['procedureSteps'][i]['depth'];
+            // Check if it's a non children (non-children have equal or minor depth)
+            if (nextDepth <= currentDepth) {
+                foundNonChildren = true;
+                nonChildrenIndex = i;
+            }
+            else {
+                procedure['procedureSteps'][i]['isDone'] = checkThis;
+            }
+        }
+    }
+
+    return [procedure, nonChildrenIndex]
+}
+
+function uncheckAfterNonChildren(procedure, nonChildrenIndex) {
+    let foundNonChildren = (nonChildrenIndex !== -1);
+    let totalSteps = procedure['procedureSteps'].length;
+
+    if (foundNonChildren) {
+        for (let j = nonChildrenIndex; j < totalSteps; j++) {
+            procedure['procedureSteps'][j]['isDone'] = false;
+        }
+    }
+    return procedure
+}
+
+function checkAllExceptContainers(procedure, stepIndex, depthLimit) {
+    let isFirstOfThisDepthArray = [true, true, true];
+    if (stepIndex > 0) {
+        for (let j = stepIndex - 1; j >= 0; j--) {
+            // Retrieve step depth
+            let thisDepth = procedure['procedureSteps'][j]['depth'];
+            // Build the condition bools (for readability)
+            let isFirstOfThisDepth = isFirstOfThisDepthArray[thisDepth];
+            let hasMinorDepth = (thisDepth < depthLimit);
+            // Mark as checked or unchecked depending on the conditions
+            if (isFirstOfThisDepth && hasMinorDepth) {
+                procedure['procedureSteps'][j]['isDone'] = false;
+                isFirstOfThisDepthArray[thisDepth] = false;
+            }
+            else {
+                procedure['procedureSteps'][j]['isDone'] = true;
+            }
+        }
+    }
+    return procedure
+}
+
+function checkTheBox(procedure, stepIndex) {
+    // If we are in this function, that can only happen if we are checking a box that was previously unchecked.
+    // 1) All the following steps that are not "children steps" HAVE TO BE UNCHECKED.
+    //    1.1) We loop forward, we check all children and we find the first step that is not a children (if any).
+    //    1.2) We loop from such step onwards and we mark all of them as unchecked.
+    // 2) Note that, from 1.1), we know which is the next step that is not a children. Refer to it as X.
+    //    2.1) If X doesn't exist, then the procedure is finished and all steps should be checked. We can loop backwards
+    //         from the current step and mark all of them as finished.
+    //    2.2) If X exists, let D be its depth (which is for sure equal or minor than the current depth, since by
+    //         construction, it's not a children).
+    //         2.2.1) All the previous steps should be checked except the ones that "contain" our current step.
+    //                That is, we can loop backwards and mark all steps as checked except those which satisfy:
+    //                2.3.1) They have a minor depth than the current non-children step
+    //                AND
+    //                2.3.2) They are the first steps of their own depth that we find while looping backwards.
+
+    // Check the current step
+    procedure['procedureSteps'][stepIndex]['isDone'] = true;
+    let nonChildrenIndex;
+
+    // Set children to the same status and find first non-children index (step 1.1)
+    [procedure, nonChildrenIndex] = markChildrenObtainNonChildrenIndex(procedure, stepIndex, true);
+    let foundNonChildren = (nonChildrenIndex !== -1);
+
+    // Mark all steps after the first non-children as unchecked (1.2)
+    procedure = uncheckAfterNonChildren(procedure, nonChildrenIndex);
+
+    // If X doesn't exist, loop backwards and mark all steps as checked (2.1)
+    if (!foundNonChildren) {
+        if (stepIndex > 0) {
+            for (let j = stepIndex - 1; j >= 0; j--) {
+                procedure['procedureSteps'][j]['isDone'] = true;
+            }
+        }
+    }
+
+    // If X exists, define its depth (2.2)
+    let nonChildrenDepth = -1;
+    if (foundNonChildren) {
+        nonChildrenDepth = procedure['procedureSteps'][nonChildrenIndex]['depth'];
+
+        // Loop backwards and mark every step as checked except the ones that meet the said conditions (2.2.1)
+        procedure = checkAllExceptContainers(procedure, stepIndex, nonChildrenDepth);
+    }
+
+    return procedure
+}
+
+function uncheckTheBox(procedure, stepIndex) {
+    // If we are in this function, that can only happen if we are unchecking a box that was previously checked.
+    // 1) All the following steps that are not "children steps" HAVE TO BE UNCHECKED.
+    //    1.1) We loop forward, we check all children and we find the first step that is not a children (if any).
+    //    1.2) We loop from such step onwards and we mark all of them as unchecked.
+    // 2) All the previous steps should be checked except the ones that "contain" our current step.
+    //    That is, we can loop backwards and mark all steps as checked except those which satisfy:
+    //    2.1) They have a minor depth than the current step
+    //    AND
+    //    2.2) They are the first steps of their own depth that we find while looping backwards.
+
+    // Uncheck the current step
+    procedure['procedureSteps'][stepIndex]['isDone'] = false;
+    let nonChildrenIndex;
+
+    // Set children to the same status and find first non-children index (step 1.1)
+    [procedure, nonChildrenIndex] = markChildrenObtainNonChildrenIndex(procedure, stepIndex, false);
+
+    // Mark all steps after the first non-children as unchecked (1.2)
+    procedure = uncheckAfterNonChildren(procedure, nonChildrenIndex);
+
+    // Loop backwards and mark every step as checked except the ones that meet the said conditions (2.2.1)
+    let currentDepth = procedure['procedureSteps'][stepIndex]['depth'];
+    procedure = checkAllExceptContainers(procedure, stepIndex, currentDepth);
+
+    return procedure
+}
+
+export function updateCheckboxes(procedureDict, stepIndex) {
+    // Make a local copy of the argument. The name 'Dict' appendix is avoided for comfort
+    let procedure = JSON.parse(JSON.stringify(procedureDict));
+
+    // Local bool variable indicating whether the step box is checked or not (before update)
+    let isChecked = procedure['procedureSteps'][stepIndex]['isDone'];
+    let checkThisBox = !isChecked;
+
+    // Depending on whether the step box is being checked or not, check or uncheck its parent step boxes
+    if (checkThisBox) {procedure = checkTheBox(procedure, stepIndex)}
+    else {procedure = uncheckTheBox(procedure, stepIndex)}
+
+    // Return the updated procedure dictionary
+    return procedure
+}

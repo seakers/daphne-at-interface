@@ -78,7 +78,7 @@
             },
             selectAnomaly(anomalyName) {
                 if (!this.selectedAnomalies.includes(anomalyName)) {
-                    this.$store.dispatch('parseAndAddSelectedAnomaly', anomalyName);
+                    this.$store.dispatch('addSelectedAnomaly', anomalyName);
                 }
             }
         }

@@ -74,12 +74,17 @@ const actions = {
         commit('mutateTelemetryPlotData', []);
         commit('mutateTelemetryInputVariables', []);
         commit('mutateTelemetryPlotSelectedVariables', []);
+        commit('mutateTelemetryValues', '');
+        commit('mutateTelemetryInfo', '');
+        commit('mutateSymptomsList', []);
+        commit('mutateSelectedSymptomsList', []);
+        commit('mutateDiagnosisReport', []);
     },
     async updateSymptomsList({state, commit}, symptomsList) {
         commit('mutateSymptomsList', symptomsList);
     },
     async addSelectedSymptom({state, commit}, symptom) {
-        let currentSelectedSymptoms = state.selectedSymptomsList;
+        let currentSelectedSymptoms = JSON.parse(JSON.stringify(state.selectedSymptomsList));
         let already_in_list = false;
         for (let index in currentSelectedSymptoms) {
             let item = currentSelectedSymptoms[index];
@@ -93,7 +98,7 @@ const actions = {
         }
     },
     async removeSelectedSymptom({state, commit}, symptom) {
-        let currentSelectedSymptoms = state.selectedSymptomsList;
+        let currentSelectedSymptoms = JSON.parse(JSON.stringify(state.selectedSymptomsList));
         let index = currentSelectedSymptoms.indexOf(symptom);
         currentSelectedSymptoms.splice(index, 1);
         commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
@@ -190,7 +195,7 @@ const actions = {
             let isRelatedToAnotherAnomaly = false;
             for (let otherAnomalyName in newSelectedAnomaliesInfo) {
                 // Note that the entry to the anomaly that has to be deleted has already been removed from the dictionary
-                let otherAnomalyProcedures = newSelectedAnomaliesInfo[otherAnomalyName];
+                let otherAnomalyProcedures = newSelectedAnomaliesInfo[otherAnomalyName]['anomalyProcedures'];
                 if (otherAnomalyProcedures.includes(procedure)) {
                     isRelatedToAnotherAnomaly = true;
                 }
@@ -223,6 +228,21 @@ const actions = {
         commit('mutateSelectedProceduresList', newSelectedProceduresList);
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
     },
+    updateProcedureDict({state, commit}, newProcedureDict) {
+        // A copy of the state variable to be modified is made
+        let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
+
+        // The updated procedure information is parsed
+        let procedureName = newProcedureDict['procedureName'];
+        let procedureStepsList = newProcedureDict['procedureSteps'];
+        let currentStep = newProcedureDict['procedureCurrentStep'];
+
+        // The copy is modified
+        newSelectedProceduresInfo[procedureName] = {'procedureStepsList': procedureStepsList, 'currentStep': currentStep};
+
+        // Perform the commit
+        commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+    },
     async requestDiagnosis({state, commit}, selectedSymptomsList) {
         let reqData = new FormData();
         reqData.append('symptomsList',  JSON.stringify(selectedSymptomsList));
@@ -244,20 +264,6 @@ const actions = {
             console.log('Error loading the anomalies list.');
         }
     },
-    async updateProcedureCurrentStep({state, commit}, newProcedureDict) {
-        // A copy of the state variable to be modified is made
-        let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
-
-        // The updated procedure information is parsed
-        let procedureName = newProcedureDict['procedureName'];
-        let newCurrentStep = newProcedureDict['procedureCurrentStep'];
-
-        // The copy is modified
-        newSelectedProceduresInfo[procedureName]['currentStep'] = newCurrentStep;
-
-        // Perform the commit
-        commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
-    }
 };
 
 const mutations = {
@@ -268,7 +274,7 @@ const mutations = {
     mutateTelemetryInputVariables(state, newVal) {state.telemetryInputVariables = newVal},
     mutateTelemetryPlotSelectedVariables(state, newVal) {state.telemetryPlotSelectedVariables = newVal},
     mutateSymptomsList(state, newVal) {state.symptomsList = newVal},
-    mutateSelectedSymptomsList(state, newVal) {state.symptomsList = newVal},
+    mutateSelectedSymptomsList(state, newVal) {state.selectedSymptomsList = newVal},
     mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal},
     mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal},
     mutateSelectedAnomaliesList(state, newVal) {state.selectedAnomaliesList = newVal},

@@ -24,7 +24,6 @@
                     @remove="newDeselection">
             </multiselect>
         </div>
-
         <div v-for="anomalyDict in anomalyList" class="is-content">
             <div class="horizontal-divider"></div>
             <div class="columns">
@@ -52,10 +51,12 @@
                         <span v-else style="color: red"> PENDING</span>
                     </b>
                         <div  class="scrollable-container">
-                            <div v-for="(stepName, index) in procedureDict['procedureSteps']">
-                                <input type="checkbox" v-on:click="checkIt(procedureDict, index)"
-                                       :checked="isChecked(procedureDict, index)" :disabled="!isEnabled(procedureDict, index)">
-                                {{stepName}}
+                            <div v-for="(stepItem, stepIndex) in procedureDict['procedureSteps']">
+                                <input type="checkbox"
+                                       v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
+                                       v-on:click="checkIt(procedureDict, stepIndex)"
+                                       :checked="stepItem['isDone']">
+                                <label>{{stepItem['label']}} - {{stepItem['action']}}</label>
                                 <br />
                             </div>
                         </div>
@@ -64,14 +65,13 @@
             </div>
             <div class="horizontal-divider"></div>
         </div>
-
     </div>
 </template>
 
 <script>
     import Multiselect from 'vue-multiselect'
     import { mapGetters, mapMutations } from 'vuex';
-
+    import {updateCheckboxes} from "../scripts/at-display-builders";
 
     export default {
         name: "AnomalyResponseWindow",
@@ -85,24 +85,16 @@
                 selectedProceduresInfo: 'getSelectedProceduresInfo',
             }),
             value ()  {
-                let anomalies = this.selectedAnomaliesList;
                 let aux = [];
-                for (let index in anomalies) {
-                    let anomaly = anomalies[index];
-                    aux.push({'name': anomaly});
-                }
+                for (let index in this.selectedAnomaliesList) {aux.push({'name': this.selectedAnomaliesList[index]})}
                 return aux;
             },
             options ()  {
-                let anomalies = this.allAnomalies;
                 let aux = [];
-                for (let i = 0; i < anomalies.length; i++) {
-                    aux.push({'name': anomalies[i]});
-                }
+                for (let i = 0; i < this.allAnomalies.length; i++) {aux.push({'name': this.allAnomalies[i]})}
                 return aux;
             },
             anomalyList() {
-                let dodgeThis = this.dodgeThis; // ref2
                 let anomalyList = [];
                 for (let anomalyIndex in this.selectedAnomaliesList) {
                     let anomalyDict = {};
@@ -129,44 +121,45 @@
         methods: {
             async newSelection(selectedAnomaly) {
                 let anomalyName = selectedAnomaly['name'];
-                if (!this.selectedAnomaliesList.includes(anomalyName)) {
-                    await this.$store.dispatch('addSelectedAnomaly', anomalyName);
-                }
+                if (!this.selectedAnomaliesList.includes(anomalyName)) {await this.$store.dispatch('addSelectedAnomaly', anomalyName)}
             },
             async newDeselection(deselectedAnomaly) {
                 let anomalyName = deselectedAnomaly['name'];
-                this.$store.dispatch('removeSelectedAnomaly', anomalyName)
+                await this.$store.dispatch('removeSelectedAnomaly', anomalyName)
             },
             loadAnomalies() {
                 this.$store.dispatch('loadAllAnomalies');
             },
-            isChecked(procedureDict, index) {
-                let currentStep = procedureDict['procedureCurrentStep'];
-                return index < currentStep;
-            },
-            isEnabled(procedureDict, index) {
-                let currentStep = procedureDict['procedureCurrentStep'];
-                return index === currentStep || index === currentStep - 1;
+            computeLeftMargin(stepItem) {
+                let margin = '0px';
+                let depth = stepItem['depth'];
+                if (depth === 0) {margin = '10px'}
+                else if (depth === 1) {margin = '25px'}
+                else if (depth === 2) {margin = '40px'}
+                return margin
             },
             isComplete(procedureDict) {
                 let currentStep = procedureDict['procedureCurrentStep'];
                 let totalSteps = procedureDict['procedureSteps'].length;
                 return currentStep === totalSteps;
             },
-            checkIt(procedureDict, index) {
-                // Compute wether the step is increased or decrased
-                let isChecked = this.isChecked(procedureDict, index);
-                let stepIncrement = 0;
-                if (isChecked) {stepIncrement = -1}
-                else {stepIncrement = 1}
-                let newCurrentStep = procedureDict['procedureCurrentStep'] + stepIncrement;
+            checkIt(procedureDict, stepIndex) {
+                // This auxiliary function returns the proper updated procedureDict object. It only changes whether the
+                // checkboxes of each step should be checked and/or disabled or not. It's easy to understand what it
+                // does, but the actual code is an "if nightmare", and that's why it's implemented elsewhere.
+                let newProcedureDict = updateCheckboxes(procedureDict, stepIndex);
 
-                // Create an updated copy of the pocedure dictionary
-                let newProcedureDict = JSON.parse(JSON.stringify(procedureDict));
-                newProcedureDict['procedureCurrentStep'] = newCurrentStep;
+                // Compute the current step (as the number of checked boxes)
+                let numberOfCheckedBoxes = 0;
+                for (let i = 0; i < newProcedureDict['procedureSteps'].length; i++) {
+                    if (newProcedureDict['procedureSteps'][i]['isDone']) {
+                        numberOfCheckedBoxes += 1;
+                    }
+                }
+                newProcedureDict['procedureCurrentStep'] = numberOfCheckedBoxes;
 
                 // Perform the update
-                this.$store.dispatch('updateProcedureCurrentStep', newProcedureDict);
+                this.$store.dispatch('updateProcedureDict', newProcedureDict);
             },
         },
 
