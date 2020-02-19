@@ -74,6 +74,12 @@
                 this.$store.dispatch('finishStage').then(() => {
                 });
             },
+            autoStartTelemetry() {
+                // this.$store.dispatch('startTelemetry');
+            },
+            autoStopTelemetry() {
+                // this.$store.dispatch('stopTelemetry');
+            },
         },
         components: {
             AnomalyResponseWindow,
@@ -91,6 +97,7 @@
                 await fetchPost('/api/auth/generate-session', new FormData());
                 // Connect to Websocket
                 await wsTools.wsConnect(this.$store);
+
 
                 // This is only for experiment!!!
                 /*// Generate the session

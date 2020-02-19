@@ -66,6 +66,7 @@ const actions = {
         let reqData = new FormData();
         await fetchPost('/api/at/startTelemetry', reqData);
         commit('mutateTelemetryIsOngoing');
+        console.log('TELEMETRY STARTED');
     },
     async stopTelemetry({state, commit}) {
         let reqData = new FormData();
@@ -79,6 +80,11 @@ const actions = {
         commit('mutateSymptomsList', []);
         commit('mutateSelectedSymptomsList', []);
         commit('mutateDiagnosisReport', []);
+        commit('mutateSelectedAnomaliesList', []);
+        commit('mutateSelectedAnomaliesInfo', {});
+        commit('mutateSelectedProceduresList', []);
+        commit('mutateSelectedProceduresInfo', {});
+        console.log('TELEMETRY STOP');
     },
     async updateSymptomsList({state, commit}, symptomsList) {
         commit('mutateSymptomsList', symptomsList);

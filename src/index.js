@@ -20,7 +20,12 @@ let stateTimer = 0;
 let mutationBlackList = ['setIsLoading', 'resetDaphne', 'clearFeatures',
     'resetFilter', 'setProblem', 'updateExtra', 'updatePlotData', 'restoreFilter',
     'restoreDaphne', 'restoreExperiment', 'setIsRecovering'];
-let updatesContextList = ['mutateTelemetryValuesAndInfo'];
+let updatesContextList = [
+    'mutateTelemetryValues',
+    'mutateSelectedAnomaliesList',
+    'mutateSelectedProceduresList',
+    'mutateTelemetryPlotSelectedVariables',
+];
 
 
 store.subscribe(async (mutation, state) => {
@@ -56,12 +61,42 @@ store.subscribe(async (mutation, state) => {
     // Context updates TODO: Refactor into something more modular
     if (updatesContextList.includes(mutation.type)) {
         // Lazily create the Websocket to ensure the session is already created by this point
-        if (mutation.type === 'mutateTelemetryValuesAndInfo') {
+        if (mutation.type === 'mutateTelemetryValues') {
             wsTools.websocket.send(JSON.stringify({
                 msg_type: 'context_add',
                 new_context: {
                     atcontext: {
-                        current_telemetry_values: mutation.payload['values'],
+                        current_telemetry_values: mutation.payload,
+                    }
+                }
+            }));
+        }
+        else if (mutation.type === 'mutateSelectedAnomaliesList') {
+            wsTools.websocket.send(JSON.stringify({
+                msg_type: 'context_add',
+                new_context: {
+                    atcontext: {
+                        selected_anomalies: mutation.payload,
+                    }
+                }
+            }));
+        }
+        else if (mutation.type === 'mutateTelemetryPlotSelectedVariables') {
+            wsTools.websocket.send(JSON.stringify({
+                msg_type: 'context_add',
+                new_context: {
+                    atcontext: {
+                        selected_measurements: mutation.payload,
+                    }
+                }
+            }));
+        }
+        else if (mutation.type === 'mutateSelectedProceduresList') {
+            wsTools.websocket.send(JSON.stringify({
+                msg_type: 'context_add',
+                new_context: {
+                    atcontext: {
+                        selected_procedures: mutation.payload,
                     }
                 }
             }));
