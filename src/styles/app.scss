@@ -107,20 +107,21 @@ body {
 .scrollable-container {
     border: 1px solid $grey-light;
     margin: 2px;
-    // width:300px;
     height: 100px;
     overflow-y: scroll;
 }
 
 .multiselect__tags, .multiselect__tags span, .multiselect__tags input, .multiselect__content-wrapper {
     background: #111111;
-    // font-size: 18px;
     color: white;
 }
 
 .multiselect__content {
-    // font-size: 18px;
     color: white;
+}
+
+.is-multiselect {
+    height: 70px;
 }
 
 .chat-message-daphne {

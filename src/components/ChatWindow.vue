@@ -38,7 +38,6 @@
     }
     .sticky-textbox {
         padding: 1em;
-        position: sticky;
         bottom: 0;
     }
 </style>

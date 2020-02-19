@@ -3,10 +3,10 @@
         <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
             Anomaly Detection
         </div>
-        <div v-if="(this.symptomsList.length === 0)" class="is-content">
+        <div v-if="(this.symptomsList.length === 0)" class="is-content" style="min-height: 100px">
             No anomalous symptoms detected.
         </div>
-        <div v-else class="is-content">
+        <div v-else class="is-content" style="min-height: 100px">
             <ul>
                 <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsList">
                     {{symptom['detection_text']}}

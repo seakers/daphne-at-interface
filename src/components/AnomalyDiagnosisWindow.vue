@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <div class="horizontal-divider"></div>
+            <div class="horizontal-divider" style="margin-top: 10px; margin-bottom: 10px"></div>
             <div class="is-content">
                 <div v-if="diagnosisReport.length === 0">
                     No diagnosis reports requested.

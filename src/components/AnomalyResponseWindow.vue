@@ -3,7 +3,7 @@
         <div class="is-title">
             Anomaly Response
         </div>
-        <div class="is-content">
+        <div class="is-content is-multiselect">
             <multiselect
                     :value="value"
                     :options="options"
@@ -13,7 +13,7 @@
                     :clear-on-select="false"
                     :preserve-search="true"
                     :allow-empty="true"
-                    placeholder="No anomalies selected"
+                    placeholder="Search and/or select the anomalies to be explored."
                     label="name"
                     selectLabel="Click to select"
                     deselectLabel="Click to remove"

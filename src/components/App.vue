@@ -18,6 +18,9 @@
                 <div style="margin-top: 20px">
                     <the-footer></the-footer>
                 </div>
+                <div class="box is-main" style="margin-bottom: 5px">
+                    <telemetry-buttons></telemetry-buttons>
+                </div>
             </div>
             <div class="vertical-divider"></div>
             <div class="column is-3 is-vertical-filler">
@@ -42,6 +45,7 @@
     import ChatWindow from "./ChatWindow";
     import TheFooter from "./TheFooter";
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
+    import TelemetryButtons from "./TelemetryButtons";
     import {fetchPost} from "../scripts/fetch-helpers";
 
     export default {
@@ -89,7 +93,8 @@
             SensorDataWindow,
             DaphneAnswer,
             QuestionBar,
-            TheFooter
+            TheFooter,
+            TelemetryButtons
         },
         async mounted() {
             if (!this.isViewer) {
