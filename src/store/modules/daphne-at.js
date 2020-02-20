@@ -250,8 +250,22 @@ const actions = {
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
     },
     async requestDiagnosis({state, commit}, selectedSymptomsList) {
+        // Make a local copy of the couple of state variables to be used
+        let info = JSON.parse(JSON.stringify(state.telemetryInfo));
+        let parsedSelectedSymptomsList = JSON.parse(JSON.stringify(selectedSymptomsList));
+
+        // Parse the selected symptoms list. Such list contains the names of each measurement with the level add-on
+        // (for example, "ppN2 (L1)". To query the knowledge graph, such add-on should be removed (amazing).
+
+        for (let index in parsedSelectedSymptomsList) {
+            let displayName = parsedSelectedSymptomsList[index]['measurement'];
+            let kgName = info[displayName]['kg_name'];
+            parsedSelectedSymptomsList[index]['measurement'] = kgName;
+        }
+
+        // Make the diagnosis request to the backend
         let reqData = new FormData();
-        reqData.append('symptomsList',  JSON.stringify(selectedSymptomsList));
+        reqData.append('symptomsList',  JSON.stringify(parsedSelectedSymptomsList));
         let response = await fetchPost('/api/at/requestDiagnosis', reqData);
         if (response.ok) {
             let diagnosis_report = await response.json();
