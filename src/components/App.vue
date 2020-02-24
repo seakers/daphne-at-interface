@@ -104,40 +104,40 @@
                 await wsTools.wsConnect(this.$store);
 
 
-                // This is only for experiment!!!
-                /*// Generate the session
-                await fetchPost(API_URL + 'auth/generate-session', new FormData());
-
-                // Tutorial
-                this.tutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-
-                // Experiment
-                this.$store.dispatch('recoverExperiment').then(async () => {
-                    this.$store.commit('setIsRecovering', false);
-                    // Only start experiment if it wasn't already running
-                    if (!this.inExperiment) {
-                        // First of all login
-                        await this.$store.dispatch('loginUser', {
-                            username: "seclss-user1",
-                            password: "hcaamtest"
-                        });
-                        this.$store.dispatch('startExperiment').then(async () => {
-                            // Restart WS after login
-                            await wsTools.wsConnect(this.$store);
-                            await wsTools.experimentWsConnect();
-                            // Set the tutorial
-                            this.$store.commit('setExperimentStage', 'tutorial');
-                            this.$store.commit('setInExperiment', true);
-                        });
-                    }
-                });*/
+                // // This is only for experiment!!!
+                // // Generate the session
+                // await fetchPost(API_URL + 'auth/generate-session', new FormData());
+                //
+                // // Tutorial
+                // this.tutorial = new Shepherd.Tour({
+                //     defaultStepOptions: {
+                //         classes: 'shadow-md bg-purple-dark',
+                //         scrollTo: true
+                //     },
+                //     useModalOverlay: true,
+                //     exitOnEsc: false
+                // });
+                //
+                // // Experiment
+                // this.$store.dispatch('recoverExperiment').then(async () => {
+                //     this.$store.commit('setIsRecovering', false);
+                //     // Only start experiment if it wasn't already running
+                //     if (!this.inExperiment) {
+                //         // First of all login
+                //         await this.$store.dispatch('loginUser', {
+                //             username: "test",
+                //             password: "test"
+                //         });
+                //         this.$store.dispatch('startExperiment').then(async () => {
+                //             // Restart WS after login
+                //             await wsTools.wsConnect(this.$store);
+                //             await wsTools.experimentWsConnect();
+                //             // Set the tutorial
+                //             this.$store.commit('setExperimentStage', 'tutorial');
+                //             this.$store.commit('setInExperiment', true);
+                //         });
+                //     }
+                // });
             }
         },
         watch: {
