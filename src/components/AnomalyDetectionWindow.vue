@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="anomaly-detection">
         <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
             Anomaly Detection
         </div>

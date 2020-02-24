@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import auth from './modules/auth';
 import daphne from './modules/daphne';
 import telemetryFeed from './modules/daphne-at';
 import experiment from './modules/experiment';
+import auth from'./modules/auth';
+import modal from './modules/modal';
 import {processedPlotData} from "../scripts/at-display-builders";
 
 Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
-
 
 export default new Vuex.Store({
     state: {
@@ -23,6 +23,7 @@ export default new Vuex.Store({
     actions: {
         async onWebsocketsMessage({ commit, state, getters, dispatch }, message) {
             let received_info = JSON.parse(message.data);
+            console.log(received_info);
 
             if (received_info['type'] === 'active.message') {
                 commit('addDialoguePiece', received_info['message']);
@@ -47,10 +48,11 @@ export default new Vuex.Store({
         },
     },
     modules: {
-        auth,
         daphne,
         experiment,
-        telemetryFeed
+        telemetryFeed,
+        auth,
+        modal
     },
     strict: debug
 });

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="anomaly_diagnosis">
         <div class="is-title">
             Anomaly Diagnosis
         </div>

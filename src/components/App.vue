@@ -27,26 +27,26 @@
                 <chat-window class="column"></chat-window>
             </div>
         </div>
+        <modal v-bind:modal-content="modalContent" v-bind:is-active="isModalActive" v-on:close-modal="onCloseModal"></modal>
     </div>
 </template>
 
 <script>
-
-    import {mapGetters, mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import {wsTools} from "../scripts/websocket-tools";
-
     import Shepherd from 'shepherd.js';
-
-    import QuestionBar from './QuestionBar';
-    import DaphneAnswer from "./DaphneAnswer";
     import SensorDataWindow from "./SensorDataWindow";
     import AnomalyDetectionWindow from "./AnomalyDetectionWindow";
     import AnomalyDiagnosisWindow from "./AnomalyDiagnosisWindow";
-    import ChatWindow from "./ChatWindow";
-    import TheFooter from "./TheFooter";
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import TelemetryButtons from "./TelemetryButtons";
-    import {fetchPost} from "../scripts/fetch-helpers";
+    import {fetchGet, fetchPost} from "../scripts/fetch-helpers";
+    import DaphneAnswer from "./DaphneAnswer";
+    import TheFooter from "./TheFooter";
+    import Timer from './Timer';
+    import QuestionBar from './QuestionBar';
+    import Modal from './Modal';
+    import ChatWindow from "./ChatWindow";
 
     export default {
         name: 'app',
@@ -58,18 +58,27 @@
         props: ["isViewer", "viewUserId"],
         computed: {
             ...mapState({
+                isModalActive: state => state.modal.isModalActive,
+                modalContent: state => state.modal.modalContent,
                 inExperiment: state => state.experiment.inExperiment,
                 experimentStage: state => state.experiment.experimentStage,
                 stageInformation: state => state.experiment.stageInformation,
                 isRecovering: state => state.experiment.isRecovering,
                 currentStageNum: state => state.experiment.currentStageNum,
             }),
+            timerExperimentCondition() {
+                if (!this.inExperiment) {
+                    return false;
+                } else {
+                    return this.currentStageNum > 0;
+                }
+            },
             stageDuration() {
                 return this.stageInformation[this.experimentStage].stageDuration;
             },
             stageStartTime() {
                 return this.stageInformation[this.experimentStage].startTime;
-            },
+            }
         },
         methods: {
             onCountdownEnd() {
@@ -84,6 +93,20 @@
             autoStopTelemetry() {
                 // this.$store.dispatch('stopTelemetry');
             },
+            onCloseModal() {
+                this.$store.commit('closeModal');
+                if (this.modalContent === 'LoginModal' && this.isStartup) {
+                    this.init();
+                }
+            },
+            async init(startData) {
+                // Load past dialogue
+                await this.$store.dispatch("loadDialogue");
+                // Scroll chat window to bottom
+                this.$refs.chatWindow.scrollToBottom();
+
+                this.isStartup = false;
+            }
         },
         components: {
             AnomalyResponseWindow,
@@ -94,7 +117,9 @@
             DaphneAnswer,
             QuestionBar,
             TheFooter,
-            TelemetryButtons
+            TelemetryButtons,
+            Modal,
+            Timer
         },
         async mounted() {
             if (!this.isViewer) {
@@ -103,9 +128,7 @@
                 // Connect to Websocket
                 await wsTools.wsConnect(this.$store);
 
-
-                // This is only for experiment!!!
-                /*// Generate the session
+                // Generate the session
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
 
                 // Tutorial
@@ -125,7 +148,7 @@
                     if (!this.inExperiment) {
                         // First of all login
                         await this.$store.dispatch('loginUser', {
-                            username: "seclss-user1",
+                            username: "user1",
                             password: "hcaamtest"
                         });
                         this.$store.dispatch('startExperiment').then(async () => {
@@ -137,7 +160,7 @@
                             this.$store.commit('setInExperiment', true);
                         });
                     }
-                });*/
+                });
             }
         },
         watch: {
@@ -147,42 +170,44 @@
                     // First the general code (nothing right now, Prachi will add something here)
                     // Make sure nothing is lingering from last stage, etc etc
 
+                    // Set problem for this stage and load the corresponding dataset
+                    console.log(this.problems, this.currentStageNum);
+
                     // Stage specific behaviour
                     switch (this.experimentStage) {
-                        case 'tutorial': {
-                            this.$store.state.experiment.stageInformation.tutorial.steps.forEach(step => {
-                                this.tutorial.addStep({
-                                    ...step,
-                                    buttons: [
-                                        {
-                                            text: 'Previous',
-                                            action: this.tutorial.back
-                                        },
-                                        {
-                                            text: 'Next',
-                                            action: this.tutorial.next
-                                        }
-                                    ]
-                                });
+                    case 'tutorial': {
+                        this.$store.state.experiment.stageInformation.tutorial.steps.forEach(step => {
+                            this.tutorial.addStep({
+                                ...step,
+                                buttons: [
+                                    {
+                                        text: 'Previous',
+                                        action: this.tutorial.back
+                                    },
+                                    {
+                                        text: 'Next',
+                                        action: this.tutorial.next
+                                    }
+                                ]
                             });
-                            this.tutorial.on("complete", () => {
-                                this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
-                                    this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
-                                });
+                        });
+                        this.tutorial.on("complete", () => {
+                            this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
+                                this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
-                            // TODO: Hijack next button action on tutorial
-                            this.tutorial.start();
-                            break;
-                        }
-                        case 'with_daphne': {
-                            break;
-                        }
-                        case 'without_daphne': {
-                            break;
-                        }
-                        default: {
-                            break;
-                        }
+                        });
+                        this.tutorial.start();
+                        break;
+                    }
+                    case 'with_daphne': {
+                        break;
+                    }
+                    case 'without_daphne': {
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
                     }
                 }
             }
@@ -192,4 +217,18 @@
 
 <style lang="scss">
     @import "../../node_modules/bulma/sass/utilities/initial-variables";
+
+    .user-info {
+        padding: 30px;
+        width: 100%;
+        flex-grow: 1;
+        color: #F6F7F7;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .vertical-divider {
+        background: $grey-light;
+        width: 1px;
+    }
 </style>

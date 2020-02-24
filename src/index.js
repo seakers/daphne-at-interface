@@ -50,8 +50,7 @@ store.subscribe(async (mutation, state) => {
                 }));
             }, 10000);
         }
-    }
-    else {
+    } else {
         if (stateTimer !== 0) {
             clearInterval(stateTimer);
             stateTimer = 0;
@@ -104,7 +103,6 @@ store.subscribe(async (mutation, state) => {
     }
 });
 
-
 let app = new Vue({
     el: '#app',
     store,
@@ -134,6 +132,5 @@ if (annyang) {
 
     // Render KITT's interface
     // SpeechKITT.vroom();
-
     // SpeechKITT.startRecognition();
 }
