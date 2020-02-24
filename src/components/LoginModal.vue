@@ -1,6 +1,6 @@
 <template>
     <div class="message-body">
-        <p>Hello! I see you are not logged in. To be able to use features such as saving and loading custom datasets, you need to be registered as a user and logged in. If you are already registered, please introduce you username and password below.</p>
+        <p>Hello! You need to be registered user to use Daphne. If you are already registered, please add you username and password below.</p>
         <form id="login-form">
             <p v-if="hasLoginError">{{ loginError }}</p>
             <div class="field">

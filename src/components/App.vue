@@ -95,17 +95,19 @@
             },
             onCloseModal() {
                 this.$store.commit('closeModal');
-                if (this.modalContent === 'LoginModal' && this.isStartup) {
-                    this.init();
+                if (this.modalContent === 'LoginModal') {
+                    this.initExperiment();
                 }
             },
-            async init(startData) {
-                // Load past dialogue
-                await this.$store.dispatch("loadDialogue");
-                // Scroll chat window to bottom
-                this.$refs.chatWindow.scrollToBottom();
-
-                this.isStartup = false;
+            async initExperiment() {
+                this.$store.dispatch('startExperiment').then(async () => {
+                    // Restart WS after login
+                    await wsTools.wsConnect(this.$store);
+                    await wsTools.experimentWsConnect();
+                    // Set the tutorial
+                    this.$store.commit('setExperimentStage', 'tutorial');
+                    this.$store.commit('setInExperiment', true);
+                });
             }
         },
         components: {
@@ -123,10 +125,10 @@
         },
         async mounted() {
             if (!this.isViewer) {
-                // Normal init code
-                await fetchPost('/api/auth/generate-session', new FormData());
-                // Connect to Websocket
-                await wsTools.wsConnect(this.$store);
+                // // Normal init code
+                // await fetchPost('/api/auth/generate-session', new FormData());
+                // // Connect to Websocket
+                // await wsTools.wsConnect(this.$store);
 
                 // Generate the session
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
@@ -147,18 +149,7 @@
                     // Only start experiment if it wasn't already running
                     if (!this.inExperiment) {
                         // First of all login
-                        await this.$store.dispatch('loginUser', {
-                            username: "user1",
-                            password: "hcaamtest"
-                        });
-                        this.$store.dispatch('startExperiment').then(async () => {
-                            // Restart WS after login
-                            await wsTools.wsConnect(this.$store);
-                            await wsTools.experimentWsConnect();
-                            // Set the tutorial
-                            this.$store.commit('setExperimentStage', 'tutorial');
-                            this.$store.commit('setInExperiment', true);
-                        });
+                        this.$store.commit('activateModal', 'LoginModal');
                     }
                 });
             }
