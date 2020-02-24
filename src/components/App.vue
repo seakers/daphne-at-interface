@@ -18,9 +18,9 @@
                 <div style="margin-top: 20px">
                     <the-footer></the-footer>
                 </div>
-                <div class="box is-main" style="margin-bottom: 5px">
-                    <telemetry-buttons></telemetry-buttons>
-                </div>
+<!--                <div class="box is-main" style="margin-bottom: 5px">-->
+<!--                    <telemetry-buttons></telemetry-buttons>-->
+<!--                </div>-->
             </div>
             <div class="vertical-divider"></div>
             <div class="column is-3 is-vertical-filler">
@@ -44,6 +44,7 @@
     import DaphneAnswer from "./DaphneAnswer";
     import TheFooter from "./TheFooter";
     import Timer from './Timer';
+    import RegisterModal from './RegisterModal';
     import QuestionBar from './QuestionBar';
     import Modal from './Modal';
     import ChatWindow from "./ChatWindow";
@@ -93,6 +94,12 @@
             autoStopTelemetry() {
                 // this.$store.dispatch('stopTelemetry');
             },
+            openRegisterForm() {
+                this.$store.commit('activateModal', 'RegisterModal');
+            },
+            openResetPasswordForm() {
+                this.$store.commit('activateModal', 'ResetPasswordModal');
+            },
             onCloseModal() {
                 this.$store.commit('closeModal');
                 if (this.modalContent === 'LoginModal') {
@@ -100,6 +107,7 @@
                 }
             },
             async initExperiment() {
+                this.$store.dispatch('startTelemetry');
                 this.$store.dispatch('startExperiment').then(async () => {
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
@@ -116,6 +124,7 @@
             AnomalyDetectionWindow,
             ChatWindow,
             SensorDataWindow,
+            RegisterModal,
             DaphneAnswer,
             QuestionBar,
             TheFooter,
