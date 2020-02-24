@@ -13,13 +13,16 @@
             <h5>Anomalies Summary:</h5>
             <p>Selected symptoms:</p>
             <ul>
-                <li v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"] }}</li>
+                <li v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"]}}</li>
             </ul>
             <p>Selected anomalies:</p>
             <ul>
                 <li v-for="anomaly in selectedAnomaliesList">{{ anomaly }}</li>
             </ul>
-            <p>Selected Procedure: {{selectedProcedure}}</p>
+            <p>Selected procedures:</p>
+            <ul>
+                <li v-for="procedure in selectedProceduresList">{{ procedure }}</li>
+            </ul>
             <p>Current Step: {{currentStep}}</p>
         </div>
     </div>
@@ -29,6 +32,7 @@
     import App from "../App";
     import {fetchPost} from "../../scripts/fetch-helpers";
     import ChatArea from "../ChatArea";
+    import {mapGetters} from 'vuex';
 
     export default {
         name: "SubjectViewer",
@@ -37,11 +41,15 @@
             return {
                 currentStage: [],
                 dialogueHistory: [],
-                selectedSymptomsList: [],
-                selectedAnomaliesList: [],
-                selectedProcedure: 0,
                 currentStep: 0
             }
+        },
+        computed: {
+            ...mapGetters({
+                selectedSymptomsList: 'getSelectedSymptomsList',
+                selectedAnomaliesList: 'getSelectedAnomaliesList',
+                selectedProceduresList: 'getSelectedProceduresList',
+            }),
         },
         components: {
             ChatArea,
