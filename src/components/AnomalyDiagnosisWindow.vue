@@ -29,10 +29,10 @@
                     No diagnosis reports requested.
                 </div>
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
-                    <div class="column is-3" style="margin: 0px; padding: 0px">
+                    <div class="column is-2" style="margin: 0px; padding: 0px">
                         The set of symptoms
                     </div>
-                    <div class="column is-3" style="margin: 0px; padding: 0px">
+                    <div class="column is-4" style="margin: 0px; padding: 0px">
                         <ul>
                             <li  v-for="symptom in diagnosisReport['symptoms_list']">
                                 {{symptom['detection_text']}}
