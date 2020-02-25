@@ -63,7 +63,7 @@ health hazards to the crew and must be rectified immediately.`
                         element: '#anomaly-detection',
                         on: 'bottom'
                     },
-                    text: `Once an anomaly is detected, you can click on it for diagnosis. Try clicking on an anomalous signature now and click Next.`
+                    text: `Once an anomaly is detected, you can click on it to select it for diagnosis. Click on the anomaly you are seeing now before clicking on Next.`
                 },
                 {
                     attachTo: {
@@ -71,7 +71,7 @@ health hazards to the crew and must be rectified immediately.`
                         on: 'bottom'
                     },
                     text: `When you click on an anomaly you want to diagnose in the Anomaly Detection window, it
-                    will appear here, in <b>Anomaly Diagnosis</b> window. You will see the information about the anomalies you selected for diagnosis.For example, 'ppN2 exceeds upper critical limit' is one symptom of
+                    will appear here, in <b>Anomaly Diagnosis</b> window. For example, 'ppN2 exceeds upper critical limit' is one symptom of
 an anomaly that is causing the partial pressure of Nitrogen to exceed nominal values.`
                 },
                 {
@@ -79,17 +79,63 @@ an anomaly that is causing the partial pressure of Nitrogen to exceed nominal va
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `Once you see the symptoms associated with anomalies, click on the symptom you want to
-                    investigate further and then click on the 'Diagnose' button to find what may be the cause.
-                    Try clicking on 'ppN2 exceeds upper critical limit' to further investigate this anomalous signature.`
+                    text: `Once you see the symptoms associated with anomalies, click on the 'Diagnose' button to find out what may be the cause. Click on
+                    Diagnose button now.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `Now, you'll see a possible cause for the anomaly you selected has appeared. In this case, a nitrogen tank burst
+                    may be a possible root cause.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `You can also click on the anomaly to remove it from the Anomaly Diagnosis window. This may be useful in case you are diagnosing multiple
+                    anomalies at the same time. Note that only the anomalies in the top row are clickable. Try to click it now. It should disappear from the top
+                    row. Click Next to proceed.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `You can click on the suggested root cause of the anomalies that have been diagnosed for further investigation. Click on the cause
+                    N2 Tank Burst to find a recommended course of action to take for resolving it. Click on Next to proceed.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `This is the <b>Anomaly Response</b> window. You can find information about treating anomalies here.
-I will provide you with the list of steps that you can perform to resolve the anomalies that you are investigating.`
+                    text: `This is the <b>Anomaly Response</b> window. You can find information about resolving anomalies here. Right now, you can see
+the recommended course of action for resolving N2 Tank Burst.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `I am providing you with three pieces of information here. <break>
+1. Anomaly name - This is the name of the anomaly that is being diagnosed.<break>
+2. Name of the procedures to be followed - This is the name of the procedure that needs to be followed for resolving this anomaly.<break>
+3. Steps to be followed for this procedure - These are the steps you will need to perform in the order shown. Once you finish executing the step, make sure to
+click on the checkbox next to it to mark it as done. Once all the steps have been marked as done, you will see that the status of the procedure changes from
+PENDING to COMPLETED.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `You can also explore multiple root causes simultaneously. This might be useful in case you disagree with my suggestion.
+                    For exploring more than one anomalies, click on the drop down menu at the top of this window to see a list of all the available
+                    root causes related to ECLSS. You can click on the X button next to the anomalies to remove them from the list. Play around to see if you understand
+                    what this window does. Click on Next when you are done.`
                 },
                 {
                     attachTo: {
@@ -105,8 +151,8 @@ on your keyboard. To clear the question bar click on "Clear" button. If you want
                         on: 'left'
                     },
                     text: `For example, you can ask me "What is the current value of the ppN2?", and I will give you the
- current value of partial pressure of nitrogen in the spacecraft. <b>Try writing or copying the above question into the
- text box.</b>`
+ current value of partial pressure of nitrogen in the spacecraft. Try writing or copying the above question into the
+ text box.`
                 },
                 {
                     attachTo: {
