@@ -89,7 +89,7 @@
                 });
             },
             autoStartTelemetry() {
-                // this.$store.dispatch('startTelemetry');
+                this.$store.dispatch('startTelemetry');
             },
             autoStopTelemetry() {
                 // this.$store.dispatch('stopTelemetry');
@@ -107,7 +107,6 @@
                 }
             },
             async initExperiment() {
-                this.$store.dispatch('startTelemetry');
                 this.$store.dispatch('startExperiment').then(async () => {
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
@@ -159,6 +158,7 @@
                     if (!this.inExperiment) {
                         // First of all login
                         this.$store.commit('activateModal', 'LoginModal');
+                        this.$store.dispatch('startTelemetry');
                     }
                 });
             }

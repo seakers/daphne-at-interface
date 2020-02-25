@@ -41,14 +41,14 @@ health hazards to the crew and must be rectified immediately.`
                     },
                     text: `This is the <b>Sensor Data</b> window which will provide you with subsystem level information of ECLSS.
 Here you will see real-time telemetry feed from various ECLSS subsystems. If you want to see the data related to a specific signature,
-click on the drop down menu and select the signature you want to see. Try making a selection and then click on Next.`
+click on the drop down menu and select the signature you want to see. Right now you are looking at the feed of a default sensor.`
                 },
                 {
                     attachTo: {
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `You will see the updated signature in the feed now. If you want to see multiple signatures at the same time,
+                    text: `If you want to see multiple signatures at the same time,
                     you can do so by selecting multiple signatures from the drop down list. Try selecting multiple signatures and click on Next.`
                 },
                 {
