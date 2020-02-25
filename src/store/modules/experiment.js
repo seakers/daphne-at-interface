@@ -26,16 +26,6 @@ const state = {
                 },
                 {
                     attachTo: {
-                        element: '#anomaly-detection',
-                        on: 'bottom'
-                    },
-                    text: `This is the  <b>Anomaly Detection</b> window. This is where you will get the first notification related to anomalies occurring
-in ECLSS. I will alert you of the anomalies by changing the colors of this window. Blue color implies all the systems are working nominally. Yellow color implies that the signature related to that anomaly
-has exceeded the Warning Limits and Red color will imply that the signature has exceeded Critical Limits. A signature exceeding Critical limits can pose serious
-health hazards to the crew and must be rectified immediately.`
-                },
-                {
-                    attachTo: {
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
@@ -60,14 +50,38 @@ click on the drop down menu and select the signature you want to see. Right now 
                 },
                 {
                     attachTo: {
+                        element: '#anomaly-detection',
+                        on: 'bottom'
+                    },
+                    text: `This is the  <b>Anomaly Detection</b> window. This is where you will get the first notification related to anomalies occurring
+in ECLSS. I will alert you of the anomalies by changing the colors of this window. Blue color implies all the systems are working nominally. Yellow color implies that the signature related to that anomaly
+has exceeded the Warning Limits and Red color will imply that the signature has exceeded Critical Limits. A signature exceeding Critical limits can pose serious
+health hazards to the crew and must be rectified immediately.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly-detection',
+                        on: 'bottom'
+                    },
+                    text: `Once an anomaly is detected, you can click on it for diagnosis. Try clicking on an anomalous signature now and click Next.`
+                },
+                {
+                    attachTo: {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `This is the <b>Anomaly Diagnosis</b> window. Here, you will see the information about the anomalies currently
-occurring in the ECLSS system. This window will show you the symptoms of the anomalies. For example, 'ppN2 exceeds upper warning
-limit' is one symptom of an anomaly that is causing the partial pressure of Nitrogen to exceed nominal values. Once you see the symptoms associated
-with a certain anomaly, click on the anomaly you want to investigate further and then click on the 'Diagnose' button to find
-what may be the cause.`
+                    text: `When you click on an anomaly you want to diagnose in the Anomaly Detection window, it
+                    will appear here, in <b>Anomaly Diagnosis</b> window. You will see the information about the anomalies you selected for diagnosis.For example, 'ppN2 exceeds upper critical limit' is one symptom of
+an anomaly that is causing the partial pressure of Nitrogen to exceed nominal values.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `Once you see the symptoms associated with anomalies, click on the symptom you want to
+                    investigate further and then click on the 'Diagnose' button to find what may be the cause.
+                    Try clicking on 'ppN2 exceeds upper critical limit' to further investigate this anomalous signature.`
                 },
                 {
                     attachTo: {
