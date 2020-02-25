@@ -56,7 +56,7 @@ click on the drop down menu and select the signature you want to see. Right now 
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `You can click the close button next to a signature to remove it from the telemetry feed. Try selecting multiple signatures and click on Next.`
+                    text: `You can click the close button next to a signature to remove it from the telemetry feed. Try doing it now. Click on Next when you're done.`
                 },
                 {
                     attachTo: {
