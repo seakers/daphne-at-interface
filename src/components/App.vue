@@ -107,11 +107,12 @@
                 }
             },
             async initExperiment() {
-                this.$store.dispatch('startTelemetry');
                 this.$store.dispatch('startExperiment').then(async () => {
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
-                    await wsTools.experimentWsConnect();
+                    await wsTools.experimentWsConnect().then(async() =>{
+                        await this.$store.dispatch('startTelemetry');
+                    });
                     // Set the tutorial
                     this.$store.commit('setExperimentStage', 'tutorial');
                     this.$store.commit('setInExperiment', true);

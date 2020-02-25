@@ -23,8 +23,6 @@ export default new Vuex.Store({
     actions: {
         async onWebsocketsMessage({ commit, state, getters, dispatch }, message) {
             let received_info = JSON.parse(message.data);
-            console.log(received_info);
-
             if (received_info['type'] === 'active.message') {
                 commit('addDialoguePiece', received_info['message']);
             } else if (received_info['type'] === 'ping') {
@@ -35,7 +33,6 @@ export default new Vuex.Store({
                 let telemetryDict = received_info['content'];
                 dispatch('initializeTelemetry', telemetryDict);
             } else if (received_info['type'] === 'telemetry_update') {
-                console.log('Telemetry update received.');
                 let telemetryDict = received_info['content'];
                 let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(telemetryDict, selectedVariables);
