@@ -13,7 +13,7 @@ const state = {
             nextStage: '',
             steps: [
                 {
-                    text: `Hello astronaut! Congratulations on been selected as one of the crew members for the
+                    text: `Hello astronaut! Congratulations on being selected as one of the crew members for the
                     mission to Mars.`
                 },
                 {
@@ -71,7 +71,7 @@ health hazards to the crew and must be rectified immediately.`
                         on: 'bottom'
                     },
                     text: `When you click on an anomaly you want to diagnose in the Anomaly Detection window, it
-                    will appear here, in <b>Anomaly Diagnosis</b> window. For example, 'ppN2 exceeds upper critical limit' is one symptom of
+                    will appear here, in <b>Anomaly Diagnosis</b> window. For example, 'ppN2(L1): is above Upper Critical Limit' is one symptom of
 an anomaly that is causing the partial pressure of Nitrogen to exceed nominal values.`
                 },
                 {
@@ -120,9 +120,9 @@ the recommended course of action for resolving N2 Tank Burst.`
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `I am providing you with three pieces of information here. <break>
-1. Anomaly name - This is the name of the anomaly that is being diagnosed.<break>
-2. Name of the procedures to be followed - This is the name of the procedure that needs to be followed for resolving this anomaly.<break>
+                    text: `I am providing you with three pieces of information here. <br>
+1. Anomaly name - This is the name of the anomaly that is being diagnosed.<br>
+2. Name of the procedures to be followed - This is the name of the procedure that needs to be followed for resolving this anomaly.<br>
 3. Steps to be followed for this procedure - These are the steps you will need to perform in the order shown. Once you finish executing the step, make sure to
 click on the checkbox next to it to mark it as done. Once all the steps have been marked as done, you will see that the status of the procedure changes from
 PENDING to COMPLETED.`
@@ -143,15 +143,15 @@ PENDING to COMPLETED.`
                         on: 'left'
                     },
                     text: `This is the chat window where you can have a conversation with me. To ask a question, you can write it down in the question bar at the bottom, and then either click Send or press Enter
-on your keyboard. To clear the question bar click on "Clear" button. If you want to hear my answers to you instead of just reading it, you can unmute me by clicking on the speaker`
+on your keyboard. To clear the question bar you can click on "Clear" button.`
                 },
                 {
                     attachTo: {
                         element: '.chat-container',
                         on: 'left'
                     },
-                    text: `For example, you can ask me "What is the current value of the ppN2?", and I will give you the
- current value of partial pressure of nitrogen in the spacecraft. Try writing or copying the above question into the
+                    text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you the
+ current value of partial pressure of nitrogen at Level 1 in the spacecraft. Try writing or copying the above question into the
  text box.`
                 },
                 {
