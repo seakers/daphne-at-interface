@@ -63,6 +63,7 @@ const actions = {
         commit('mutateTelemetryPlotSelectedVariables', newVariables);
     },
     async startTelemetry({state, commit}) {
+        console.log('START TELEMETRY');
         let reqData = new FormData();
         await fetchPost('/api/at/startTelemetry', reqData);
         commit('mutateTelemetryIsOngoing');
