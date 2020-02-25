@@ -111,7 +111,7 @@
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
                     await wsTools.experimentWsConnect().then(async() =>{
-                        await this.$store.dispatch('startTelemetry');
+                        await this.$store.dispatch('startFakeTelemetry');
                     });
                     // Set the tutorial
                     this.$store.commit('setExperimentStage', 'tutorial');
@@ -160,7 +160,6 @@
                     if (!this.inExperiment) {
                         // First of all login
                         this.$store.commit('activateModal', 'LoginModal');
-                        this.$store.dispatch('startTelemetry');
                     }
                 });
             }

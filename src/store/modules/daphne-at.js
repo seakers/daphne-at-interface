@@ -62,6 +62,13 @@ const actions = {
     async updateSelectedVariables({state, commit}, newVariables) {
         commit('mutateTelemetryPlotSelectedVariables', newVariables);
     },
+    async startFakeTelemetry({state, commit}) {
+        console.log('START FAKE TELEMETRY');
+        let reqData = new FormData();
+        await fetchPost('/api/at/startFakeTelemetry', reqData);
+        commit('mutateTelemetryIsOngoing');
+        console.log('TELEMETRY STARTED');
+    },
     async startTelemetry({state, commit}) {
         console.log('START TELEMETRY');
         let reqData = new FormData();
