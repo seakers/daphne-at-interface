@@ -6,7 +6,7 @@
         <div class="is-content">
             <div class="is-content">
                 <div v-if="(this.selectedSymptomsList.length === 0)" >
-                    No symptoms selected.
+                    No anomalies selected.
                 </div>
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
                     <div class="column is-10" style="margin: 0px; padding: 0px">
@@ -30,7 +30,7 @@
                 </div>
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
                     <div class="column is-2" style="margin: 0px; padding: 0px">
-                        The set of symptoms
+                        The set of anomalies
                     </div>
                     <div class="column is-4" style="margin: 0px; padding: 0px">
                         <ul>
@@ -39,10 +39,10 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="column is-3" style="margin: 0px; padding: 0px">
-                        could be caused by the anomalies
+                    <div class="column is-2" style="margin: 0px; padding: 0px">
+                        could be caused by:
                     </div>
-                    <div class="column is-3" style="margin: 0px; padding: 0px">
+                    <div class="column is-4" style="margin: 0px; padding: 0px">
                         <ul>
                             <li  v-on:click="selectAnomaly(anomaly)" v-for="anomaly in diagnosisReport['diagnosis_list']">
                                 {{anomaly}}
