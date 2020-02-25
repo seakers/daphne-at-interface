@@ -139,7 +139,7 @@ PENDING to COMPLETED.`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container',
+                        element: '#chat_window',
                         on: 'left'
                     },
                     text: `This is the chat window where you can have a conversation with me. To ask a question, you can write it down in the question bar at the bottom, and then either click Send or press Enter
@@ -147,7 +147,7 @@ on your keyboard. To clear the question bar you can click on "Clear" button.`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container',
+                        element: '#chat_window',
                         on: 'left'
                     },
                     text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you the
@@ -156,7 +156,7 @@ on your keyboard. To clear the question bar you can click on "Clear" button.`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container',
+                        element: '#chat_window',
                         on: 'left'
                     },
                     text: `You can also ask me questions related to procedures or tools and components required during procedures.
