@@ -12,6 +12,7 @@ const state = {
     // Symptoms detection and diagnosis related variables
     symptomsList: [], // A list of all the currently detected symptoms.
     selectedSymptomsList: [], // A list of the symptoms selected by the user to be diagnosed.
+    lastSelectedSymptomsList: [], // A list of the symptoms that appear in the  last requested diagnosis report
     diagnosisReport: [], // Contains the information related to a requested diagnosis.
 
     // Anomaly treatment related variables
@@ -32,6 +33,7 @@ const getters = {
     getTelemetryInfo(state) {return state.telemetryInfo},
     getSymptomsList(state) {return state.symptomsList},
     getSelectedSymptomsList(state) {return state.selectedSymptomsList},
+    getLastSelectedSymptomsList(state) {return state.lastSelectedSymptomsList},
     getDiagnosisReport(state) {return state.diagnosisReport},
     getSelectedAnomaliesList(state) {return state.selectedAnomaliesList},
     getSelectedAnomaliesInfo(state) {return state.selectedAnomaliesInfo},
@@ -281,6 +283,13 @@ const actions = {
         } else {
             console.log('Error requesting a diagnosis report.')
         }
+
+        // Update the last selected symptoms list
+        let lastSelectedSymptomsList = JSON.parse(JSON.stringify(state.selectedSymptomsList));
+        commit('mutateLastSelectedSymptomsList', lastSelectedSymptomsList);
+
+        // Clean the selected symptoms list
+        commit('mutateSelectedSymptomsList', []);
     },
     async loadAllAnomalies({state, commit}) {
         let reqData = new FormData();
@@ -291,6 +300,10 @@ const actions = {
         } else {
             console.log('Error loading the anomalies list.');
         }
+    },
+    async recoverSymptomsList({state, commit}) {
+        let lastSymptomsList = state.lastSelectedSymptomsList;
+        commit('mutateSelectedSymptomsList', lastSymptomsList);
     },
 };
 
@@ -303,6 +316,7 @@ const mutations = {
     mutateTelemetryPlotSelectedVariables(state, newVal) {state.telemetryPlotSelectedVariables = newVal},
     mutateSymptomsList(state, newVal) {state.symptomsList = newVal},
     mutateSelectedSymptomsList(state, newVal) {state.selectedSymptomsList = newVal},
+    mutateLastSelectedSymptomsList(state, newVal) {state.lastSelectedSymptomsList = newVal},
     mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal},
     mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal},
     mutateSelectedAnomaliesList(state, newVal) {state.selectedAnomaliesList = newVal},

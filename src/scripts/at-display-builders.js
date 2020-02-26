@@ -141,8 +141,8 @@ export function processedPlotData(telemetryDict, selectedVariables) {
         processedData.push(trace);
         trace = buildThresholdTrace(xaxis, info[variable]['low_warning_threshold'], orange, 'dot', 'Warning Limits', true);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['nominal'], blue, 'dot', 'Nominal value', true);
-        processedData.push(trace);
+        // trace = buildThresholdTrace(xaxis, info[variable]['nominal'], blue, 'dot', 'Nominal value', true);
+        // processedData.push(trace);
         trace = buildThresholdTrace(xaxis, info[variable]['high_warning_threshold'], orange, 'dot', 'Warning Limits', false);
         processedData.push(trace);
         trace = buildThresholdTrace(xaxis, info[variable]['high_critic_threshold'], red, 'dot', 'Critical Limits', false);

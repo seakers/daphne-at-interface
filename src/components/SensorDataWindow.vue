@@ -28,7 +28,7 @@
                 <vue-plotly
                         :data="plotData"
                         :layout="plotLayout"
-                        :options="{}"/>
+                        :options="{displayModeBar: false}"/>
             </div>
         </div>
     </div>

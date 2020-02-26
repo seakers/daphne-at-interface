@@ -18,9 +18,9 @@
                 <div style="margin-top: 20px">
                     <the-footer></the-footer>
                 </div>
-<!--                <div class="box is-main" style="margin-bottom: 5px">-->
-<!--                    <telemetry-buttons></telemetry-buttons>-->
-<!--                </div>-->
+                <div class="box is-main" style="margin-bottom: 5px">
+                    <telemetry-buttons></telemetry-buttons>
+                </div>
             </div>
             <div class="vertical-divider"></div>
             <div class="column is-3 is-vertical-filler">
@@ -135,33 +135,33 @@
         },
         async mounted() {
             if (!this.isViewer) {
-                // // Normal init code
-                // await fetchPost('/api/auth/generate-session', new FormData());
-                // // Connect to Websocket
-                // await wsTools.wsConnect(this.$store);
+                // Normal init code
+                await fetchPost('/api/auth/generate-session', new FormData());
+                // Connect to Websocket
+                await wsTools.wsConnect(this.$store);
 
-                // Generate the session
-                await fetchPost(API_URL + 'auth/generate-session', new FormData());
-
-                // Tutorial
-                this.tutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-
-                // Experiment
-                this.$store.dispatch('recoverExperiment').then(async () => {
-                    this.$store.commit('setIsRecovering', false);
-                    // Only start experiment if it wasn't already running
-                    if (!this.inExperiment) {
-                        // First of all login
-                        this.$store.commit('activateModal', 'LoginModal');
-                    }
-                });
+                // // Generate the session
+                // await fetchPost(API_URL + 'auth/generate-session', new FormData());
+                //
+                // // Tutorial
+                // this.tutorial = new Shepherd.Tour({
+                //     defaultStepOptions: {
+                //         classes: 'shadow-md bg-purple-dark',
+                //         scrollTo: true
+                //     },
+                //     useModalOverlay: true,
+                //     exitOnEsc: false
+                // });
+                //
+                // // Experiment
+                // this.$store.dispatch('recoverExperiment').then(async () => {
+                //     this.$store.commit('setIsRecovering', false);
+                //     // Only start experiment if it wasn't already running
+                //     if (!this.inExperiment) {
+                //         // First of all login
+                //         this.$store.commit('activateModal', 'LoginModal');
+                //     }
+                // });
             }
         },
         watch: {
