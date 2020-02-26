@@ -14,6 +14,7 @@
     import Stage1Modal from './Stage1Modal';
     import Stage2Modal from './Stage2Modal';
     import LoginModal from './LoginModal';
+    import RegisterModal from './RegisterModal';
 
     export default {
         name: 'modal',
@@ -25,7 +26,8 @@
         components: {
             Stage1Modal,
             Stage2Modal,
-            LoginModal
+            LoginModal,
+            RegisterModal
         },
         methods: {
             onCloseModal() {

@@ -1,5 +1,5 @@
 <template>
-    <div id="chat_window">
+    <div id="chat-window">
         <div class="chat-container">
             <ChatArea :dialogue-history="dialogueHistory"></ChatArea>
             <QuestionBar class="sticky-textbox"></QuestionBar>
