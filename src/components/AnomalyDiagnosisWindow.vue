@@ -29,20 +29,16 @@
                     No diagnosis reports requested.
                 </div>
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
-                    <div class="column is-2" style="margin: 0px; padding: 0px">
-                        The set of anomalies
-                    </div>
-                    <div class="column is-4" style="margin: 0px; padding: 0px">
+                    <div class="column is-6" style="margin: 0px; padding: 0px">
+                        <u style="margin-bottom:20px">The set of anomalies:</u>
                         <ul>
-                            <li  v-for="symptom in diagnosisReport['symptoms_list']">
+                            <li  v-for="symptom in diagnosisReport['symptoms_list']" v-on:click="recoverSymptomsList()">
                                 {{symptom['detection_text']}}
                             </li>
                         </ul>
                     </div>
-                    <div class="column is-2" style="margin: 0px; padding: 0px">
-                        could be caused by:
-                    </div>
-                    <div class="column is-4" style="margin: 0px; padding: 0px">
+                    <div class="column is-6" style="margin: 0px; padding: 0px">
+                        <u style="margin-bottom:200px">Could be caused by:</u>
                         <ul>
                             <li  v-on:click="selectAnomaly(anomaly)" v-for="anomaly in diagnosisReport['diagnosis_list']">
                                 {{anomaly}}
@@ -64,6 +60,7 @@
         computed: {
             ...mapGetters({
                 selectedSymptomsList: 'getSelectedSymptomsList',
+                lastSelectedSymptomsList: 'getLastSelectedSymptomsList',
                 diagnosisReport: 'getDiagnosisReport',
                 selectedAnomalies: 'getSelectedAnomaliesList',
             }),
@@ -80,6 +77,9 @@
                 if (!this.selectedAnomalies.includes(anomalyName)) {
                     this.$store.dispatch('addSelectedAnomaly', anomalyName);
                 }
+            },
+            recoverSymptomsList() {
+                this.$store.dispatch('recoverSymptomsList')
             }
         }
     }
