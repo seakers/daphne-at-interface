@@ -115,7 +115,14 @@ const actions = {
     },
     async removeSelectedSymptom({state, commit}, symptom) {
         let currentSelectedSymptoms = JSON.parse(JSON.stringify(state.selectedSymptomsList));
-        let index = currentSelectedSymptoms.indexOf(symptom);
+        let stringifiedSymptom = JSON.stringify(symptom);
+        let index = -1;
+        for (let i = 0; i < currentSelectedSymptoms.length; i++) {
+            let stringifiedItem = JSON.stringify(state.selectedSymptomsList[i]);
+            if (stringifiedItem === stringifiedSymptom) {
+                index = i;
+            }
+        }
         currentSelectedSymptoms.splice(index, 1);
         commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
     },
@@ -271,6 +278,7 @@ const actions = {
             let displayName = parsedSelectedSymptomsList[index]['measurement'];
             let kgName = info[displayName]['kg_name'];
             parsedSelectedSymptomsList[index]['measurement'] = kgName;
+            parsedSelectedSymptomsList[index]['display_name'] = displayName;
         }
 
         // Make the diagnosis request to the backend
