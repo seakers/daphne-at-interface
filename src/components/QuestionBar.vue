@@ -20,7 +20,7 @@
         </div>
         <div>
             <a href="/question_cheatsheet.html" target="_blank">
-                Click here to see a question cheatsheet!
+                Click here to see a list of questions that I can answer!
             </a>
         </div>
     </div>

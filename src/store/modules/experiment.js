@@ -121,9 +121,9 @@ the recommended course of action for resolving N2 Tank Burst.`
                         on: 'top'
                     },
                     text: `I am providing you with three pieces of information here. <br>
-1. Anomaly name - This is the name of the anomaly that is being diagnosed.<br>
-2. Name of the procedures to be followed - This is the name of the procedure that needs to be followed for resolving this anomaly.<br>
-3. Steps to be followed for this procedure - These are the steps you will need to perform in the order shown. Once you finish executing the step, make sure to
+1. <b>Anomaly name</b> - This is the name of the anomaly that is being diagnosed.<br>
+2. <b>Name of the procedures to be followed</b> - This is the name of the procedure that needs to be followed for resolving this anomaly.<br>
+3. <b>Steps to be followed for this procedure</b> - These are the steps you will need to perform in the order shown. Once you finish executing the step, make sure to
 click on the checkbox next to it to mark it as done. Once all the steps have been marked as done, you will see that the status of the procedure changes from
 PENDING to COMPLETED.`
                 },
@@ -139,16 +139,16 @@ PENDING to COMPLETED.`
                 },
                 {
                     attachTo: {
-                        element: '#chat_window',
-                        on: 'left'
+                        element: '.sticky-textbox',
+                        on: 'top'
                     },
                     text: `This is the chat window where you can have a conversation with me. To ask a question, you can write it down in the question bar at the bottom, and then either click Send or press Enter
 on your keyboard. To clear the question bar you can click on "Clear" button.`
                 },
                 {
                     attachTo: {
-                        element: '#chat_window',
-                        on: 'left'
+                        element: '.sticky-textbox',
+                        on: 'top'
                     },
                     text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you the
  current value of partial pressure of nitrogen at Level 1 in the spacecraft. Try writing or copying the above question into the
@@ -156,8 +156,8 @@ on your keyboard. To clear the question bar you can click on "Clear" button.`
                 },
                 {
                     attachTo: {
-                        element: '#chat_window',
-                        on: 'left'
+                        element: '.sticky-textbox',
+                        on: 'top'
                     },
                     text: `You can also ask me questions related to procedures or tools and components required during procedures.
  If you need a pdf procedure for a specific anomaly that you want to resolve, you can ask me "Show procedure for anomaly" followed by anomaly name and
