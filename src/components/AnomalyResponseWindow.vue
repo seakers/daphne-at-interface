@@ -40,8 +40,9 @@
                 </div>
                 <div class="column is-7">
                     <p class="is-mini-title">Steps to be followed for each procedure</p>
-                    <div v-for="procedureDict in anomalyDict['anomalyProcedures']">
+                    <div v-for="(procedureDict, index) in anomalyDict['anomalyProcedures']">
                         <br><b>
+                        {{index + 1}})
                         {{procedureDict['procedureName']}}
                         ({{procedureDict['procedureCurrentStep']}}
                         out of

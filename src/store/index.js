@@ -33,6 +33,7 @@ export default new Vuex.Store({
                 let telemetryDict = received_info['content'];
                 dispatch('initializeTelemetry', telemetryDict);
             } else if (received_info['type'] === 'telemetry_update') {
+                console.log('TELEMETRY UPDATE');
                 let telemetryDict = received_info['content'];
                 let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(telemetryDict, selectedVariables);

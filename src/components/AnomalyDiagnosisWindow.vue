@@ -40,8 +40,8 @@
                     <div class="column is-6" style="margin: 0px; padding: 0px">
                         <u style="margin-bottom:200px">Could be caused by:</u>
                         <ul>
-                            <li  v-on:click="selectAnomaly(anomaly)" v-for="anomaly in diagnosisReport['diagnosis_list']">
-                                {{anomaly}}
+                            <li  v-on:click="selectAnomaly(anomaly['name'])" v-for="anomaly in diagnosisReport['diagnosis_list']">
+                                {{anomaly['name']}} (with a score of {{anomaly['score']}})
                             </li>
                         </ul>
                     </div>
