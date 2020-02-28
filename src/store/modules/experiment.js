@@ -79,7 +79,7 @@ an anomaly that is causing the partial pressure of Nitrogen to exceed nominal va
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `Once you see the symptoms associated with anomalies, click on the 'Diagnose' button to find out what may be the cause. Click on
+                    text: `Once you see the symptoms associated with anomalies, click on the 'Diagnose' button to find out what the cause may be. Click on
                     Diagnose button now.`
                 },
                 {
@@ -87,7 +87,7 @@ an anomaly that is causing the partial pressure of Nitrogen to exceed nominal va
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `Now, you'll see a possible cause for the anomaly you selected has appeared. In this case, a nitrogen tank burst
+                    text: `Now, you'll see that a possible cause for the anomaly you had selected has appeared in this window. In this case, a nitrogen tank burst
                     may be a possible root cause.`
                 },
                 {
