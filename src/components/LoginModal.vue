@@ -41,7 +41,7 @@
                 isLoggedIn: state => state.auth.isLoggedIn,
                 hasLoginError: state => state.auth.hasLoginError,
                 loginError: state => state.auth.loginError
-            })
+            }),
         },
         methods: {
             login() {
@@ -49,7 +49,8 @@
 
                 this.$store.dispatch('loginUser', {
                     username: formData.get("username"),
-                    password: formData.get("password")
+                    password: formData.get("password"),
+                    daphneVersion: 'AT',
                 }).then(async () => {
                     // Start the Websocket
                     await wsTools.wsRefresh();

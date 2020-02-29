@@ -34,7 +34,7 @@ const getters = {
 const actions = {
     async loadDialogue({ state, commit, rootState }) {
         try {
-            let dataResponse = await fetchGet(API_URL + 'eoss/dialogue/history');
+            let dataResponse = await fetchGet(API_URL + 'at/dialogue/history');
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
@@ -51,7 +51,7 @@ const actions = {
     async clearHistory({ state, commit, rootState }) {
         try {
             let reqData = new FormData();
-            let dataResponse = await fetchPost(API_URL + 'eoss/dialogue/clear-history', reqData);
+            let dataResponse = await fetchPost(API_URL + 'at/dialogue/clear-history', reqData);
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
