@@ -28,13 +28,26 @@
             <div class="horizontal-divider"></div>
             <div class="columns">
                 <div class="column is-5">
-                    <p class="is-mini-title">Anomaly name</p>
+                    <p class="is-mini-title">Anomaly root cause</p>
                     <p>{{anomalyDict['anomalyName']}}</p>
                     <br>
-                    <p class="is-mini-title">Name of the procedure(s) to be followed</p>
+                    <p class="is-mini-title">Procedure(s) to be followed</p>
                     <ul v-for="procedureDict in anomalyDict['anomalyProcedures']">
                         <li style="list-style-type: disc; margin-left: 30px">
-                            {{procedureDict['procedureName']}}
+                            <p>{{procedureDict['procedureName']}}</p>
+                            <ul>
+                                <li style="list-style-type: circle; margin-left: 20px">
+                                    Objective: {{procedureDict['procedureObjective']}}
+                                </li>
+                                <li style="list-style-type: circle; margin-left: 20px">
+                                    Equipment:
+                                    <ul v-for="item in procedureDict['procedureEquipment']">
+                                        <li style="margin-left: 20px">
+                                            {{item}}
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -105,10 +118,14 @@
                         let procedureDict = {};
                         let procedureName = this.selectedAnomaliesInfo[anomalyName]['anomalyProcedures'][procedureIndex];
                         let procedureSteps = this.selectedProceduresInfo[procedureName]['procedureStepsList'];
-                        let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['currentStep'];
+                        let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['procedureCurrentStep'];
+                        let procedureObjective = this.selectedProceduresInfo[procedureName]['procedureObjective'];
+                        let procedureEquipment = this.selectedProceduresInfo[procedureName]['procedureEquipment'];
                         procedureDict['procedureName'] = procedureName;
                         procedureDict['procedureSteps'] = procedureSteps;
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
+                        procedureDict['procedureObjective'] = procedureObjective;
+                        procedureDict['procedureEquipment'] = procedureEquipment;
                         procedureList.push(procedureDict);
                     }
                     anomalyDict['anomalyName'] = anomalyName;

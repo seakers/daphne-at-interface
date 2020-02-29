@@ -126,7 +126,7 @@ const actions = {
         currentSelectedSymptoms.splice(index, 1);
         commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
     },
-    async retrieveProcedureFromAnomaly(state, anomalyName) {
+    async retrieveProceduresFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
         reqData.append('anomaly_name',  JSON.stringify(anomalyName));
         let response = await fetchPost('/api/at/retrieveProcedureFromAnomaly', reqData);
@@ -150,6 +150,30 @@ const actions = {
             return ['ERROR']
         }
     },
+    async retrieveObjectiveFromProcedure(state, procedureName) {
+        let reqData = new FormData();
+        reqData.append('procedure_name',  JSON.stringify(procedureName));
+        let response = await fetchPost('/api/at/retrieveObjectiveFromProcedure', reqData);
+        if (response.ok) {
+            let objective = await response.json();
+            return objective;
+        } else {
+            console.log('Error retrieving the procedure objective.');
+            return ['ERROR']
+        }
+    },
+    async retrieveEquipmentFromProcedure(state, procedureName) {
+        let reqData = new FormData();
+        reqData.append('procedure_name',  JSON.stringify(procedureName));
+        let response = await fetchPost('/api/at/retrieveEquipmentFromProcedure', reqData);
+        if (response.ok) {
+            let equipment = await response.json();
+            return equipment;
+        } else {
+            console.log('Error retrieving the procedure objective.');
+            return ['ERROR']
+        }
+    },
     async addSelectedAnomaly({state, commit}, anomalyName) {
         // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
         // changes will be committed at the end of the action.
@@ -160,7 +184,7 @@ const actions = {
 
 
         // Retrieve a list with the names of all the procedures related to the anomaly
-        let procedures = await Promise.resolve(this.dispatch('retrieveProcedureFromAnomaly', anomalyName));
+        let procedures = await Promise.resolve(this.dispatch('retrieveProceduresFromAnomaly', anomalyName));
 
         // Update the copy of the state variables.
         newSelectedAnomaliesList.push(anomalyName);
@@ -172,7 +196,13 @@ const actions = {
             if (!newSelectedProceduresList.includes(procedureName)) {
                 // In case it is not already selected, retrieve its list of steps
                 let stepsList = await Promise.resolve(this.dispatch('retrieveStepsFromProcedure', procedureName));
-                let procedureInfo = {'procedureStepsList': stepsList, 'currentStep': 0};
+                let objective = await Promise.resolve(this.dispatch('retrieveObjectiveFromProcedure', procedureName));
+                let equipment = await Promise.resolve(this.dispatch('retrieveEquipmentFromProcedure', procedureName));
+                let procedureInfo = {
+                    'procedureStepsList': stepsList,
+                    'procedureCurrentStep': 0,
+                    'procedureObjective': objective,
+                    'procedureEquipment': equipment};
 
                 // Commit the update on the procedure and its information
                 newSelectedProceduresList.push(procedureName);
