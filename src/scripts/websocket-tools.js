@@ -41,7 +41,12 @@ class WebsocketTools {
     }
 
     async wsRefresh() {
-        this.websocket.refresh();
+        try {
+            this.websocket.refresh();
+        }
+        catch(err) {
+            console.log(err);
+        }
     }
 
     async experimentWsRefresh() {

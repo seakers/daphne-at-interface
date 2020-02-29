@@ -280,11 +280,16 @@ const actions = {
                 let experimentInformation = await response.json();
                 if (experimentInformation.is_running) {
                     // If experiment was already running restore the last known state
-                    commit('setIsRecovering', true);
-                    commit('restoreAuth', experimentInformation.experiment_data.auth);
-                    // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
-                    commit('restoreDaphne', experimentInformation.experiment_data.daphne);
-                    commit('restoreExperiment', experimentInformation.experiment_data.experiment);
+                    try {
+                        commit('setIsRecovering', true);
+                        commit('restoreAuth', experimentInformation.experiment_data.auth);
+                        // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
+                        commit('restoreDaphne', experimentInformation.experiment_data.daphne);
+                        commit('restoreExperiment', experimentInformation.experiment_data.experiment);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                     // Start the websockets after completing the request so the session cookie is already set
                     await wsTools.experimentWsConnect();
                     await wsTools.wsConnect(this);

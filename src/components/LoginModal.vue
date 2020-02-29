@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import {mapGetters, mapState} from 'vuex';
     import {wsTools} from "../scripts/websocket-tools";
 
     export default {
@@ -41,6 +41,9 @@
                 isLoggedIn: state => state.auth.isLoggedIn,
                 hasLoginError: state => state.auth.hasLoginError,
                 loginError: state => state.auth.loginError
+            }),
+            ...mapGetters({
+                telemetryIsOngoing: 'getTelemetryIsOngoing',
             }),
         },
         methods: {
@@ -53,7 +56,12 @@
                     daphneVersion: 'AT',
                 }).then(async () => {
                     // Start the Websocket
-                    await wsTools.wsRefresh();
+                    await wsTools.wsRefresh().then(async () => {
+                        // If not already ongoing, start receiving a fake telemetry for the tutorial
+                        if (!this.telemetryIsOngoing) {
+                            await this.$store.dispatch('startFakeTelemetry');
+                        }
+                    });
                 });
             },
             openRegisterForm() {

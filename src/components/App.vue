@@ -110,9 +110,8 @@
                 this.$store.dispatch('startExperiment').then(async () => {
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
-                    await wsTools.experimentWsConnect().then(async() =>{
-                        await this.$store.dispatch('startFakeTelemetry');
-                    });
+                    // Establish the experiment websocket connection
+                    await wsTools.experimentWsConnect();
                     // Set the tutorial
                     this.$store.commit('setExperimentStage', 'tutorial');
                     this.$store.commit('setInExperiment', true);
@@ -195,6 +194,10 @@
                         this.tutorial.on("complete", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
+                            });
+                            // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
+                            this.$store.dispatch('stopTelemetry').then(() => {
+                                this.$store.dispatch('startTelemetry');
                             });
                         });
                         this.tutorial.start();
