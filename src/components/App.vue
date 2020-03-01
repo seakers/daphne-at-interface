@@ -1,11 +1,17 @@
 <template>
     <div class="is-seclss-background-black is-vertical-filler">
-        <div class="horizontal-divider"></div>
         <div class="columns is-vertical-filler" style="margin-bottom: 5px">
             <div class="column is-8.9 is-vertical-filler">
-                <div class="box is-main is-sticky" style="margin-bottom: 5px">
-                    <anomaly-detection-window></anomaly-detection-window>
+                <div class="is-sticky" >
+                    <div style="height: 5px; background-color: #111111"></div>
+                    <div class="box is-main" style="margin: 0px;">
+                        <anomaly-detection-window></anomaly-detection-window>
+                    </div>
+                    <div style="height: 10px; background-color: #111111"></div>
+                    <div class="horizontal-divider" style="margin-bottom: 0px"></div>
+                    <div style="height: 20px; background-color: #111111"></div>
                 </div>
+
                 <div class="box is-main" style="margin-bottom: 5px">
                     <sensor-data-window></sensor-data-window>
                 </div>
@@ -38,7 +44,6 @@
     import SensorDataWindow from "./SensorDataWindow";
     import AnomalyDetectionWindow from "./AnomalyDetectionWindow";
     import AnomalyDiagnosisWindow from "./AnomalyDiagnosisWindow";
-    import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import TelemetryButtons from "./TelemetryButtons";
     import {fetchGet, fetchPost} from "../scripts/fetch-helpers";
     import DaphneAnswer from "./DaphneAnswer";
@@ -48,6 +53,7 @@
     import QuestionBar from './QuestionBar';
     import Modal from './Modal';
     import ChatWindow from "./ChatWindow";
+    import AnomalyResponseWindow from "./AnomalyResponseWindow";
 
     export default {
         name: 'app',

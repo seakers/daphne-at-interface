@@ -288,10 +288,17 @@ const actions = {
         // The updated procedure information is parsed
         let procedureName = newProcedureDict['procedureName'];
         let procedureStepsList = newProcedureDict['procedureSteps'];
-        let currentStep = newProcedureDict['procedureCurrentStep'];
+        let procedureCurrentStep = newProcedureDict['procedureCurrentStep'];
+        let procedureObjective = newProcedureDict['procedureObjective'];
+        let procedureEquipment = newProcedureDict['procedureEquipment'];
 
         // The copy is modified
-        newSelectedProceduresInfo[procedureName] = {'procedureStepsList': procedureStepsList, 'currentStep': currentStep};
+        newSelectedProceduresInfo[procedureName] = {
+            'procedureStepsList': procedureStepsList,
+            'procedureCurrentStep': procedureCurrentStep,
+            'procedureObjective': procedureObjective,
+            'procedureEquipment': procedureEquipment,
+        };
 
         // Perform the commit
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);

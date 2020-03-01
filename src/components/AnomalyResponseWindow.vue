@@ -25,59 +25,55 @@
             </multiselect>
         </div>
         <div v-for="anomalyDict in anomalyList" class="is-content">
-            <div class="horizontal-divider"></div>
-            <div class="columns">
-                <div class="column is-5">
-                    <p class="is-mini-title">Anomaly root cause</p>
-                    <p>{{anomalyDict['anomalyName']}}</p>
-                    <br>
-                    <p class="is-mini-title">Procedure(s) to be followed</p>
-                    <ul v-for="procedureDict in anomalyDict['anomalyProcedures']">
-                        <li style="list-style-type: disc; margin-left: 30px">
-                            <p>{{procedureDict['procedureName']}}</p>
-                            <ul>
-                                <li style="list-style-type: circle; margin-left: 20px">
-                                    Objective: {{procedureDict['procedureObjective']}}
-                                </li>
-                                <li style="list-style-type: circle; margin-left: 20px">
-                                    Equipment:
-                                    <ul v-for="item in procedureDict['procedureEquipment']">
-                                        <li style="margin-left: 20px">
-                                            {{item}}
-                                        </li>
-                                    </ul>
+            <div class="horizontal-divider" style="margin-bottom: 10px"></div>
+            <p class="is-mini-title" style="margin-bottom:10px">{{anomalyDict['anomalyName']}}</p>
+            <div v-for="(procedureDict, procedureIndex) in anomalyDict['anomalyProcedures']">
+                <div class="procedure" :class="accordionClasses[anomalyDict['anomalyName']][procedureIndex]">
+                    <div class="procedure-header" @click="toggleAccordion(anomalyDict['anomalyName'], procedureIndex)">
+                        {{procedureIndex}})   {{procedureDict['procedureName']}}
+                        <span v-if="isComplete(procedureDict)" style="color: greenyellow; float:right">
+                            COMPLETED
+                        </span>
+                        <span v-else style="color: red; float:right">
+                            PENDING
+                        </span>
+                    </div>
+                    <div class="procedure-body">
+                        <div class="procedure-content">
+                            <p >
+                                <span style="color: #0AFEFF">Objective </span>
+                                {{procedureDict['procedureObjective']}}
+                            </p>
+                            <p style="margin-top: 10px">
+                                <span style="color: #0AFEFF">Equipment</span>
+                            </p>
+                            <ul v-for="item in procedureDict['procedureEquipment']">
+                                <li style="margin-left: 20px">
+                                    {{item}}
                                 </li>
                             </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="column is-7">
-                    <p class="is-mini-title">Steps to be followed for each procedure</p>
-                    <div v-for="(procedureDict, index) in anomalyDict['anomalyProcedures']">
-                        <br><b>
-                        {{index + 1}})
-                        {{procedureDict['procedureName']}}
-                        ({{procedureDict['procedureCurrentStep']}}
-                        out of
-                        {{procedureDict['procedureSteps'].length}}
-                        steps performed)
-                        <span v-if="isComplete(procedureDict)" style="color: greenyellow"> COMPLETED</span>
-                        <span v-else style="color: red"> PENDING</span>
-                    </b>
-                        <div  class="scrollable-container">
-                            <div v-for="(stepItem, stepIndex) in procedureDict['procedureSteps']">
-                                <input type="checkbox"
-                                       v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
-                                       v-on:click="checkIt(procedureDict, stepIndex)"
-                                       :checked="stepItem['isDone']">
-                                <label>{{stepItem['label']}} - {{stepItem['action']}}</label>
-                                <br />
+                            <p style="margin-top: 10px">
+                                <span style="color: #0AFEFF">Steps to follow</span>
+                                ({{procedureDict['procedureCurrentStep']}}
+                                out of
+                                {{procedureDict['procedureSteps'].length}}
+                                steps performed)
+                            </p>
+                            <div  class="scrollable-container" style="margin-left: 20px">
+                                <div v-for="(stepItem, stepIndex) in procedureDict['procedureSteps']">
+                                    <input type="checkbox"
+                                           v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
+                                           v-on:click="checkIt(procedureDict, stepIndex)"
+                                           :checked="stepItem['isDone']">
+                                    <label>{{stepItem['label']}} - {{stepItem['action']}}</label>
+                                    <br />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="horizontal-divider"></div>
+            <div class="horizontal-divider" style="margin-top: 30px"></div>
         </div>
     </div>
 </template>
@@ -90,6 +86,13 @@
     export default {
         name: "AnomalyResponseWindow",
 
+        data() {
+            return {
+                accordionTabIsOpen: {},
+                dodgeThis: true,
+            }
+        },
+
         computed: {
             ...mapGetters({
                 selectedAnomaliesList: 'getSelectedAnomaliesList',
@@ -98,12 +101,12 @@
                 selectedProceduresList: 'getSelectedProceduresList',
                 selectedProceduresInfo: 'getSelectedProceduresInfo',
             }),
-            value ()  {
+            value()  {
                 let aux = [];
                 for (let index in this.selectedAnomaliesList) {aux.push({'name': this.selectedAnomaliesList[index]})}
                 return aux;
             },
-            options ()  {
+            options()  {
                 let aux = [];
                 for (let i = 0; i < this.allAnomalies.length; i++) {aux.push({'name': this.allAnomalies[i]})}
                 return aux;
@@ -126,6 +129,7 @@
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;
+                        procedureDict['isOpen'] = false;
                         procedureList.push(procedureDict);
                     }
                     anomalyDict['anomalyName'] = anomalyName;
@@ -133,6 +137,25 @@
                     anomalyList.push(anomalyDict);
                 }
                 return anomalyList;
+            },
+            accordionClasses() {
+                let dodgeThis = this.dodgeThis;
+                let accordionClassesDict = {};
+                for (let key in this.accordionTabIsOpen) {
+                    let boolList = this.accordionTabIsOpen[key];
+                    let aux = [];
+                    for (let index in boolList) {
+                        let isOpen = boolList[index];
+                        let struct = {
+                            'is-closed': !isOpen,
+                            'is-primary': isOpen,
+                            'is-dark': !isOpen
+                        }
+                        aux.push(struct)
+                    }
+                    accordionClassesDict[key] = aux;
+                }
+                return accordionClassesDict
             }
         },
 
@@ -179,10 +202,38 @@
                 // Perform the update
                 this.$store.dispatch('updateProcedureDict', newProcedureDict);
             },
+            toggleAccordion(anomalyName, procedureIndex) {
+                this.accordionTabIsOpen[anomalyName][procedureIndex] = !this.accordionTabIsOpen[anomalyName][procedureIndex];
+                this.dodgeThis = !this.dodgeThis;
+            },
         },
 
         mounted: function() {
             this.loadAnomalies()
+        },
+
+        watch: {
+            selectedAnomaliesList(newVal, oldVal) {
+                // Find the added or substracted anomalies
+                let addedVal = newVal.filter(function(obj) { return oldVal.indexOf(obj) === -1; });
+                let removedVal = oldVal.filter(function(obj) { return newVal.indexOf(obj) === -1; });
+                // Proceed according to whether an anomaly has been added or substracted
+                if (removedVal.length > 0) {
+                    // Delete the anomaly "tab is open" bool list from the accordion bool dictionary
+                    let removedAnomalyName = removedVal[0];
+                    delete this.accordionTabIsOpen[removedAnomalyName];
+                }
+                if (addedVal.length > 0) {
+                    // Add the anomaly "tab is open" bool list from the accordion bool dictionary
+                    let addedAnomalyName = addedVal[0];
+                    let anomalyProcedures = this.selectedAnomaliesInfo[addedAnomalyName]['anomalyProcedures'];
+                    let boolList = [];
+                    for (let index in anomalyProcedures) {
+                        boolList.push(false);
+                    }
+                    this.accordionTabIsOpen[addedAnomalyName] = boolList;
+                }
+            }
         },
 
         components: {
