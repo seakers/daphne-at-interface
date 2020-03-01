@@ -132,3 +132,9 @@ body {
     color: $white;
     background: $cyan;
 }
+
+.is-sticky {
+    position: sticky;
+    top: 5px;
+    z-index: 10;
+}

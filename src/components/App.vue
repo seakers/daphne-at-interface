@@ -3,7 +3,7 @@
         <div class="horizontal-divider"></div>
         <div class="columns is-vertical-filler" style="margin-bottom: 5px">
             <div class="column is-8.9 is-vertical-filler">
-                <div class="box is-main" style="margin-bottom: 5px">
+                <div class="box is-main is-sticky" style="margin-bottom: 5px">
                     <anomaly-detection-window></anomaly-detection-window>
                 </div>
                 <div class="box is-main" style="margin-bottom: 5px">

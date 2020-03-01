@@ -7,11 +7,22 @@
             No anomalous symptoms detected.
         </div>
         <div v-else class="is-content" style="min-height: 100px">
-            <ul>
-                <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsList">
-                    {{symptom['detection_text']}}
-                </li>
-            </ul>
+            <div class="columns">
+                <div class="column is-6">
+                    <ul>
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn">
+                            {{symptom['detection_text']}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="column is-6">
+                    <ul>
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn">
+                            {{symptom['detection_text']}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -34,6 +45,22 @@
             ...mapGetters({
                 symptomsList: 'getSymptomsList',
             }),
+            symptomsListLeftColumn() {
+                let aux = [];
+                let symptomsList = this.symptomsList;
+                for (let i = 0; i < symptomsList.length; i = i + 2) {
+                    aux.push(symptomsList[i]);
+                }
+                return aux;
+            },
+            symptomsListRightColumn() {
+                let aux = [];
+                let symptomsList = this.symptomsList;
+                for (let i = 1; i < symptomsList.length; i = i + 2) {
+                    aux.push(symptomsList[i]);
+                }
+                return aux;
+            }
         },
 
         methods: {
