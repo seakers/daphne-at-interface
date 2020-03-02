@@ -138,37 +138,13 @@ const actions = {
             return 'ERROR'
         }
     },
-    async retrieveStepsFromProcedure(state, procedureName) {
+    async retrieveInfoFromProcedure(state, procedureName) {
         let reqData = new FormData();
         reqData.append('procedure_name',  JSON.stringify(procedureName));
-        let response = await fetchPost('/api/at/retrieveStepsFromProcedure', reqData);
+        let response = await fetchPost('/api/at/retrieveInfoFromProcedure', reqData);
         if (response.ok) {
-            let stepsList = await response.json();
-            return stepsList;
-        } else {
-            console.log('Error retrieving the procedure name.');
-            return ['ERROR']
-        }
-    },
-    async retrieveObjectiveFromProcedure(state, procedureName) {
-        let reqData = new FormData();
-        reqData.append('procedure_name',  JSON.stringify(procedureName));
-        let response = await fetchPost('/api/at/retrieveObjectiveFromProcedure', reqData);
-        if (response.ok) {
-            let objective = await response.json();
-            return objective;
-        } else {
-            console.log('Error retrieving the procedure objective.');
-            return ['ERROR']
-        }
-    },
-    async retrieveEquipmentFromProcedure(state, procedureName) {
-        let reqData = new FormData();
-        reqData.append('procedure_name',  JSON.stringify(procedureName));
-        let response = await fetchPost('/api/at/retrieveEquipmentFromProcedure', reqData);
-        if (response.ok) {
-            let equipment = await response.json();
-            return equipment;
+            let info = await response.json();
+            return info;
         } else {
             console.log('Error retrieving the procedure objective.');
             return ['ERROR']
@@ -194,15 +170,15 @@ const actions = {
         for (let index in procedures) {
             let procedureName = procedures[index];
             if (!newSelectedProceduresList.includes(procedureName)) {
-                // In case it is not already selected, retrieve its list of steps
-                let stepsList = await Promise.resolve(this.dispatch('retrieveStepsFromProcedure', procedureName));
-                let objective = await Promise.resolve(this.dispatch('retrieveObjectiveFromProcedure', procedureName));
-                let equipment = await Promise.resolve(this.dispatch('retrieveEquipmentFromProcedure', procedureName));
+                // In case it is not already selected, retrieve its list information
+                let info = await Promise.resolve(this.dispatch('retrieveInfoFromProcedure', procedureName));
                 let procedureInfo = {
-                    'procedureStepsList': stepsList,
+                    'procedureStepsList': info['procedureStepsList'],
                     'procedureCurrentStep': 0,
-                    'procedureObjective': objective,
-                    'procedureEquipment': equipment};
+                    'procedureObjective': info['procedureObjective'],
+                    'procedureEquipment': info['procedureEquipment'],
+                    'procedureIsOpen': false,
+                };
 
                 // Commit the update on the procedure and its information
                 newSelectedProceduresList.push(procedureName);
@@ -291,6 +267,7 @@ const actions = {
         let procedureCurrentStep = newProcedureDict['procedureCurrentStep'];
         let procedureObjective = newProcedureDict['procedureObjective'];
         let procedureEquipment = newProcedureDict['procedureEquipment'];
+        let procedureIsOpen = newProcedureDict['procedureIsOpen'];
 
         // The copy is modified
         newSelectedProceduresInfo[procedureName] = {
@@ -298,6 +275,7 @@ const actions = {
             'procedureCurrentStep': procedureCurrentStep,
             'procedureObjective': procedureObjective,
             'procedureEquipment': procedureEquipment,
+            'procedureIsOpen': procedureIsOpen,
         };
 
         // Perform the commit

@@ -24,13 +24,17 @@
                     @remove="newDeselection">
             </multiselect>
         </div>
-        <div v-for="anomalyDict in anomalyList" class="is-content">
+        <div v-for="(anomalyDict, anomalyIndex) in anomalyList" class="is-content" :key="componentKey">
             <div class="horizontal-divider" style="margin-bottom: 10px"></div>
             <p class="is-mini-title" style="margin-bottom:10px">{{anomalyDict['anomalyName']}}</p>
             <div v-for="(procedureDict, procedureIndex) in anomalyDict['anomalyProcedures']">
-                <div class="procedure" :class="accordionClasses[anomalyDict['anomalyName']][procedureIndex]">
-                    <div class="procedure-header" @click="toggleAccordion(anomalyDict['anomalyName'], procedureIndex)">
-                        {{procedureIndex}})   {{procedureDict['procedureName']}}
+                <div class="procedure" :class="{
+                            'is-closed': !anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen'],
+                            'is-primary': anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen'],
+                            'is-dark': !anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen']
+                        }">
+                    <div class="procedure-header" @click="toggleAccordion(procedureDict)">
+                        {{procedureIndex + 1}})   {{procedureDict['procedureName']}}
                         <span v-if="isComplete(procedureDict)" style="color: greenyellow; float:right">
                             COMPLETED
                         </span>
@@ -88,8 +92,8 @@
 
         data() {
             return {
-                accordionTabIsOpen: {},
-                dodgeThis: true,
+                componentKey: true,
+                anomalyListCopy: []
             }
         },
 
@@ -124,12 +128,13 @@
                         let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['procedureCurrentStep'];
                         let procedureObjective = this.selectedProceduresInfo[procedureName]['procedureObjective'];
                         let procedureEquipment = this.selectedProceduresInfo[procedureName]['procedureEquipment'];
+                        let procedureIsOpen = this.selectedProceduresInfo[procedureName]['procedureIsOpen'];
                         procedureDict['procedureName'] = procedureName;
                         procedureDict['procedureSteps'] = procedureSteps;
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;
-                        procedureDict['isOpen'] = false;
+                        procedureDict['procedureIsOpen'] = procedureIsOpen;
                         procedureList.push(procedureDict);
                     }
                     anomalyDict['anomalyName'] = anomalyName;
@@ -138,35 +143,18 @@
                 }
                 return anomalyList;
             },
-            accordionClasses() {
-                let dodgeThis = this.dodgeThis;
-                let accordionClassesDict = {};
-                for (let key in this.accordionTabIsOpen) {
-                    let boolList = this.accordionTabIsOpen[key];
-                    let aux = [];
-                    for (let index in boolList) {
-                        let isOpen = boolList[index];
-                        let struct = {
-                            'is-closed': !isOpen,
-                            'is-primary': isOpen,
-                            'is-dark': !isOpen
-                        }
-                        aux.push(struct)
-                    }
-                    accordionClassesDict[key] = aux;
-                }
-                return accordionClassesDict
-            }
         },
 
         methods: {
             async newSelection(selectedAnomaly) {
                 let anomalyName = selectedAnomaly['name'];
-                if (!this.selectedAnomaliesList.includes(anomalyName)) {await this.$store.dispatch('addSelectedAnomaly', anomalyName)}
+                if (!this.selectedAnomaliesList.includes(anomalyName)) {
+                    await this.$store.dispatch('addSelectedAnomaly', anomalyName);
+                }
             },
             async newDeselection(deselectedAnomaly) {
                 let anomalyName = deselectedAnomaly['name'];
-                await this.$store.dispatch('removeSelectedAnomaly', anomalyName)
+                await this.$store.dispatch('removeSelectedAnomaly', anomalyName);
             },
             loadAnomalies() {
                 this.$store.dispatch('loadAllAnomalies');
@@ -202,38 +190,14 @@
                 // Perform the update
                 this.$store.dispatch('updateProcedureDict', newProcedureDict);
             },
-            toggleAccordion(anomalyName, procedureIndex) {
-                this.accordionTabIsOpen[anomalyName][procedureIndex] = !this.accordionTabIsOpen[anomalyName][procedureIndex];
-                this.dodgeThis = !this.dodgeThis;
+            toggleAccordion(procedureDict) {
+                procedureDict['procedureIsOpen'] = !procedureDict['procedureIsOpen'];
+                this.$store.dispatch('updateProcedureDict', procedureDict);
             },
         },
 
         mounted: function() {
             this.loadAnomalies()
-        },
-
-        watch: {
-            selectedAnomaliesList(newVal, oldVal) {
-                // Find the added or substracted anomalies
-                let addedVal = newVal.filter(function(obj) { return oldVal.indexOf(obj) === -1; });
-                let removedVal = oldVal.filter(function(obj) { return newVal.indexOf(obj) === -1; });
-                // Proceed according to whether an anomaly has been added or substracted
-                if (removedVal.length > 0) {
-                    // Delete the anomaly "tab is open" bool list from the accordion bool dictionary
-                    let removedAnomalyName = removedVal[0];
-                    delete this.accordionTabIsOpen[removedAnomalyName];
-                }
-                if (addedVal.length > 0) {
-                    // Add the anomaly "tab is open" bool list from the accordion bool dictionary
-                    let addedAnomalyName = addedVal[0];
-                    let anomalyProcedures = this.selectedAnomaliesInfo[addedAnomalyName]['anomalyProcedures'];
-                    let boolList = [];
-                    for (let index in anomalyProcedures) {
-                        boolList.push(false);
-                    }
-                    this.accordionTabIsOpen[addedAnomalyName] = boolList;
-                }
-            }
         },
 
         components: {
