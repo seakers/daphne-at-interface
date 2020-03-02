@@ -116,6 +116,12 @@
                 this.$store.dispatch('startExperiment').then(async () => {
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
+
+                    // If not already ongoing, start receiving a fake telemetry for the tutorial
+                    if (!this.telemetryIsOngoing) {
+                        await this.$store.dispatch('startFakeTelemetry');
+                    }
+
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
                     // Set the tutorial
@@ -177,7 +183,7 @@
                     // Make sure nothing is lingering from last stage, etc etc
 
                     // Set problem for this stage and load the corresponding dataset
-                    console.log(this.problems, this.currentStageNum);
+                    console.log(this.currentStageNum);
 
                     // Stage specific behaviour
                     switch (this.experimentStage) {

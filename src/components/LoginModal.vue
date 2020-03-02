@@ -56,12 +56,7 @@
                     daphneVersion: 'AT',
                 }).then(async () => {
                     // Start the Websocket
-                    await wsTools.wsRefresh().then(async () => {
-                        // If not already ongoing, start receiving a fake telemetry for the tutorial
-                        if (!this.telemetryIsOngoing) {
-                            await this.$store.dispatch('startFakeTelemetry');
-                        }
-                    });
+                    console.log('Submit LOGIN');
                 });
             },
             openRegisterForm() {

@@ -29,8 +29,8 @@ const state = {
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `This is the <b>Sensor Data</b> window which will provide you with subsystem level information of ECLSS.
-Here you will see real-time telemetry feed from various ECLSS subsystems. If you want to see the data related to a specific signature,
+                    text: `This is the <b>Sensor Data</b> window which will provide you the subsystem level information of ECLSS.
+Here you will see real-time telemetry feed from various ECLSS subsystems. If you want to see the sensor data related to a specific measurement,
 click on the drop down menu and select the signature you want to see. Right now you are looking at the feed of a default sensor.`
                 },
                 {
@@ -46,7 +46,7 @@ click on the drop down menu and select the signature you want to see. Right now 
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `You can click the close button next to a signature to remove it from the telemetry feed. Try doing it now. Click on Next when you're done.`
+                    text: `You can click the cross button next to a measurement name to remove it from the telemetry feed plot. Try doing it now. Click on Next when you're done.`
                 },
                 {
                     attachTo: {
@@ -286,6 +286,7 @@ const actions = {
                         // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
                         commit('restoreDaphne', experimentInformation.experiment_data.daphne);
                         commit('restoreExperiment', experimentInformation.experiment_data.experiment);
+                        // commit('restoreDaphneAT', experimentInformation.experiment_data.daphneat);
                     }
                     catch(err) {
                         console.log(err);

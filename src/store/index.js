@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import daphne from './modules/daphne';
-import telemetryFeed from './modules/daphne-at';
+import daphneat from './modules/daphne-at';
 import experiment from './modules/experiment';
 import auth from'./modules/auth';
 import modal from './modules/modal';
@@ -31,11 +31,13 @@ export default new Vuex.Store({
                 console.log(received_info['text']);
             } else if (received_info['type'] === 'initialize_telemetry') {
                 let telemetryDict = received_info['content'];
-                dispatch('initializeTelemetry', telemetryDict);
+                if (telemetryDict !== '') {
+                    dispatch('initializeTelemetry', telemetryDict);
+                }
             } else if (received_info['type'] === 'telemetry_update') {
                 console.log('TELEMETRY UPDATE');
                 let telemetryDict = received_info['content'];
-                let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
+                let selectedVariables = state.daphneat.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(telemetryDict, selectedVariables);
                 dispatch('updateTelemetryPlotData', plotData);
                 dispatch('updateTelemetryValuesAndInfo', telemetryDict);
@@ -48,7 +50,7 @@ export default new Vuex.Store({
     modules: {
         daphne,
         experiment,
-        telemetryFeed,
+        daphneat,
         auth,
         modal
     },

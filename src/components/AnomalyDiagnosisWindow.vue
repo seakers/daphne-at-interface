@@ -71,6 +71,7 @@
                 this.$store.dispatch('removeSelectedSymptom', symptom);
             },
             requestDiagnosis() {
+                console.log('REQUEST DIAGNOSIS');
                 this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
             },
             selectAnomaly(anomalyName) {

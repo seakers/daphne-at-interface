@@ -21,9 +21,10 @@
             </ul>
             <p>Selected procedures:</p>
             <ul>
-                <li v-for="procedure in selectedProceduresList">{{ procedure }}</li>
+                <li v-for="(key, value) in selectedProceduresInfo">
+                    {{key}} (Current Step: {{value['procedureStepList'][value['procedureCurrentStep']]}})
+                </li>
             </ul>
-            <p>Current Step: {{currentStep}}</p>
         </div>
     </div>
 </template>
@@ -49,6 +50,7 @@
                 selectedSymptomsList: 'getSelectedSymptomsList',
                 selectedAnomaliesList: 'getSelectedAnomaliesList',
                 selectedProceduresList: 'getSelectedProceduresList',
+                selectedProceduresInfo: 'getSelectedProceduresInfo',
             }),
         },
         components: {
@@ -68,8 +70,8 @@
                         let state = await dataResponse.json();
                         this.currentStage = state["experiment"]["experimentStage"];
                         this.dialogueHistory = state["daphne"]["dialogueHistory"];
-                        this.selectedSymptomsList = state["telemetryFeed"]["selectedSymptomsList"];
-                        this.selectedAnomaliesList = state["telemetryFeed"]["selectedAnomaliesList"];
+                        this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
+                        this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
                         // TODO: Add the rest when they exist
                     }
                     else {

@@ -43,12 +43,13 @@ store.subscribe(async (mutation, state) => {
 
         // Upload new state to server
         if (stateTimer === 0) {
-            stateTimer = window.setInterval(async () => {
+            stateTimer = window.setInterval(() => {
+                console.log('State update');
                 wsTools.experimentWebsocket.send(JSON.stringify({
                     msg_type: 'update_state',
                     state: state
                 }));
-            }, 10000);
+            }, 1000);
         }
     } else {
         if (stateTimer !== 0) {
@@ -131,6 +132,6 @@ if (annyang) {
     SpeechKITT.setStylesheet('//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/themes/flat.css');
 
     // Render KITT's interface
-    // SpeechKITT.vroom();
-    // SpeechKITT.startRecognition();
+    SpeechKITT.vroom();
+    //SpeechKITT.startRecognition();
 }
