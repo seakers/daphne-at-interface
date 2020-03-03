@@ -17,9 +17,18 @@ import './styles/app.scss';
 
 // Record state and mutations when inside an experiment
 let stateTimer = 0;
-let mutationBlackList = ['setIsLoading', 'resetDaphne', 'clearFeatures',
+let mutationBlackList = [
+    'setIsLoading', 'resetDaphne', 'clearFeatures',
     'resetFilter', 'setProblem', 'updateExtra', 'updatePlotData', 'restoreFilter',
-    'restoreDaphne', 'restoreExperiment', 'setIsRecovering'];
+    'restoreDaphne', 'restoreExperiment', 'setIsRecovering',
+    'mutateTelemetryIsOngoing', 'mutateTelemetryPlotData', 'mutateTelemetryValues', 'mutateTelemetryInfo',
+    'mutateTelemetryInputVariables', 'mutateSymptomsList', 'mutateLastSelectedSymptomsList', 'mutateAllAnomaliesList',
+    'mutateSelectedAnomaliesInfo', 'mutateSelectedProceduresInfo', 'restoreDaphneAT'
+];
+let daphneATStateBlackList = [
+    'telemetryPlotData', 'telemetryValues', 'telemetryInfo', 'telemetryInputVariables', 'symptomsList',
+    'selectedSymptomsList', 'allAnomaliesList', 'selectedAnomaliesInfo', 'selectedProceduresInfo',
+];
 let updatesContextList = [
     'mutateTelemetryValues',
     'mutateSelectedAnomaliesList',
@@ -34,7 +43,7 @@ store.subscribe(async (mutation, state) => {
         // Only update mutations if after tutorial (currentStageNum > 0)
         if (state.experiment.currentStageNum > 0 && !mutationBlackList.includes(mutation.type)) {
             // Upload mutation to server
-            if (wsTools.experimentWebsocket !== 'undefined') {
+            if (wsTools.experimentWebsocket !== undefined) {
                 wsTools.experimentWebsocket.send(JSON.stringify({
                     msg_type: 'add_action',
                     stage: state.experiment.currentStageNum - 1,
@@ -47,10 +56,17 @@ store.subscribe(async (mutation, state) => {
         if (stateTimer === 0) {
             stateTimer = window.setInterval(() => {
                 console.log('State update');
-                if (wsTools.experimentWebsocket !== 'undefined') {
+                if (wsTools.experimentWebsocket !== undefined) {
+                    let partialState = JSON.parse(JSON.stringify(state));
+                    for (let key in partialState['daphneat']) {
+                        if (daphneATStateBlackList.includes(key)) {
+                            delete partialState['daphneat'][key];
+                        }
+                    }
+                    delete partialState['experiment']['stageInformation']['tutorial']['steps'];
                     wsTools.experimentWebsocket.send(JSON.stringify({
                         msg_type: 'update_state',
-                        state: state
+                        state: partialState
                     }));
                 }
             }, 1000);

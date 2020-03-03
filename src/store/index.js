@@ -44,6 +44,12 @@ export default new Vuex.Store({
             } else if (received_info['type'] === 'symptoms_report') {
                 let symptoms_report = received_info['content'];
                 dispatch('updateSymptomsList', symptoms_report);
+            } else if (received_info['type'] === 'finish_experiment_from_mcc') {
+                dispatch('finishStage').then(() => {
+                    dispatch('finishExperiment').then(() => {
+                        dispatch('stopTelemetry');
+                    });
+                });
             }
         },
     },

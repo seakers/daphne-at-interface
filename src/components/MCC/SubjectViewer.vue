@@ -35,6 +35,13 @@
                     <div class="scrollable-mcccontainer">
                         <ChatArea :dialogue-history="dialogueHistory"></ChatArea>
                     </div>
+                    <div class="is-content" style="float: right">
+                        <div class="control">
+                            <button type="submit" class="button is-primary" v-on:click="finishExperiment" style="background-color: red">
+                                Finish Experiment
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,6 +52,7 @@
     import App from "../App";
     import {fetchPost} from "../../scripts/fetch-helpers";
     import ChatArea from "../ChatArea";
+    import {actions} from "../../store/modules/daphne-at";
 
     export default {
         name: "SubjectViewer",
@@ -56,7 +64,7 @@
                 selectedSymptomsList: [],
                 selectedAnomaliesList: [],
                 selectedProceduresList: [],
-                selectedProceduresInfo: [],
+                selectedProceduresInfo: {},
             }
         },
         components: {
@@ -74,13 +82,22 @@
                     if (dataResponse.ok) {
                         // Add the new functionality
                         let state = await dataResponse.json();
-                        this.currentStage = state["experiment"]["experimentStage"];
-                        this.dialogueHistory = state["daphne"]["dialogueHistory"];
-                        this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
-                        this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
-                        this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
-                        this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
-                        // TODO: Add the rest when they exist
+                        if (state !== 'None') {
+                            this.currentStage = state["experiment"]["experimentStage"];
+                            this.dialogueHistory = state["daphne"]["dialogueHistory"];
+                            this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
+                            this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
+                            this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
+                            this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
+                        }
+                        else {
+                            this.currentStage = 'UNKNOWN';
+                            this.dialogueHistory = [];
+                            this.selectedSymptomsList = [];
+                            this.selectedAnomaliesList = [];
+                            this.selectedProceduresList = [];
+                            this.selectedProceduresInfo = [];
+                        }
                     }
                     else {
                         console.error('Error retrieving user state.');
@@ -89,6 +106,11 @@
                 catch(e) {
                     console.error('Networking error:', e);
                 }
+            },
+            async finishExperiment() {
+                console.log('FINISH EXPERIMENT');
+                let reqData = new FormData();
+                await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
             }
         },
         mounted() {

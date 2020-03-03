@@ -65,6 +65,7 @@ const actions = {
         commit('mutateTelemetryPlotSelectedVariables', newVariables);
     },
     async startFakeTelemetry({state, commit}) {
+        this.dispatch('loadAllAnomalies');
         console.log('START FAKE TELEMETRY');
         let reqData = new FormData();
         await fetchPost('/api/at/startFakeTelemetry', reqData);
@@ -72,6 +73,7 @@ const actions = {
         console.log('TELEMETRY STARTED');
     },
     async startTelemetry({state, commit}) {
+        this.dispatch('loadAllAnomalies');
         console.log('START TELEMETRY');
         let reqData = new FormData();
         await fetchPost('/api/at/startTelemetry', reqData);
@@ -282,6 +284,16 @@ const actions = {
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
     },
     async requestDiagnosis({state, commit}, selectedSymptomsList) {
+        // Clean the current diagnosis report
+        commit('mutateDiagnosisReport', []);
+
+        // Update the last selected symptoms list
+        let lastSelectedSymptomsList = JSON.parse(JSON.stringify(state.selectedSymptomsList));
+        commit('mutateLastSelectedSymptomsList', lastSelectedSymptomsList);
+
+        // Clean the selected symptoms list
+        commit('mutateSelectedSymptomsList', []);
+
         // Make a local copy of the couple of state variables to be used
         let info = JSON.parse(JSON.stringify(state.telemetryInfo));
         let parsedSelectedSymptomsList = JSON.parse(JSON.stringify(selectedSymptomsList));
@@ -306,13 +318,6 @@ const actions = {
         } else {
             console.log('Error requesting a diagnosis report.')
         }
-
-        // Update the last selected symptoms list
-        let lastSelectedSymptomsList = JSON.parse(JSON.stringify(state.selectedSymptomsList));
-        commit('mutateLastSelectedSymptomsList', lastSelectedSymptomsList);
-
-        // Clean the selected symptoms list
-        commit('mutateSelectedSymptomsList', []);
     },
     async loadAllAnomalies({state, commit}) {
         let reqData = new FormData();

@@ -26,7 +26,12 @@
             <div class="horizontal-divider" style="margin-top: 10px; margin-bottom: 10px"></div>
             <div class="is-content">
                 <div v-if="diagnosisReport.length === 0">
-                    No diagnosis reports requested.
+                    <img v-if="isLoading"
+                         src="assets/img/loader.svg"
+                         style="display: block; margin: auto;"
+                         height="20" width="20"
+                         alt="Loading spinner">
+                    <p v-else>No diagnosis reports requested.</p>
                 </div>
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
                     <div class="column is-6" style="margin: 0px; padding: 0px">
@@ -52,10 +57,18 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters} from 'vuex';
+
+    let loaderImage = require('../images/loader.svg');
 
     export default {
         name: "AnomalyDiagnosisWindow",
+
+        data: function() {
+            return {
+                isLoading: false,
+            }
+        },
 
         computed: {
             ...mapGetters({
@@ -70,9 +83,10 @@
             deselectSymptom(symptom) {
                 this.$store.dispatch('removeSelectedSymptom', symptom);
             },
-            requestDiagnosis() {
-                console.log('REQUEST DIAGNOSIS');
-                this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
+            async requestDiagnosis() {
+                this.isLoading = true;
+                await this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
+                this.isLoading = false;
             },
             selectAnomaly(anomalyName) {
                 if (!this.selectedAnomalies.includes(anomalyName)) {
@@ -81,7 +95,7 @@
             },
             recoverSymptomsList() {
                 this.$store.dispatch('recoverSymptomsList')
-            }
+            },
         }
     }
 </script>

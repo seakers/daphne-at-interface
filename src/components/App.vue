@@ -209,15 +209,13 @@
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
+                                this.$store.dispatch('loadAllAnomalies')
                             });
                         });
                         this.tutorial.start();
                         break;
                     }
                     case 'with_daphne': {
-                        break;
-                    }
-                    case 'without_daphne': {
                         break;
                     }
                     default: {
