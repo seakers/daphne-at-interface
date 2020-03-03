@@ -346,6 +346,11 @@ const mutations = {
     mutateSelectedAnomaliesInfo(state, newVal) {state.selectedAnomaliesInfo = newVal},
     mutateSelectedProceduresList(state, newVal) {state.selectedProceduresList = newVal},
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal},
+    restoreDaphneAT(state, recoveredState) {
+        Object.keys(recoveredState).forEach((key) => {
+            state[key] = recoveredState[key];
+        });
+    },
 };
 
 export default {

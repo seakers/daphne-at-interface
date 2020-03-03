@@ -11,7 +11,6 @@
                     <div class="horizontal-divider" style="margin-bottom: 0px"></div>
                     <div style="height: 20px; background-color: #111111"></div>
                 </div>
-
                 <div class="box is-main" style="margin-bottom: 5px">
                     <sensor-data-window></sensor-data-window>
                 </div>

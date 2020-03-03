@@ -112,6 +112,13 @@ body {
     overflow-y: scroll;
 }
 
+.scrollable-mcccontainer {
+    border: 1px solid #0AFEFF;
+    margin: 2px;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
 .multiselect__tags, .multiselect__tags span, .multiselect__tags input, .multiselect__content-wrapper {
     background: #111111;
     color: white;

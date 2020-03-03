@@ -286,7 +286,7 @@ const actions = {
                         // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
                         commit('restoreDaphne', experimentInformation.experiment_data.daphne);
                         commit('restoreExperiment', experimentInformation.experiment_data.experiment);
-                        // commit('restoreDaphneAT', experimentInformation.experiment_data.daphneat);
+                        commit('restoreDaphneAT', experimentInformation.experiment_data.daphneat);
                     }
                     catch(err) {
                         console.log(err);
