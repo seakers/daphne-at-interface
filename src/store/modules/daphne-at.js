@@ -21,6 +21,7 @@ const state = {
     allAnomaliesList: [], // A list of all the anomalies that are present in the knowledge graph. Used for the telemetry plot dropdown menu.
     selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies. RELEVANT FOR THE CONTEXT.
     selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
+    loadingNewAnomaly: false,
 };
 
 const getters = {
@@ -40,6 +41,7 @@ const getters = {
     getAllAnomaliesList(state) {return state.allAnomaliesList},
     getSelectedProceduresList(state) {return state.selectedProceduresList},
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
+    getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
 };
 
 const actions = {
@@ -153,6 +155,9 @@ const actions = {
         }
     },
     async addSelectedAnomaly({state, commit}, anomalyName) {
+        // Update the loading bool
+        commit('mutateLoadingNewAnomaly', true);
+
         // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
         // changes will be committed at the end of the action.
         let newSelectedAnomaliesList = JSON.parse(JSON.stringify(state.selectedAnomaliesList));
@@ -193,6 +198,9 @@ const actions = {
         commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
         commit('mutateSelectedProceduresList', newSelectedProceduresList);
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+
+        // Update the loading bool
+        commit('mutateLoadingNewAnomaly', false);
     },
     removeSelectedAnomaly({state, commit}, anomalyName) {
         // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
@@ -351,6 +359,7 @@ const mutations = {
     mutateSelectedAnomaliesInfo(state, newVal) {state.selectedAnomaliesInfo = newVal},
     mutateSelectedProceduresList(state, newVal) {state.selectedProceduresList = newVal},
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal},
+    mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal},
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {
             state[key] = recoveredState[key];

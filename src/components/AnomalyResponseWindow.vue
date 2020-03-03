@@ -24,7 +24,14 @@
                     @remove="newDeselection">
             </multiselect>
         </div>
-        <div v-for="(anomalyDict, anomalyIndex) in anomalyList" class="is-content" :key="componentKey">
+        <div v-if="isLoading" class="is-content">
+            <img v-if="isLoading"
+                 src="assets/img/loader.svg"
+                 style="display: block; margin: auto;"
+                 height="40" width="40"
+                 alt="Loading spinner">
+        </div>
+        <div v-else v-for="(anomalyDict, anomalyIndex) in anomalyList" class="is-content" :key="componentKey">
             <div class="horizontal-divider" style="margin-bottom: 10px"></div>
             <p class="is-mini-title" style="margin-bottom:10px">{{anomalyDict['anomalyName']}}</p>
             <div v-for="(procedureDict, procedureIndex) in anomalyDict['anomalyProcedures']">
@@ -87,13 +94,15 @@
     import { mapGetters, mapMutations } from 'vuex';
     import {updateCheckboxes} from "../scripts/at-display-builders";
 
+    let loaderImage = require('../images/loader.svg');
+
     export default {
         name: "AnomalyResponseWindow",
 
         data() {
             return {
                 componentKey: true,
-                anomalyListCopy: []
+                anomalyListCopy: [],
             }
         },
 
@@ -104,6 +113,7 @@
                 allAnomalies: 'getAllAnomaliesList',
                 selectedProceduresList: 'getSelectedProceduresList',
                 selectedProceduresInfo: 'getSelectedProceduresInfo',
+                isLoading: 'getLoadingNewAnomaly',
             }),
             value()  {
                 let aux = [];

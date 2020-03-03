@@ -11,7 +11,7 @@
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
                     <div class="column is-10" style="margin: 0px; padding: 0px">
                         <ul>
-                            <li v-on:click="deselectSymptom(symptom)" v-for="symptom in selectedSymptomsList">
+                            <li v-on:click="deselectSymptom(symptom)" v-for="symptom in selectedSymptomsList" style="cursor: pointer">
                                 {{symptom['detection_text']}}
                             </li>
                         </ul>
@@ -29,7 +29,7 @@
                     <img v-if="isLoading"
                          src="assets/img/loader.svg"
                          style="display: block; margin: auto;"
-                         height="20" width="20"
+                         height="40" width="40"
                          alt="Loading spinner">
                     <p v-else>No diagnosis reports requested.</p>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="column is-6" style="margin: 0px; padding: 0px">
                         <u style="margin-bottom:200px">Could be caused by:</u>
                         <ul>
-                            <li  v-on:click="selectAnomaly(anomaly['name'])" v-for="anomaly in diagnosisReport['diagnosis_list']">
+                            <li  v-on:click="selectAnomaly(anomaly['name'])" v-for="anomaly in diagnosisReport['diagnosis_list']" style="cursor: pointer">
                                 {{anomaly['name']}} (with a score of {{anomaly['score']}})
                             </li>
                         </ul>

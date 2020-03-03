@@ -10,14 +10,14 @@
             <div class="columns">
                 <div class="column is-6">
                     <ul>
-                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn">
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn" style="cursor: pointer">
                             {{symptom['detection_text']}}
                         </li>
                     </ul>
                 </div>
                 <div class="column is-6">
                     <ul>
-                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn">
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn" style="cursor: pointer">
                             {{symptom['detection_text']}}
                         </li>
                     </ul>

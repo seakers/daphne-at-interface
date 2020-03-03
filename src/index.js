@@ -23,11 +23,10 @@ let mutationBlackList = [
     'restoreDaphne', 'restoreExperiment', 'setIsRecovering',
     'mutateTelemetryIsOngoing', 'mutateTelemetryPlotData', 'mutateTelemetryValues', 'mutateTelemetryInfo',
     'mutateTelemetryInputVariables', 'mutateSymptomsList', 'mutateLastSelectedSymptomsList', 'mutateAllAnomaliesList',
-    'mutateSelectedAnomaliesInfo', 'mutateSelectedProceduresInfo', 'restoreDaphneAT'
+    'mutateSelectedAnomaliesInfo', 'mutateSelectedProceduresInfo', 'restoreDaphneAT', 'mutateLoadingNewAnomaly'
 ];
 let daphneATStateBlackList = [
     'telemetryPlotData', 'telemetryValues', 'telemetryInfo', 'telemetryInputVariables', 'symptomsList',
-    'selectedSymptomsList', 'allAnomaliesList', 'selectedAnomaliesInfo', 'selectedProceduresInfo',
 ];
 let updatesContextList = [
     'mutateTelemetryValues',
