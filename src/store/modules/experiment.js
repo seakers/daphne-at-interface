@@ -13,158 +13,286 @@ const state = {
             nextStage: '',
             steps: [
                 {
-                    text: `Hello astronaut! Congratulations on being selected as one of the crew members for the
+                    text: `Hello astronaut! Congratulations for being selected as one of the crew members for the
                     mission to Mars.`
                 },
                 {
-                    text: `My name is Daphne. I have been assigned as your personal assistant on this mission. I will monitor
-                    the Environment Control and Life Support System (ECLSS) and notify you of anomalous events caused in its subsystems.
-                    I can also help you troubleshoot anomalies by guiding you through a procedure.
-                    Together, we'll make sure everything on this mission goes smoothly.
-                    In the next few minutes, I will tell you more about myself and how I can help you with anomaly treatment.
-                    So, please pay close attention.`
+                    text: `My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
+                    monitor the Environment Control and Life Support System (ECLSS), and I will assist you with any
+                    anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`
+                },
+                {
+                    text: `In the next few minutes, I will tell you more about myself and how I can help you during the
+                    process of treating and anomaly. So please, pay close attention!`
                 },
                 {
                     attachTo: {
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `This is the <b>Sensor Data</b> window which will provide you the subsystem level information of ECLSS.
-Here you will see real-time telemetry feed from various ECLSS subsystems. If you want to see the sensor data related to a specific measurement,
-click on the drop down menu and select the signature you want to see. Right now you are looking at the feed of a default sensor.`
+                    text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
+                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
+                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed 
+                    orange and red ones) stand for the warning and critical limits of such measurement.`
                 },
                 {
                     attachTo: {
                         element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `If you want to see multiple signatures at the same time,
-                    you can do so by selecting multiple signatures from the drop down list. Try selecting multiple signatures and click on Next.`
-                },
-                {
-                    attachTo: {
-                        element: '#telemetry-feed',
-                        on: 'bottom'
-                    },
-                    text: `You can click the cross button next to a measurement name to remove it from the telemetry feed plot. Try doing it now. Click on Next when you're done.`
+                    text: `Note that there is a dropdown menu at the top. You can use it to choose which
+                    measurements you want me to display. I can even display more than one measurement at once! Bear in
+                    mind though that if you want me to do so, then I will not show the limits of each measurement (there
+                    would be too many lines!). Try clicking on the dropdown menu and adding a new measurement to the
+                    plot. After that, try to remove by clicking on the little cross next to it. When you are done, click
+                    Next.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly-detection',
                         on: 'bottom'
                     },
-                    text: `This is the  <b>Anomaly Detection</b> window. This is where you will get the first notification related to anomalies occurring
-in ECLSS. I will alert you of the anomalies by changing the colors of this window. Blue color implies all the systems are working nominally. Yellow color implies that the signature related to that anomaly
-has exceeded the Warning Limits and Red color will imply that the signature has exceeded Critical Limits. A signature exceeding Critical limits can pose serious
-health hazards to the crew and must be rectified immediately.`
+                    text: `This is the  <b>Anomaly Detection</b> window. I will use this area to notify you about any
+                    anomalies that I might find within the sensor data readings. As you can see right now, I will
+                    basically provide you with a list of the measurements that exceed any of its limits.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly-detection',
                         on: 'bottom'
                     },
-                    text: `Once an anomaly is detected, you can click on it to select it for diagnosis. Click on the anomaly you are seeing now before clicking on Next.`
+                    text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
+                    of the screen, so you will always be able to see it (scroll down and check that!). Also, I will change
+                    the color of this window to bring your attention, as well as to inform you about how severe are the 
+                    anomalies that I found. I will use red when any measurement exceeds its critical limits, and orange
+                    with all of them are just above its warning limits.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly-detection',
+                        on: 'bottom'
+                    },
+                    text: `Once an anomalous measurement is detected, you can click on it to select it. I will soon tell
+                    you what is this useful for. Try selecting the ppN2 (L1) and Level Cabin Pressure (L1) anomalous
+                    measurements, and then click Next.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `When you click on an anomaly you want to diagnose in the Anomaly Detection window, it
-                    will appear here, in <b>Anomaly Diagnosis</b> window. For example, 'ppN2(L1): is above Upper Critical Limit' is one symptom of
-an anomaly that is causing the partial pressure of Nitrogen to exceed nominal values.`
+                    text: `This is the <b>Anomaly Diagnosis</b> window. Whenever you select an anomalous measurement, it
+                    will appear on the upper slot. In fact, if you select more than one, I will display a list of all
+                    of your selections. Right now, if you followed my instructions, you should be seeing 'ppN2(L1): is
+                    above Upper Critic Limit' and 'Level Cabin Pressure (L1): is above Upper Critic Limit'.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `Once you see the symptoms associated with anomalies, click on the 'Diagnose' button to find out what the cause may be. Click on
-                    Diagnose button now.`
+                    text: `You can also deselect any item from the list. To do so, you just have to click on it, and it
+                    will disappear. Try this by clicking on the 'Level Cabin Pressure (L1): is above Upper Critical
+                    Limit' one, and then click Next.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `Now, you'll see that a possible cause for the anomaly you had selected has appeared in this window. In this case, a nitrogen tank burst
-                    may be a possible root cause.`
+                    text: `As you might have noticed, a 'Diagnose' button appeared on the right side of the upper slot.
+                    This button will be only available when you have some anomalous measurements selected. Do not click
+                    it yet!`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `You can also click on the anomaly to remove it from the Anomaly Diagnosis window. This may be useful in case you are diagnosing multiple
-                    anomalies at the same time. Note that only the anomalies in the top row are clickable. Try to click it now. It should disappear from the top
-                    row. Click Next to proceed.`
+                    text: `Whenever you click on this button, I will try to provide you with possible causes for the
+                    selected anomalous measurements. It takes me a while to think sometimes (specially if you select a
+                    lot of measurements), so be patient! Try to click the 'Diagnose' button now, and then click Next.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
-                    text: `You can click on the suggested root cause of the anomalies that have been diagnosed for further investigation. Click on the cause
-                    N2 Tank Burst to find a recommended course of action to take for resolving it. Click on Next to proceed.`
+                    text: `As you can see, several things happened here. First, I cleaned all your selected measurements
+                    from the upper slot. Do not worry about that, I will soon tell you how to recover them.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `Apart from the previous, some new information appeared on the lower slot. This is how I
+                    provide you with my (possible) explanations of what might be causing an anomaly. On the left, you
+                    can see the list of the anomalous measurements that were selected when you clicked on 'Diagnose'. On
+                    the right, you can see a list of some possible causes for such anomalous measurements.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `As I said, you might want to recover the exact same list of anomalous measurements that you
+                    selected, and then
+                    modify it. To do so, click on such list of this lower slot, and it will appear on the upper one
+                    again. Try doing it now, and then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
+                    I provided a list of them, and each item has an associated score. This score stands for how confident
+                    I am for cause to be the one that is actually happening.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `Bear in mind two important things: first, this list is only a suggestion, and second, more
+                    than one of such causes might be happening at once!`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `If you want to further explore any of my suggestions, you can click on it to select it. Try
+                    selecting the 'N2 Tank Burst' now, and then click on Next.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `This is the <b>Anomaly Response</b> window. You can find information about resolving anomalies here. Right now, you can see
-the recommended course of action for resolving N2 Tank Burst.`
+                    text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
+                    to treat each of the anomaly causes that you selected.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `I am providing you with three pieces of information here. <br>
-1. <b>Anomaly name</b> - This is the name of the anomaly that is being diagnosed.<br>
-2. <b>Name of the procedures to be followed</b> - This is the name of the procedure that needs to be followed for resolving this anomaly.<br>
-3. <b>Steps to be followed for this procedure</b> - These are the steps you will need to perform in the order shown. Once you finish executing the step, make sure to
-click on the checkbox next to it to mark it as done. Once all the steps have been marked as done, you will see that the status of the procedure changes from
-PENDING to COMPLETED.`
+                    text: `As you can se right now, the 'N2 Tank Burst' has only one related procedure, the 'N2 Ballast
+                    Tank Replacement. Other anomaly causes might have more than one associated procedure though.`
                 },
                 {
                     attachTo: {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `You can also explore multiple root causes simultaneously. This might be useful in case you disagree with my suggestion.
-                    For exploring more than one anomalies, click on the drop down menu at the top of this window to see a list of all the available
-                    root causes related to ECLSS. You can click on the X button next to the anomalies to remove them from the list. Play around to see if you understand
-                    what this window does. Click on Next when you are done.`
+                    text: `You can click on the slot for the 'N2 Ballast Tank Replacement' procedure to see detailed
+                    information about it. Try clicking on it now, and then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `For each procedure, I will show you three important pieces of information: its objective, the
+                    required material to perform it and the steps that you show follow to complete it.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `Pay close attention on how I display the steps to be followed now. As you can see, I am 
+                    showing a scrollable box with all the steps. Each step has a checkbox on its left, so that you can
+                    check it whenever you complete it. Try checking some steps now, and then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `At the top right side of the procedure slot, I will display the status of such procedure. I
+                    will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
+                    selecting all the steps of this procedure now to see the difference (you only need to check the last
+                    step). Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `Try on clicking on the 'N2 Ballast Tank Replacement' procedure name again onw. This will hide
+                    all its details, to ease navigation through the screen. Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `You can also explore multiple anomaly causes simultaneously. This might be useful in case I
+                    provided more than one suggestion, or if more than one anomaly is happening at the same time.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `I am not all mighty, so I could be providing you with wrong suggestions. In case you disagree
+                    with me, you can use the dropdown menu at the top of this window to explore the procedures of other
+                    anomalies of the ECLSS system. Try selecting one, and then click Next.`
                 },
                 {
                     attachTo: {
                         element: '.sticky-textbox',
                         on: 'top'
                     },
-                    text: `This is the chat window where you can have a conversation with me. To ask a question, you can write it down in the question bar at the bottom, and then either click Send or press Enter
-on your keyboard. To clear the question bar you can click on "Clear" button.`
+                    text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
+                    treatment process.`
                 },
                 {
                     attachTo: {
                         element: '.sticky-textbox',
                         on: 'top'
                     },
-                    text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you the
- current value of partial pressure of nitrogen at Level 1 in the spacecraft. Try writing or copying the above question into the
- text box.`
+                    text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
+                    the current value such measurement. Try writing or copying the above question into the text box,
+                    area, and then click 'Send' or the enter tab.`
                 },
                 {
                     attachTo: {
                         element: '.sticky-textbox',
                         on: 'top'
                     },
-                    text: `You can also ask me questions related to procedures or tools and components required during procedures.
- If you need a pdf procedure for a specific anomaly that you want to resolve, you can ask me "Show procedure for anomaly" followed by anomaly name and
- the procedure file will open in a new window for your viewing.`
+                    text: `You can click on the button with the small speaker to mute/unmute me (I can read out loud the
+                    answers of your questions!). You can also click on the 'Clear' button to clear all the previously
+                    asked questions and proper answers.`
                 },
                 {
-                    text: `Now, you know all the tools available to you in order to solve anomalies during this mission. It is going to be a long, arduous journey, so good luck! Onwards to Mars!`
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `There are other questions that I can answer too, apart from the one you tried. If you want to
+                    know about them, click on the link just below this question bar. A new tab will be opened with a
+                    list of the questions that I am able to answer. This is a good moment for you to get familiar with
+                    such list, so try on clicking the link. Whenever you are done, click on Next.`
+                },
+                {
+                    text: `Now, you know all the tools available to you in order to solve anomalies during this mission.
+                    It is going to be a long, arduous journey, so good luck! Onwards to Mars!`
+                },
+                {
+                    text: `IMPORANT: It should not be a problem, but try to avoid refreshing the browser page during the
+                    experiment.`
+                },
+                {
+                    text: `Now the experiment is about to start. Before you click Next, tell the person that is
+                    monitoring you that you are ready. DO NOT click Next until he/she has given you explicit permission.`
+                },
+                {
+                    text: `You should be seeing this only if you have been granted permission. Click on Next to start
+                    the experiment.`
                 },
             ],
         },

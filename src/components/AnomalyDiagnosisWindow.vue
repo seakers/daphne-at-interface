@@ -37,7 +37,7 @@
                     <div class="column is-6" style="margin: 0px; padding: 0px">
                         <u style="margin-bottom:20px">The set of anomalies:</u>
                         <ul>
-                            <li  v-for="symptom in diagnosisReport['symptoms_list']" v-on:click="recoverSymptomsList()">
+                            <li  v-for="symptom in diagnosisReport['symptoms_list']" v-on:click="recoverSymptomsList()" style="cursor: pointer">
                                 {{symptom['detection_text']}}
                             </li>
                         </ul>
