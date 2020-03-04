@@ -37,6 +37,7 @@ export default new Vuex.Store({
             } else if (received_info['type'] === 'telemetry_update') {
                 console.log('TELEMETRY UPDATE');
                 let telemetryDict = received_info['content'];
+                console.log(telemetryDict);
                 let selectedVariables = state.daphneat.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(telemetryDict, selectedVariables);
                 dispatch('updateTelemetryPlotData', plotData);
