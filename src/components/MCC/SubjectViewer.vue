@@ -110,6 +110,7 @@
             async finishExperiment() {
                 console.log('FINISH EXPERIMENT');
                 let reqData = new FormData();
+                reqData.append('user_id', this.userId);
                 await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
             }
         },
