@@ -67,7 +67,7 @@ const actions = {
         commit('mutateTelemetryPlotSelectedVariables', newVariables);
     },
     async startFakeTelemetry({state, commit}) {
-        this.dispatch('loadAllAnomalies');
+        // this.dispatch('loadAllAnomalies');
         console.log('START FAKE TELEMETRY');
         let reqData = new FormData();
         await fetchPost('/api/at/startFakeTelemetry', reqData);
@@ -75,7 +75,7 @@ const actions = {
         console.log('TELEMETRY STARTED');
     },
     async startTelemetry({state, commit}) {
-        this.dispatch('loadAllAnomalies');
+        // this.dispatch('loadAllAnomalies');
         console.log('START TELEMETRY');
         let reqData = new FormData();
         await fetchPost('/api/at/startTelemetry', reqData);

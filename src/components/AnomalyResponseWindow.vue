@@ -207,7 +207,7 @@
         },
 
         mounted: function() {
-            // this.loadAnomalies()
+            this.loadAnomalies()
         },
 
         components: {

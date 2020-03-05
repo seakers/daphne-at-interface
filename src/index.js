@@ -27,6 +27,7 @@ let mutationBlackList = [
 ];
 let daphneATStateBlackList = [
     'telemetryPlotData', 'telemetryValues', 'telemetryInfo', 'telemetryInputVariables', 'symptomsList',
+    'loadingNewAnomaly'
 ];
 let updatesContextList = [
     'mutateTelemetryValues',
