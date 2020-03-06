@@ -33,7 +33,7 @@ const state = {
                     text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
                     of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed 
-                    orange and red ones) stand for the warning and critical limits of such measurement.`
+                    orange and red ones) stand for the warning and critic limits of such measurement.`
                 },
                 {
                     attachTo: {
@@ -44,7 +44,7 @@ const state = {
                     measurements you want me to display. I can even display more than one measurement at once! Bear in
                     mind though that if you want me to do so, then I will not show the limits of each measurement (there
                     would be too many lines!). Try clicking on the dropdown menu and adding a new measurement to the
-                    plot. After that, try to remove by clicking on the little cross next to it. When you are done, click
+                    plot. After that, try to  it clicking on the little cross next to it. When you are done, click
                     Next.`
                 },
                 {
@@ -64,7 +64,7 @@ const state = {
                     text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
                     of the screen, so you will always be able to see it (scroll down and check that!). Also, I will change
                     the color of this window to bring your attention, as well as to inform you about how severe are the 
-                    anomalies that I found. I will use red when any measurement exceeds its critical limits, and orange
+                    anomalies that I found. I will use red when any measurement exceeds its critic limits, and orange
                     when all of them are just above its warning limits.`
                 },
                 {
@@ -197,7 +197,7 @@ const state = {
                         on: 'top'
                     },
                     text: `For each procedure, I will show you three important pieces of information: its objective, the
-                    required material to perform it and the steps that you show follow to complete it.`
+                    required material to perform it and the steps that you should follow to complete it.`
                 },
                 {
                     attachTo: {
