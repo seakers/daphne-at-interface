@@ -32,7 +32,7 @@
 
         methods: {
             startTelemetry() {
-                this.$store.dispatch('startTelemetry');
+                this.$store.dispatch('startFakeTelemetry');
             },
             stopTelemetry() {
                 this.$store.dispatch('stopTelemetry');

@@ -23,7 +23,7 @@ const state = {
                 },
                 {
                     text: `In the next few minutes, I will tell you more about myself and how I can help you during the
-                    process of treating and anomaly. So please, pay close attention!`
+                    process of treating an anomaly. So please, pay close attention!`
                 },
                 {
                     attachTo: {
@@ -65,7 +65,7 @@ const state = {
                     of the screen, so you will always be able to see it (scroll down and check that!). Also, I will change
                     the color of this window to bring your attention, as well as to inform you about how severe are the 
                     anomalies that I found. I will use red when any measurement exceeds its critical limits, and orange
-                    with all of them are just above its warning limits.`
+                    when all of them are just above its warning limits.`
                 },
                 {
                     attachTo: {
@@ -92,7 +92,7 @@ const state = {
                         on: 'bottom'
                     },
                     text: `You can also deselect any item from the list. To do so, you just have to click on it, and it
-                    will disappear. Try this by clicking on the 'Level Cabin Pressure (L1): is above Upper Critical
+                    will disappear. Try this by clicking on the 'Level Cabin Pressure (L1): is above Upper Critic
                     Limit' one, and then click Next.`
                 },
                 {
@@ -137,9 +137,9 @@ const state = {
                         on: 'bottom'
                     },
                     text: `As I said, you might want to recover the exact same list of anomalous measurements that you
-                    selected, and then
-                    modify it. To do so, click on such list of this lower slot, and it will appear on the upper one
-                    again. Try doing it now, and then click Next.`
+                    had selected before clicking the diagnose button, and then modify it. To do so, click on the list on
+                    the left part of the lower slot, and it will appear on the upper one again. Try doing it now, and
+                    then click Next.`
                 },
                 {
                     attachTo: {
@@ -147,8 +147,9 @@ const state = {
                         on: 'bottom'
                     },
                     text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
-                    I provided a list of them, and each item has an associated score. This score stands for how confident
-                    I am for cause to be the one that is actually happening.`
+                    I provided a list of them, and each item has an associated score between 0 and 1. This score stands
+                    for how confident I am for each cause to be the one that is actually happening. The highest the
+                    score, the most confident I am.`
                 },
                 {
                     attachTo: {
@@ -180,7 +181,7 @@ const state = {
                         on: 'top'
                     },
                     text: `As you can se right now, the 'N2 Tank Burst' has only one related procedure, the 'N2 Ballast
-                    Tank Replacement. Other anomaly causes might have more than one associated procedure though.`
+                    Tank Replacement'. Other anomaly causes might have more than one associated procedure though.`
                 },
                 {
                     attachTo: {
@@ -212,6 +213,13 @@ const state = {
                         element: '#anomaly_response',
                         on: 'top'
                     },
+                    text: `When performing a procedure, make sure you check each step when you complete it!`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
                     text: `At the top right side of the procedure slot, I will display the status of such procedure. I
                     will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
                     selecting all the steps of this procedure now to see the difference (you only need to check the last
@@ -222,7 +230,7 @@ const state = {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `Try on clicking on the 'N2 Ballast Tank Replacement' procedure name again onw. This will hide
+                    text: `Try on clicking on the 'N2 Ballast Tank Replacement' procedure slot again onw. This will hide
                     all its details, to ease navigation through the screen. Click Next when you are ready.`
                 },
                 {
@@ -238,9 +246,10 @@ const state = {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `I am not all mighty, so I could be providing you with wrong suggestions. In case you disagree
+                    text: `I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
                     with me, you can use the dropdown menu at the top of this window to explore the procedures of other
-                    anomalies of the ECLSS system. Try selecting one, and then click Next.`
+                    anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
+                    cross next to it. Click Next when you are ready.`
                 },
                 {
                     attachTo: {
@@ -264,9 +273,8 @@ const state = {
                         element: '.sticky-textbox',
                         on: 'top'
                     },
-                    text: `You can click on the button with the small speaker to mute/unmute me (I can read out loud the
-                    answers of your questions!). You can also click on the 'Clear' button to clear all the previously
-                    asked questions and proper answers.`
+                    text: `You can click on the 'Clear' button to clear all the previously asked questions and their
+                    corresponding answers from our dialogue.`
                 },
                 {
                     attachTo: {
@@ -283,7 +291,7 @@ const state = {
                     It is going to be a long, arduous journey, so good luck! Onwards to Mars!`
                 },
                 {
-                    text: `IMPORANT: It should not be a problem, but try to avoid refreshing the browser page during the
+                    text: `IMPORTANT: It should not be a problem, but try to avoid refreshing the browser page during the
                     experiment.`
                 },
                 {
