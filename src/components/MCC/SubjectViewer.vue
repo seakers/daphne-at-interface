@@ -13,6 +13,12 @@
                         <ul>
                             <li v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"]}}</li>
                         </ul>
+                        <p style="color: #0AFEFF">Last provided diagnosis:</p>
+                        <ul>
+                            <li  v-for="anomaly in lastProvidedDiagnosis">
+                                {{anomaly['name']}} (with a score of {{anomaly['score']}})
+                            </li>
+                        </ul>
                         <p style="color: #0AFEFF">Selected anomalies:</p>
                         <ul>
                             <li v-for="anomaly in selectedAnomaliesList">{{ anomaly }}</li>
@@ -65,6 +71,7 @@
                 selectedAnomaliesList: [],
                 selectedProceduresList: [],
                 selectedProceduresInfo: {},
+                lastProvidedDiagnosis: [],
             }
         },
         components: {
@@ -89,6 +96,7 @@
                             this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
                             this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
                             this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
+                            this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
                         }
                         else {
                             this.currentStage = 'UNKNOWN';
