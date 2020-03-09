@@ -1,20 +1,27 @@
 <template>
-    <div class="field has-addons is-fullwidth">
-        <div class="control is-expanded">
-            <input class="input" type="text" name="command" placeholder="Ask a question / Give a command / Speak it out!" v-model="command" v-on:keyup.enter="sendCommand">
+    <div>
+        <div class="field has-addons is-fullwidth">
+            <div class="control is-expanded">
+                <input class="input" type="text" name="command" placeholder="Ask a question / Give a command / Speak it out!" v-model="command" v-on:keyup.enter="sendCommand">
+            </div>
+            <div class="control">
+                <a class="button is-info" v-on:click.prevent="switchVoice">
+                    <span class="icon is-small">
+                        <i class="fas" v-bind:class="[ speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
+                    </span>
+                </a>
+            </div>
+            <div class="control">
+                <a class="button is-info" id="clear_history" v-on:click.prevent="clearHistory">Clear</a>
+            </div>
+            <div class="control">
+                <a class="button is-info" id="send_command" v-on:click.prevent="sendCommand">Send</a>
+            </div>
         </div>
-        <div class="control">
-            <a class="button is-info" v-on:click.prevent="switchVoice">
-                <span class="icon is-small">
-                    <i class="fas" v-bind:class="[ speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
-                </span>
+        <div>
+            <a href="/question_cheatsheet.html" target="_blank">
+                Here's a list of the questions that I can answer!
             </a>
-        </div>
-        <div class="control">
-            <a class="button is-info" id="clear_history" v-on:click.prevent="clearHistory">Clear</a>
-        </div>
-        <div class="control">
-            <a class="button is-info" id="send_command" v-on:click.prevent="sendCommand">Send</a>
         </div>
     </div>
 </template>

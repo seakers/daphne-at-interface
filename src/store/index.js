@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import auth from './modules/auth';
 import daphne from './modules/daphne';
-import telemetryFeed from './modules/daphne-at';
+import daphneat from './modules/daphne-at';
 import experiment from './modules/experiment';
+import auth from'./modules/auth';
+import modal from './modules/modal';
 import {processedPlotData} from "../scripts/at-display-builders";
 
 Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
-
 
 export default new Vuex.Store({
     state: {
@@ -23,7 +23,6 @@ export default new Vuex.Store({
     actions: {
         async onWebsocketsMessage({ commit, state, getters, dispatch }, message) {
             let received_info = JSON.parse(message.data);
-
             if (received_info['type'] === 'active.message') {
                 commit('addDialoguePiece', received_info['message']);
             } else if (received_info['type'] === 'ping') {
@@ -32,24 +31,34 @@ export default new Vuex.Store({
                 console.log(received_info['text']);
             } else if (received_info['type'] === 'initialize_telemetry') {
                 let telemetryDict = received_info['content'];
-                commit('initializeTelemetry', telemetryDict);
+                if (telemetryDict !== '') {
+                    dispatch('initializeTelemetry', telemetryDict);
+                }
             } else if (received_info['type'] === 'telemetry_update') {
+                console.log('TELEMETRY UPDATE');
                 let telemetryDict = received_info['content'];
-                let selectedVariables = state.telemetryFeed.telemetryPlotSelectedVariables;
+                let selectedVariables = state.daphneat.telemetryPlotSelectedVariables;
                 let plotData = processedPlotData(telemetryDict, selectedVariables);
-                commit('updateTelemetryPlotData', plotData);
-                commit('updateTelemetryValuesAndInfo', telemetryDict);
+                dispatch('updateTelemetryPlotData', plotData);
+                dispatch('updateTelemetryValuesAndInfo', telemetryDict);
             } else if (received_info['type'] === 'symptoms_report') {
                 let symptoms_report = received_info['content'];
-                commit('updateSymptomsReport', symptoms_report);
+                dispatch('updateSymptomsList', symptoms_report);
+            } else if (received_info['type'] === 'finish_experiment_from_mcc') {
+                dispatch('finishStage').then(() => {
+                    dispatch('finishExperiment').then(() => {
+                        dispatch('stopTelemetry');
+                    });
+                });
             }
         },
     },
     modules: {
-        auth,
         daphne,
         experiment,
-        telemetryFeed
+        daphneat,
+        auth,
+        modal
     },
     strict: debug
 });

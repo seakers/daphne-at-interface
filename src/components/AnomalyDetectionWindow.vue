@@ -1,17 +1,28 @@
 <template>
-    <div>
+    <div id="anomaly-detection">
         <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
             Anomaly Detection
         </div>
-        <div v-if="(this.symptomsList.length === 0)" class="is-content">
+        <div v-if="(this.symptomsList.length === 0)" class="is-content" style="min-height: 100px">
             No anomalous symptoms detected.
         </div>
-        <div v-else class="is-content">
-            <ul>
-                <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsList">
-                    {{symptom['detection_text']}}
-                </li>
-            </ul>
+        <div v-else class="is-content" style="min-height: 100px">
+            <div class="columns">
+                <div class="column is-6">
+                    <ul>
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn" style="cursor: pointer">
+                            {{symptom['detection_text']}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="column is-6">
+                    <ul>
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn" style="cursor: pointer">
+                            {{symptom['detection_text']}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -34,11 +45,27 @@
             ...mapGetters({
                 symptomsList: 'getSymptomsList',
             }),
+            symptomsListLeftColumn() {
+                let aux = [];
+                let symptomsList = this.symptomsList;
+                for (let i = 0; i < symptomsList.length; i = i + 2) {
+                    aux.push(symptomsList[i]);
+                }
+                return aux;
+            },
+            symptomsListRightColumn() {
+                let aux = [];
+                let symptomsList = this.symptomsList;
+                for (let i = 1; i < symptomsList.length; i = i + 2) {
+                    aux.push(symptomsList[i]);
+                }
+                return aux;
+            }
         },
 
         methods: {
             selectSymptom(symptom) {
-                this.$store.commit('addSelectedSymptom', symptom);
+                this.$store.dispatch('addSelectedSymptom', symptom);
             }
         },
 

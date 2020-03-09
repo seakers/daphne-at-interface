@@ -21,11 +21,12 @@ const getters = {
 
 // actions
 const actions = {
-    async loginUser({ state, commit, rootState }, { username, password }) {
+    async loginUser({ state, commit, rootState }, { username, password, daphneVersion }) {
         try {
             let reqData = new FormData();
             reqData.append("username", username);
             reqData.append("password", password);
+            reqData.append("daphneVersion", daphneVersion);
             let dataResponse = await fetchPost(API_URL + 'auth/login', reqData);
 
             if (dataResponse.ok) {

@@ -1,19 +1,43 @@
 <template>
-    <div>
-        <p>Please select whose screen you want to see (only users currently doing an experiment are available):</p>
-        <div class="field has-addons">
-            <div class="control">
-        <div class="select">
-            <select name="subject-list" v-model="selectedSubject">
-                <option v-for="subject in subjectList" :value="{ userId: subject.id, userName: subject.name }" :key="subject.id">{{ subject.name }}</option>
-            </select>
+    <div class="is-seclss-background-black is-vertical-filler">
+        <div>
+            <div class="is-seclss-background-black" style="height: 10px"></div>
+            <div class="box is-main" style="margin:10px">
+                <div class="is-title" style="border-width: 0px !important">
+                    <div style="height: 10px"></div>
+                    <div class="columns">
+                        <div class="column is-8">
+                            Please select whose screen you want to see (only users currently doing an experiment are available):
+                        </div>
+                        <div class="column is-4">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <div class="select">
+                                        <select name="subject-list" v-model="selectedSubject">
+                                            <option v-for="subject in subjectList" :value="{ userId: subject.id, userName: subject.name }" :key="subject.id">{{ subject.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <button type="submit" class="button is-primary" v-on:click="addShownSubject">Add</button>
+                                </div>
+                                <div class="control">
+                                    <button type="submit" class="button is-primary" v-on:click="quitShownSubject">Quit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 10px"></div>
+                </div>
+            </div>
+            <SubjectViewer class="box is-main" style="margin:40px"
+                           v-for="subject in shownSubjects"
+                           :user-name="subject['userName']"
+                           :user-id="subject['userId']"
+                           :key="subject['userId']">
+            </SubjectViewer>
+            <div class="is-seclss-background-black" style="height: 100px"></div>
         </div>
-    </div>
-    <div class="control">
-        <button type="submit" class="button is-primary" v-on:click="addShownSubject">Add</button>
-    </div>
-    </div>
-    <SubjectViewer v-for="subject in shownSubjects" :user-name="subject['userName']" :user-id="subject['userId']" :key="subject['userId']"></SubjectViewer>
     </div>
 </template>
 
@@ -48,7 +72,20 @@
                 }
             },
             addShownSubject() {
-                this.shownSubjects.push(this.selectedSubject);
+                if (!this.shownSubjects.includes(this.selectedSubject)) {
+                    this.shownSubjects.push(this.selectedSubject);
+                }
+            },
+            quitShownSubject() {
+                if (this.shownSubjects.includes(this.selectedSubject)) {
+                    let indexToDelete = -1;
+                    for (let index in this.shownSubjects) {
+                        if (this.shownSubjects[index] === this.selectedSubject) {
+                            indexToDelete = index;
+                        }
+                    }
+                    this.shownSubjects.splice(indexToDelete, 1);
+                }
             }
         },
         mounted() {

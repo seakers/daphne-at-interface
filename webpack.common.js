@@ -11,7 +11,8 @@ const { VueLoaderPlugin } = require('vue-loader');
 module.exports = {
     entry: {
         index: './src/index.js',
-        'mcc_control': './src/mcc_control.js'
+        'mcc_control': './src/mcc_control.js',
+        'question_cheatsheet': './src/question_cheatsheet.js'
     },
 
     output: {
@@ -99,6 +100,11 @@ module.exports = {
             template: './src/mcc_control.html',
             chunks: ['mcc_control'],
             filename: 'mcc_control.html'
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/question_cheatsheet.html',
+            chunks: ['question_cheatsheet'],
+            filename: 'question_cheatsheet.html'
         }),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output

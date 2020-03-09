@@ -13,224 +13,309 @@ const state = {
             nextStage: '',
             steps: [
                 {
-                    text: `Hello astronaut! Congratulations on been selected as one of the crew members for the
-mission to Mars. <b>It is going to be a long, arduous journey, so buckle up your seat-belt. Onwards to Mars!`
+                    text: `Hello astronaut! Congratulations for being selected as one of the crew members for the
+                    mission to Mars.`
                 },
                 {
-                    text: `Specifically, the task consists on designing different constellations of satellites for
-Earth observation. This means you will be assigning different sets of instruments from a predefined pool of instruments
-to different orbits and then evaluating your constellation design (e.g, the set of satellites with specific instruments
-assigned to specific orbits) to see which constellations are the best for each of the two tasks. Note that a
-constellation design that works well for one of the two problems might not work well at all for the next one, so simply
- copying designs from one stage to the next is unlikely to work well.`
+                    text: `My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
+                    monitor the Environment Control and Life Support System (ECLSS), and I will assist you with any
+                    anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`
+                },
+                {
+                    text: `In the next few minutes, I will tell you more about myself and how I can help you during the
+                    process of treating an anomaly. So please, pay close attention!`
                 },
                 {
                     attachTo: {
                         element: '#telemetry-feed',
-                        on: 'right'
-                    },
-                    text: `This is the <b>Telemetry Feed</b> window. This window will provide you subsystem level information.
-about parameters from sensors from various subsystems and `
-                },
-                {
-                    attachTo: {
-                        element: '#main-plot-block',
                         on: 'bottom'
                     },
-                    text: `This is the plot that shows the trade-space of the constellation designs you come up with.
-This set of constellation designs comes from a different problem, so don't worry if you see something different when
-the actual focused task begins. Each dot here is a single constellation design, and each design has an associated
-science/societal score and a cost. The science score, just as a reminder, is a measure (ranging from 0 to 1) of how
-well you are satisfying a set of requirements which are decided by different stakeholders.`
+                    text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
+                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
+                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed 
+                    orange and red ones) stand for the warning and critic limits of such measurement.`
                 },
                 {
                     attachTo: {
-                        element: '.design-builder',
-                        on: 'right'
-                    },
-                    text: `You will also notice how there is a Details button in this window. If you click on it
-will open a new window with more information on this architecture. This is one of the features only available on the
- Assistant version of Daphne. There you can see a detailed breakdown of the science score and the lifecycle cost.
- Note that this might be too much information to process adequately in the duration of the experiment, so we would
- advice to use with caution (perhaps a few times at the beginning and then only when needed).`
-                },
-                {
-                    attachTo: {
-                        element: '.data-mining',
-                        on: 'left'
-                    },
-                    text: `While this is the basic functionality for tradespace analysis, you have more tools available
-to you in this experiment. The first of them, and the one you will have available in the Assistant Daphne, is
-Data Mining. The Data Mining feature allows you to select a set of points in the dataset either by drawing squares in
-the dataset or using filters. Then, by pressing Run Data Mining, you obtain a set of "features". A feature is a set of
-characteristics shared by a group of designs, such as having an L-band radar and an L-band radiometer in the same orbit.
-Let's see how it works step by step.`
-                },
-                {
-                    attachTo: {
-                        element: '#main-plot-block',
+                        element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `First of all, choose Drag-select in the Mouse Selection panel. This allows you to select a
-subset of points from which you want to obtain relevant features. <b>Try making a selection.</b>`
+                    text: `Note that there is a dropdown menu at the top. You can use it to choose which
+                    measurements you want me to display. I can even display more than one measurement at once! Bear in
+                    mind though that if you want me to do so, then I will not show the limits of each measurement (there
+                    would be too many lines!). Try clicking on the dropdown menu and adding a new measurement to the
+                    plot. After that, try to  it clicking on the little cross next to it. When you are done, click
+                    Next.`
                 },
                 {
                     attachTo: {
-                        element: '.data-mining',
-                        on: 'right'
+                        element: '#anomaly-detection',
+                        on: 'bottom'
                     },
-                    text: `With that done, ,<b>click on Run data mining</b> to see the features. They are represented
-as triangles in this plot, where two important metrics for them are represented: Coverage and Specificity. Coverage
-measures how many points in your selection are covered by this feature, while Specificity measures which percentage of
-the points with the feature are inside your selection. An ideal feature would be the one with perfect Coverage (all your
-selected points are inside it) and Specificity (no points outside your selection have this feature). To learn more about
-a feature, we have the Feature Application. <b>Before clicking on Next, click on one Feature</b>`
+                    text: `This is the  <b>Anomaly Detection</b> window. I will use this area to notify you about any
+                    anomalies that I might find within the sensor data readings. As you can see right now, I will
+                    basically provide you with a list of the measurements that exceed any of its limits.`
                 },
                 {
                     attachTo: {
-                        element: '.feature-application',
-                        on: 'left'
+                        element: '#anomaly-detection',
+                        on: 'bottom'
                     },
-                    text: `In this window you can see how a feature is described. The tree you see is how the feature
-explains itself. Thus, if you have found a feature you want your designs to have, this window here will tell you how to
-ensure that. Now on to the last feature of the Data Mining functionality.`
+                    text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
+                    of the screen, so you will always be able to see it (scroll down and check that!). Also, I will change
+                    the color of this window to bring your attention, as well as to inform you about how severe are the 
+                    anomalies that I found. I will use red when any measurement exceeds its critic limits, and orange
+                    when all of them are just above its warning limits.`
                 },
                 {
                     attachTo: {
-                        element: '.filter',
-                        on: 'left'
+                        element: '#anomaly-detection',
+                        on: 'bottom'
                     },
-                    text: `This last window is the Filters window. Instead of selecting a group of features manually in
-                    the dataset, you can use this window to select a set of designs that have something in common. You
-                    can try using any of those, as they're pretty self explanatory.`
+                    text: `Once an anomalous measurement is detected, you can click on it to select it. I will soon tell
+                    you what is this useful for. Try selecting the ppN2 (L1) and Level Cabin Pressure (L1) anomalous
+                    measurements, and then click Next.`
                 },
                 {
                     attachTo: {
-                        element: '#admin-panel'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `The next feature you need to know about is how to communicate with the Virtual Assistant.
-                    Let's learn how you can ask questions.`
+                    text: `This is the <b>Anomaly Diagnosis</b> window. Whenever you select an anomalous measurement, it
+                    will appear on the upper slot. In fact, if you select more than one, I will display a list of all
+                    of your selections. Right now, if you followed my instructions, you should be seeing 'ppN2(L1): is
+                    above Upper Critic Limit' and 'Level Cabin Pressure (L1): is above Upper Critic Limit'.`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `To ask a question, you can write it down here, and then either click Send or press Enter
-on your keyboard.`
+                    text: `You can also deselect any item from the list. To do so, you just have to click on it, and it
+                    will disappear. Try this by clicking on the 'Level Cabin Pressure (L1): is above Upper Critic
+                    Limit' one, and then click Next.`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `For example, you can ask Daphne what she thinks about the current design. After thinking for
-a while, Daphne will give her thoughts on the design along with some suggestions on how to improve it.
-<b>Try writing or copying the following question into the Question Bar: "What do you think of this design?"</b>
-If you want to hear the output instead of just reading it, you can unmute Daphne by clicking on the speaker.`
+                    text: `As you might have noticed, a 'Diagnose' button appeared on the right side of the upper slot.
+                    This button will be only available when you have some anomalous measurements selected. Do not click
+                    it yet!`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `You can read all the suggestions Daphne has for you about your design in here. You can see
-there is advice from different roles: the Expert Critic will give advice based on a knowledge base with simple rules of
-thumb about how to design Earth observing systems (e.g., don't put a visible light instrument in a dawn-dusk orbit);
-the Explorer Critic will use brute force search around the current design to see if it finds a way to improve it; the
-Historian Critic will compare your constellation design to past missions and tell you if it finds any similarity (which
-is not inherently good or bad, but rather a trade-off between innovation and risk); and the Analyst Critic will suggest
-changes based on what the best constellation designs in the current dataset have in common. Take Daphne's advice with
-caution - as you would with any peer's advice. While it is likely to help you, it may in some cases not help you
-achieve your current goal. "What do you think of this design" is just one question Daphne can answer, but there are a
-few more. It is worth noting this will only be available on the Daphne Peer version.`
-                },
-                {
-                    text: `Generally speaking, Daphne can answer WHY questions (e.g., about why a constellation design
-has a certain score), WHAT questions (e.g., information on past and planned Earth observing mission), and HOW questions
-(e.g., suggestions on HOW you can improve a constellation design). The first and second types will be the answered by
- the Assistant Daphne, while the last one will be answered by Daphne Peer.`
+                    text: `Whenever you click on this button, I will try to provide you with possible causes for the
+                    selected anomalous measurements. It takes me a while to think sometimes (specially if you select a
+                    lot of measurements), so be patient! Try to click the 'Diagnose' button now, and then click Next.`
                 },
                 {
                     attachTo: {
-                        element: 'body'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `You can now try choosing a question from those available at the Available Commands lists.
-There you will see the questions listed by role (Engineer, Analyst, Explorer, Historian, Critic). If you look at the
-Engineer list, you will see that there are terms between curly brackets such as $\{engineer_stakeholder}. You can look
-at the lists in Commands Information such as Stakeholders (Engineer) or Technologies (Historian) to know valid values
-for these fields. If a part of a question is inside square brackets it means it is optional. <b>For example, one way to
- use the Engineer is to first ask "Why does this design have this science benefit?" and then ask "Which instruments
- improve the science score for stakeholder $\{engineer_stakeholder}?" with a stakeholder that has a low score. Another
- example question (which you can try!) would be: "Which orbit is most common for radar altimeters?"</b>`
+                    text: `As you can see, several things happened here. First, I cleaned all your selected measurements
+                    from the upper slot. Do not worry about that, I will soon tell you how to recover them.`
                 },
                 {
                     attachTo: {
-                        element: '.chat-container'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `You might have seen some messages from Daphne that appear without you asking a question.
-One of them will talk about a Background Search. This is a search algorithm that is running behind the scenes, trying to
- help you find better designs. If you accept its suggestion you may see a few blue points appear on your dataset. The
- designs it finds will be shown in blue to differentiate them from the ones already there that you found. This feature
- will always be active for you.`
+                    text: `Apart from the previous, some new information appeared on the lower slot. This is how I
+                    provide you with my (possible) explanations of what might be causing an anomaly. On the left, you
+                    can see the list of the anomalous measurements that were selected when you clicked on 'Diagnose'. On
+                    the right, you can see a list of some possible causes for such anomalous measurements.`
                 },
                 {
                     attachTo: {
-                        element: '.active-menu',
-                        on: 'right'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `You can activate or deactivate this background search here, as well as choose whether you want
-to see the new results it finds or not. You will also notice how there are two other options in this same menu.`
+                    text: `As I said, you might want to recover the exact same list of anomalous measurements that you
+                    had selected before clicking the diagnose button, and then modify it. To do so, click on the list on
+                    the left part of the lower slot, and it will appear on the upper one again. Try doing it now, and
+                    then click Next.`
                 },
                 {
                     attachTo: {
-                        element: '.active-menu',
-                        on: 'right'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `The Diversifier will track in real time which architectures you have been adding and will
-suggest areas of the datasets that you have left unexplored in case you want to change the area you're exploring. This
-will only be available for the Daphne Peer version.`
+                    text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
+                    I provided a list of them, and each item has an associated score between 0 and 1. This score stands
+                    for how confident I am for each cause to be the one that is actually happening. The highest the
+                    score, the most confident I am.`
                 },
                 {
                     attachTo: {
-                        element: '.active-menu',
-                        on: 'right'
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
                     },
-                    text: `The Suggestions will keep track of the changes you make in the Design Builder, and will give
-you real time advice on how that design can be improved without having to Evaluate it or ask the Critic what it thinks
-about it. Again, this will only be available on the Daphne Peer version.`
+                    text: `Bear in mind two important things: first, this list is only a suggestion, and second, more
+                    than one of such causes might be happening at once!`
                 },
                 {
-                    text: `Now you know every tool available to you! The experiment, just as a reminder, will have two
-stages. Apart from the different tasks with different focus, the main difference between them will be what functions
-are available to you. In one task, you will have Assistant Daphne with you, with the Details panel, the Data Mining
-functions, and the Engineer, Analyst, and Historian questions. The other one, Peer Daphne, will have the Critic
-available to you, as well as the the Diversifier and the Suggestions. The Tradespace Plot, the Design Builder, and the
-Background Search will always be available.`
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `If you want to further explore any of my suggestions, you can click on it to select it. Try
+                    selecting the 'N2 Tank Burst' now, and then click on Next.`
                 },
                 {
-                    text: `As a final reminder, <b>each stage of the experiment will last for 15 minutes</b>.
-Remember, you have two objectives: <b>1. Find a range of designs with good science scores with a cost between $800M
-and $4,000M</b> and <b>2. Try to learn any patterns useful to discern between designs with high and low science benefit
-with similar costs, so you can do the short tests afterwards</b>. For example, you may try to find which
-instrument-orbits pairings appear most often in the best architectures you can find. The Data Mining capability should
- be helpful for this. <b>Whether you start with Assistant Daphne or Peer Daphne is randomized</b>.
-  You are also encouraged to take notes during each task, as this will probably be helpful to do well in the test.
-  The first stage will be to design the Surface Water focused mission and the second one will be for the Applications
-  focused mission. And once again, <b>trying to reuse good designs from the first task for the second task will likely
-  not work!</b>. With all this being said, click on done to start the experiment!`
-                }
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
+                    to treat each of the anomaly causes that you selected.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `As you can se right now, the 'N2 Tank Burst' has only one related procedure, the 'N2 Ballast
+                    Tank Replacement'. Other anomaly causes might have more than one associated procedure though.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `You can click on the slot for the 'N2 Ballast Tank Replacement' procedure to see detailed
+                    information about it. Try clicking on it now, and then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `For each procedure, I will show you three important pieces of information: its objective, the
+                    required material to perform it and the steps that you should follow to complete it.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `Pay close attention on how I display the steps to be followed now. As you can see, I am 
+                    showing a scrollable box with all the steps. Each step has a checkbox on its left, so that you can
+                    check it whenever you complete it. Try checking some steps now, and then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `When performing a procedure, make sure you check each step when you complete it!`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `At the top right side of the procedure slot, I will display the status of such procedure. I
+                    will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
+                    selecting all the steps of this procedure now to see the difference (you only need to check the last
+                    step). Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `Try on clicking on the 'N2 Ballast Tank Replacement' procedure slot again onw. This will hide
+                    all its details, to ease navigation through the screen. Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `You can also explore multiple anomaly causes simultaneously. This might be useful in case I
+                    provided more than one suggestion, or if more than one anomaly is happening at the same time.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
+                    with me, you can use the dropdown menu at the top of this window to explore the procedures of other
+                    anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
+                    cross next to it. Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
+                    treatment process.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
+                    the current value such measurement. Try writing or copying the above question into the text box,
+                    area, and then click 'Send' or the enter tab.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `You can click on the 'Clear' button to clear all the previously asked questions and their
+                    corresponding answers from our dialogue.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `There are other questions that I can answer too, apart from the one you tried. If you want to
+                    know about them, click on the link just below this question bar. A new tab will be opened with a
+                    list of the questions that I am able to answer. This is a good moment for you to get familiar with
+                    such list, so try on clicking the link. Whenever you are done, click on Next.`
+                },
+                {
+                    text: `Now, you know all the tools available to you in order to solve anomalies during this mission.
+                    It is going to be a long, arduous journey, so good luck! Onwards to Mars!`
+                },
+                {
+                    text: `IMPORTANT: It should not be a problem, but try to avoid refreshing the browser page during the
+                    experiment.`
+                },
+                {
+                    text: `Now the experiment is about to start. Before you click Next, tell the person that is
+                    monitoring you that you are ready. DO NOT click Next until he/she has given you explicit permission.`
+                },
+                {
+                    text: `You should be seeing this only if you have been granted permission. Click on Next to start
+                    the experiment.`
+                },
             ],
         },
         with_daphne: {
             restrictedQuestions: null,
             nextStage: '',
             startTime: 0,
-            stageDuration: 60*20
+            stageDuration: 30*60
         },
         without_daphne: {
             restrictedQuestions: {
             },
             nextStage: '',
             startTime: 0,
-            stageDuration: 60*15
+            stageDuration: 30*60
         }
     }
 };
@@ -325,16 +410,23 @@ const actions = {
     async recoverExperiment({ state, commit, rootState, dispatch }) {
         // Call server to see if there is an experiment already running
         try {
+            //TODO add and remove restores from modules
             let response = await fetchGet(API_URL + 'experiment-at/reload-experiment');
             if (response.ok) {
                 let experimentInformation = await response.json();
                 if (experimentInformation.is_running) {
                     // If experiment was already running restore the last known state
-                    commit('setIsRecovering', true);
-                    commit('restoreAuth', experimentInformation.experiment_data.auth);
-                    // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
-                    commit('restoreDaphne', experimentInformation.experiment_data.daphne);
-                    commit('restoreExperiment', experimentInformation.experiment_data.experiment);
+                    try {
+                        commit('setIsRecovering', true);
+                        commit('restoreAuth', experimentInformation.experiment_data.auth);
+                        // Functions inside the problem don't survive the recovery, so they need to be reloaded from scratch
+                        commit('restoreDaphne', experimentInformation.experiment_data.daphne);
+                        commit('restoreExperiment', experimentInformation.experiment_data.experiment);
+                        commit('restoreDaphneAT', experimentInformation.experiment_data.daphneat);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                     // Start the websockets after completing the request so the session cookie is already set
                     await wsTools.experimentWsConnect();
                     await wsTools.wsConnect(this);
