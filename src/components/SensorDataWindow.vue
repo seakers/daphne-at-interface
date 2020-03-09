@@ -69,7 +69,13 @@
                 return aux;
             },
             plotLayout () {
-                return setLayout(this.selectedVariables, this.telemetryInfo, this.plotData);
+                try {
+                    return setLayout(this.selectedVariables, this.telemetryInfo, this.plotData);
+                }
+                catch(err) {
+                    console.log(err);
+                    console.log('ERROR setting the plot layout.')
+                }
             }
         },
 

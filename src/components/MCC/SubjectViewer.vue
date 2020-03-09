@@ -29,8 +29,7 @@
                                 <p style="margin-bottom:2px">{{procedureName}}</p>
                                 <p style="margin-left:20px">
                                     Current Step -->
-                                    {{procedureDict['procedureStepsList'][procedureDict['procedureCurrentStep']]['action']}}
-                                    ({{procedureDict['procedureCurrentStep']}} out of {{procedureDict['procedureStepsList'].length}})
+                                    {{writeCurrentStep(procedureDict, procedureName)}}
                                 </p>
                             </li>
                         </ul>
@@ -120,6 +119,26 @@
                 let reqData = new FormData();
                 reqData.append('user_id', this.userId);
                 await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
+            },
+            writeCurrentStep(procedureDict, procedureName) {
+                let stepsList = procedureDict['procedureStepsList'];
+                let currentStepIndex = procedureDict['procedureCurrentStep'];
+                let totalSteps = stepsList.length;
+                if (currentStepIndex === totalSteps) {
+                    let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
+                    return message
+                }
+                else {
+                    try {
+                        let action = stepsList[currentStepIndex]['action'];
+                        let message = action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
+                        return message
+                    }
+                    catch(err) {
+                        console.log('ERROR retrieving the procedure current step action.');
+                        return 'ERROR retrieving the procedure current step information.'
+                    }
+                }
             }
         },
         mounted() {

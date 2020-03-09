@@ -341,6 +341,18 @@ const actions = {
         let lastSymptomsList = state.lastSelectedSymptomsList;
         commit('mutateSelectedSymptomsList', lastSymptomsList);
     },
+    async triggerAlarm(state, alarm) {
+        if (alarm === 'alarmIn') {
+            let newAnomalySound = require('../../sounds/woopwoop.mp3');
+            let audio = new Audio(newAnomalySound);
+            await audio.play();
+        }
+        else if (alarm === 'alarmOut') {
+            let newAnomalySound = require('../../sounds/endgame.mp3');
+            let audio = new Audio(newAnomalySound);
+            await audio.play();
+        }
+    }
 };
 
 const mutations = {

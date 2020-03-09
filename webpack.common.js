@@ -81,10 +81,12 @@ module.exports = {
             { test: /\.(jpg|png|gif|svg)$/, use: [ { loader: 'file-loader', options: { name: '[name].[ext]', outputPath: './assets/img/' } } ] },
             // file-loader(for fonts)
             { test: /\.(woff|woff2|eot|ttf|otf)$/, use: ['file-loader'] },
+            // file-loader(for mp3 files)
+            { test: /\.mp3$/, loader: 'file-loader', options: { name: '[name].[ext]'}},
             {
                 test: /\.vue$/,
                 loader: 'vue-loader'
-            }
+            },
         ]
     },
 

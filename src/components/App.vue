@@ -32,6 +32,7 @@
                 <chat-window class="column"></chat-window>
             </div>
         </div>
+        <div style="height: 20px; background-color: #111111"></div>
         <modal v-bind:modal-content="modalContent" v-bind:is-active="isModalActive" v-on:close-modal="onCloseModal"></modal>
     </div>
 </template>
@@ -49,7 +50,7 @@
     import TheFooter from "./TheFooter";
     import Timer from './Timer';
     import RegisterModal from './RegisterModal';
-    import QuestionBar from './QuestionBar';
+    // import QuestionBar from './QuestionBar';
     import Modal from './Modal';
     import ChatWindow from "./ChatWindow";
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
@@ -137,7 +138,7 @@
             SensorDataWindow,
             RegisterModal,
             DaphneAnswer,
-            QuestionBar,
+            // QuestionBar,
             TheFooter,
             TelemetryButtons,
             Modal,

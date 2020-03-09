@@ -42,7 +42,10 @@ export default new Vuex.Store({
                 dispatch('updateTelemetryPlotData', plotData);
                 dispatch('updateTelemetryValuesAndInfo', telemetryDict);
             } else if (received_info['type'] === 'symptoms_report') {
-                let symptoms_report = received_info['content'];
+                let content = received_info['content'];
+                let symptoms_report = content['symptoms_report'];
+                let alarm = content['alarm'];
+                dispatch('triggerAlarm', alarm);
                 dispatch('updateSymptomsList', symptoms_report);
             } else if (received_info['type'] === 'finish_experiment_from_mcc') {
                 dispatch('finishStage').then(() => {
