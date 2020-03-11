@@ -72,6 +72,47 @@ const state = {
                         element: '#anomaly-detection',
                         on: 'bottom'
                     },
+                    buttons: [
+                        {
+                            text: 'Alarm IN',
+                            action: async function () {
+                                let newAnomalySound = require('../../sounds/woopwoop.mp3');
+                                let audio = new Audio(newAnomalySound);
+                                await audio.play();
+                            },
+                            secondary: true,
+                        },
+                    ],
+                    text: `Additionally, as you probably have already realized, I will trigger an alarm every time this
+                    window changes. That is, if an anomalous measurement either appears, disappears or exceeds a new
+                    limit, I will make this sound. Try clicking the Alarm IN button to hear this alarm and become
+                    familiar with it. Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly-detection',
+                        on: 'bottom'
+                    },
+                    buttons: [
+                        {
+                            text: 'Alarm OUT',
+                            action: async function () {
+                                let newAnomalySound = require('../../sounds/endgame.mp3');
+                                let audio = new Audio(newAnomalySound);
+                                await audio.play();
+                            },
+                            secondary: true,
+                        },
+                    ],
+                    text: `Similarly, I will trigger a different alarm every time I think that an anomaly has finished
+                    and the situation is back to normal. Try clicking the Alarm OUT button to listen to this alarm
+                    (which you have not heard yet!) and become familiar with it. Click Next when you are ready.`
+                },
+                {
+                    attachTo: {
+                        element: '#anomaly-detection',
+                        on: 'bottom'
+                    },
                     text: `Once an anomalous measurement is detected, you can click on it to select it. I will soon tell
                     you what is this useful for. Try selecting the ppN2 (L1) and Level Cabin Pressure (L1) anomalous
                     measurements, and then click Next.`
@@ -266,15 +307,8 @@ const state = {
                     },
                     text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
                     the current value such measurement. Try writing or copying the above question into the text box,
-                    area, and then click 'Send' or the enter tab.`
-                },
-                {
-                    attachTo: {
-                        element: '.sticky-textbox',
-                        on: 'top'
-                    },
-                    text: `You can click on the 'Clear' button to clear all the previously asked questions and their
-                    corresponding answers from our dialogue.`
+                    area, and then click the enter key (↵) on your keyboard. Wait until my answer appears on the chat,
+                    and then click Next.`
                 },
                 {
                     attachTo: {
@@ -287,7 +321,109 @@ const state = {
                     such list, so try on clicking the link. Whenever you are done, click on Next.`
                 },
                 {
-                    text: `Now, you know all the tools available to you in order to solve anomalies during this mission.
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `As you can see, there are three buttons attached to this question bar. Two of them are very
+                    straightforward: the Send button does exactly the same than hitting the enter key when you type a
+                    question, and the Clear button clears all the messages from our chat. We will talk about the third
+                    button soon.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `Now, the final feature: I have the ability to speak with you!`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `First, you can ask me questions out loud and I will recognise and process your speech.
+                    Second, I can read my own answers out loud. Both features are independent: you can activate either
+                    of them, both or none. It is up to you! I will now explain you how to do so.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `The purpose of the third button (the Speaker button) is to mute or unmute me. When unmuted,
+                    I will read all the answers to your questions out loud!`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `Try clicking on the Speaker button to unmute me now. Then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#skitt-ui',
+                    },
+                    tetherOptions:{
+                        target: '#skitt-toggle-button',
+                        attachment: 'top left',
+                        targetAttachment: 'top right',
+                        offset: '200px -30px'
+                    },
+                    text: `The purpose of this small add-on at the bottom left part of the screen (with a microphone on
+                    it) is to activate or deactivate the voice recognition feature. When activated, I'll listen to what
+                    you are saying all the time.`
+                },
+                {
+                    attachTo: {
+                        element: '#skitt-ui',
+                    },
+                    tetherOptions:{
+                        target: '#skitt-toggle-button',
+                        attachment: 'top left',
+                        targetAttachment: 'top right',
+                        offset: '200px -30px'
+                    },
+                    text: `Try clicking on the Microphone now. Then say "Hello there" loud and clear, and wait for a
+                    bit. Then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `You can see that a message with what I understood from your speech has appeared in the chat.
+                    Also, if you followed my instructions, you should have heard me reading my answer.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `As you can see, I do not always understand your questions. This is my way of telling you so.`
+                },
+                {
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `Now click again on the Speaker button to mute me, and then click Next.`
+                },
+                {
+                    attachTo: {
+                        element: '#skitt-ui',
+                    },
+                    tetherOptions:{
+                        target: '#skitt-toggle-button',
+                        attachment: 'top left',
+                        targetAttachment: 'top right',
+                        offset: '200px -30px'
+                    },
+                    text: `Finally, click again on the Microphone to deactivate the speech recognition. Then click Next.`
+                },
+                {
+                    text: `Now you know all the tools available to you in order to solve anomalies during this mission.
                     It is going to be a long, arduous journey, so good luck! Onwards to Mars!`
                 },
                 {

@@ -54,6 +54,7 @@
     import Modal from './Modal';
     import ChatWindow from "./ChatWindow";
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
+    import * as _ from 'lodash-es';
 
     export default {
         name: 'app',
@@ -128,6 +129,11 @@
                     this.$store.commit('setExperimentStage', 'tutorial');
                     this.$store.commit('setInExperiment', true);
                 });
+            },
+            customizer(objValue, srcValue) {
+                if (_.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
             }
         },
         components: {
@@ -189,8 +195,8 @@
                     switch (this.experimentStage) {
                     case 'tutorial': {
                         this.$store.state.experiment.stageInformation.tutorial.steps.forEach(step => {
-                            this.tutorial.addStep({
-                                ...step,
+                            this.tutorial.addStep(_.mergeWith({
+                                // ...step,
                                 buttons: [
                                     {
                                         text: 'Previous',
@@ -201,7 +207,7 @@
                                         action: this.tutorial.next
                                     }
                                 ]
-                            });
+                            }, step, this.customizer));
                         });
                         this.tutorial.on("complete", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
