@@ -60,6 +60,7 @@
         name: 'app',
         data: function () {
             return {
+                preTutorial: {},
                 tutorial: {},
             }
         },
@@ -126,7 +127,7 @@
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
                     // Set the tutorial
-                    this.$store.commit('setExperimentStage', 'tutorial');
+                    this.$store.commit('setExperimentStage', 'preTutorial');
                     this.$store.commit('setInExperiment', true);
                 });
             },
@@ -159,6 +160,16 @@
 
                 // Generate the session
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
+
+                // preTutorial
+                this.preTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
 
                 // Tutorial
                 this.tutorial = new Shepherd.Tour({
@@ -193,6 +204,38 @@
 
                     // Stage specific behaviour
                     switch (this.experimentStage) {
+                    case 'preTutorial': {
+                        this.$store.state.experiment.stageInformation.preTutorial.steps.forEach(step => {
+                            this.preTutorial.addStep(_.mergeWith({
+                                // ...step,
+                                buttons: [
+                                    {
+                                        text: 'No',
+                                        action: this.preTutorial.cancel
+                                    },
+                                    {
+                                        text: 'Yes',
+                                        action: this.preTutorial.next
+                                    }
+                                ]
+                            }, step, this.customizer));
+                        });
+                        this.preTutorial.on("complete", () => {
+                            this.$store.commit('setExperimentStage', this.stageInformation.preTutorial.nextStage);
+                        });
+                        this.preTutorial.on("cancel", () => {
+                            this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
+                                this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
+                            });
+                            // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
+                            this.$store.dispatch('stopTelemetry').then(() => {
+                                this.$store.dispatch('startTelemetry');
+                                this.$store.dispatch('loadAllAnomalies')
+                            });
+                        });
+                        this.preTutorial.start();
+                        break;
+                    }
                     case 'tutorial': {
                         this.$store.state.experiment.stageInformation.tutorial.steps.forEach(step => {
                             this.tutorial.addStep(_.mergeWith({

@@ -9,8 +9,18 @@ const state = {
     experimentStage: '',
     currentStageNum: -1,
     stageInformation: {
+        preTutorial: {
+            nextStage: '',
+
+            steps: [
+                {
+                    text: 'Would you like to continue with the tutorial?'
+                },
+            ],
+        },
         tutorial: {
             nextStage: '',
+
             steps: [
                 {
                     text: `Hello astronaut! Congratulations for being selected as one of the crew members for the
@@ -32,7 +42,7 @@ const state = {
                     },
                     text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
                     of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
-                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed 
+                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
                     orange and red ones) stand for the warning and critic limits of such measurement.`
                 },
                 {
@@ -63,7 +73,7 @@ const state = {
                     },
                     text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
                     of the screen, so you will always be able to see it (scroll down and check that!). Also, I will change
-                    the color of this window to bring your attention, as well as to inform you about how severe are the 
+                    the color of this window to bring your attention, as well as to inform you about how severe are the
                     anomalies that I found. I will use red when any measurement exceeds its critic limits, and orange
                     when all of them are just above its warning limits.`
                 },
@@ -245,7 +255,7 @@ const state = {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `Pay close attention on how I display the steps to be followed now. As you can see, I am 
+                    text: `Pay close attention on how I display the steps to be followed now. As you can see, I am
                     showing a scrollable box with all the steps. Each step has a checkbox on its left, so that you can
                     check it whenever you complete it. Try checking some steps now, and then click Next.`
                 },
@@ -469,7 +479,9 @@ const actions = {
             if (response.ok) {
                 let experimentStages = await response.json();
                 // Start the experiment: set the order of the conditions after the tutorial
+                commit('setNextStage', { experimentStage: 'preTutorial', nextStage: 'tutorial' });
                 commit('setNextStage', { experimentStage: 'tutorial', nextStage: experimentStages[0] });
+
                 for (let i = 0; i < experimentStages.length - 1; ++i) {
                     commit('setNextStage', { experimentStage: experimentStages[i], nextStage: experimentStages[i+1] });
                 }
