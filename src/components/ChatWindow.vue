@@ -32,6 +32,18 @@
                         Here's a list of the questions that I can answer!
                     </a>
                 </div>
+                <div class="control">
+                    <h5 align="middle">Tutorials</h5>
+                    <div align="middle">
+                        <a  v-on:click.prevent="detectionTutorial"><u>Detection</u></a>
+                        <a  v-on:click.prevent="telemetryTutorial"><u>Sensor Data</u></a>
+                        <a  v-on:click.prevent="diagnosisTutorial"><u>Diagnosis</u></a>
+                    </div>
+                    <div align="middle">
+                        <a  v-on:click.prevent="responseTutorial"><u>Response</u></a>
+                        <a  v-on:click.prevent="chatTutorial"><u>Chat</u></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -104,6 +116,21 @@
             switchVoice(event) {
                 console.log(this.speakOut);
                 this.speakOut = !this.speakOut;
+            },
+            telemetryTutorial(event) {
+                this.$root.$emit('telemetryTutorialI');
+            },
+            detectionTutorial(event) {
+                this.$root.$emit('detectionTutorialI');
+            },
+            diagnosisTutorial(event) {
+                this.$root.$emit('diagnosisTutorialI');
+            },
+            responseTutorial(event) {
+                this.$root.$emit('responseTutorialI');
+            },
+            chatTutorial(event) {
+                this.$root.$emit('chatTutorialI');
             }
         },
         watch: {

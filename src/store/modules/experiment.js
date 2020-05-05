@@ -10,41 +10,32 @@ const state = {
     currentStageNum: -1,
     stageInformation: {
         preTutorial: {
-            nextStage: '',
-
-            steps: [
-                {
-                    text: 'Would you like to continue with the tutorial?'
-                },
-            ],
+            nextStage: 'introTutorial',
         },
-        tutorial: {
-            nextStage: '',
+        // each tutorial is given an initial next and previous stage based on the order of the initial tutorial
+        // the first step is added on its own in App.vue to ensure it can switch between stages
+        introTutorial: {
+            nextStage: 'telemetryTutorial',
+            prevStage: 'preTutorial',
 
             steps: [
-                {
-                    text: `Hello astronaut! Congratulations for being selected as one of the crew members for the
-                    mission to Mars.`
-                },
-                {
-                    text: `My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
-                    monitor the Environment Control and Life Support System (ECLSS), and I will assist you with any
-                    anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`
-                },
                 {
                     text: `In the next few minutes, I will tell you more about myself and how I can help you during the
                     process of treating an anomaly. So please, pay close attention!`
                 },
                 {
-                    attachTo: {
-                        element: '#telemetry-feed',
-                        on: 'bottom'
-                    },
-                    text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
-                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
-                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red ones) stand for the warning and critic limits of such measurement.`
-                },
+                    id: 'lastStep',
+                    text: `My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
+                    monitor the Environment Control and Life Support System (ECLSS), and I will assist you with any
+                    anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`
+                }
+            ]
+        },
+        telemetryTutorial: {
+            nextStage: 'detectionTutorial',
+            prevStage: 'introTutorial',
+
+            steps: [
                 {
                     attachTo: {
                         element: '#telemetry-feed',
@@ -53,19 +44,25 @@ const state = {
                     text: `Note that there is a dropdown menu at the top. You can use it to choose which
                     measurements you want me to display. I can even display more than one measurement at once! Bear in
                     mind though that if you want me to do so, then I will not show the limits of each measurement (there
-                    would be too many lines!). Try clicking on the dropdown menu and adding a new measurement to the
-                    plot. After that, try to  it clicking on the little cross next to it. When you are done, click
-                    Next.`
+                    would be too many lines!).`
                 },
                 {
                     attachTo: {
-                        element: '#anomaly-detection',
+                        element: '#telemetry-feed',
                         on: 'bottom'
                     },
-                    text: `This is the  <b>Anomaly Detection</b> window. I will use this area to notify you about any
-                    anomalies that I might find within the sensor data readings. As you can see right now, I will
-                    basically provide you with a list of the measurements that exceed any of its limits.`
-                },
+                    id: 'lastStep',
+                    text: `Try clicking on the dropdown menu and adding a new measurement to the
+                    plot. After that, try to  it clicking on the little cross next to it. When you are done, click
+                    Next.`
+                }
+            ]
+        },
+        detectionTutorial: {
+            nextStage: 'diagnosisTutorial',
+            prevStage: 'telemetryTutorial',
+
+            steps: [
                 {
                     attachTo: {
                         element: '#anomaly-detection',
@@ -123,20 +120,18 @@ const state = {
                         element: '#anomaly-detection',
                         on: 'bottom'
                     },
+                    id: 'lastStep',
                     text: `Once an anomalous measurement is detected, you can click on it to select it. I will soon tell
                     you what is this useful for. Try selecting the ppN2 (L1) and Level Cabin Pressure (L1) anomalous
                     measurements, and then click Next.`
-                },
-                {
-                    attachTo: {
-                        element: '#anomaly_diagnosis',
-                        on: 'bottom'
-                    },
-                    text: `This is the <b>Anomaly Diagnosis</b> window. Whenever you select an anomalous measurement, it
-                    will appear on the upper slot. In fact, if you select more than one, I will display a list of all
-                    of your selections. Right now, if you followed my instructions, you should be seeing 'ppN2(L1): is
-                    above Upper Critic Limit' and 'Level Cabin Pressure (L1): is above Upper Critic Limit'.`
-                },
+                }
+            ]
+        },
+        diagnosisTutorial: {
+            nextStage: 'responseTutorial',
+            prevStage: 'detectionTutorial',
+
+            steps: [
                 {
                     attachTo: {
                         element: '#anomaly_diagnosis',
@@ -215,23 +210,23 @@ const state = {
                         element: '#anomaly_diagnosis',
                         on: 'bottom'
                     },
+                    id: 'lastStep',
                     text: `If you want to further explore any of my suggestions, you can click on it to select it. Try
                     selecting the 'N2 Tank Burst' now, and then click on Next.`
-                },
+                }
+            ]
+        },
+        responseTutorial: {
+            nextStage: 'chatTutorial',
+            prevStage: 'diagnosisTutorial',
+
+            steps: [
                 {
                     attachTo: {
                         element: '#anomaly_response',
                         on: 'top'
                     },
-                    text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
-                    to treat each of the anomaly causes that you selected.`
-                },
-                {
-                    attachTo: {
-                        element: '#anomaly_response',
-                        on: 'top'
-                    },
-                    text: `As you can se right now, the 'N2 Tank Burst' has only one related procedure, the 'N2 Ballast
+                    text: `As you can see right now, the 'N2 Tank Burst' has only one related procedure, the 'N2 Ballast
                     Tank Replacement'. Other anomaly causes might have more than one associated procedure though.`
                 },
                 {
@@ -297,19 +292,19 @@ const state = {
                         element: '#anomaly_response',
                         on: 'top'
                     },
+                    id: 'lastStep',
                     text: `I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
                     with me, you can use the dropdown menu at the top of this window to explore the procedures of other
                     anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
                     cross next to it. Click Next when you are ready.`
-                },
-                {
-                    attachTo: {
-                        element: '.sticky-textbox',
-                        on: 'top'
-                    },
-                    text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
-                    treatment process.`
-                },
+                }
+            ]
+        },
+        chatTutorial: {
+            nextStage: 'conclusionTutorial',
+            prevStage: 'responseTutorial',
+
+            steps: [
                 {
                     attachTo: {
                         element: '.sticky-textbox',
@@ -375,7 +370,7 @@ const state = {
                     attachTo: {
                         element: '#skitt-ui',
                     },
-                    tetherOptions:{
+                    tetherOptions: {
                         target: '#skitt-toggle-button',
                         attachment: 'top left',
                         targetAttachment: 'top right',
@@ -389,7 +384,7 @@ const state = {
                     attachTo: {
                         element: '#skitt-ui',
                     },
-                    tetherOptions:{
+                    tetherOptions: {
                         target: '#skitt-toggle-button',
                         attachment: 'top left',
                         targetAttachment: 'top right',
@@ -424,18 +419,22 @@ const state = {
                     attachTo: {
                         element: '#skitt-ui',
                     },
-                    tetherOptions:{
+                    tetherOptions: {
                         target: '#skitt-toggle-button',
                         attachment: 'top left',
                         targetAttachment: 'top right',
                         offset: '200px -30px'
                     },
+                    id: 'lastStep',
                     text: `Finally, click again on the Microphone to deactivate the speech recognition. Then click Next.`
-                },
-                {
-                    text: `Now you know all the tools available to you in order to solve anomalies during this mission.
-                    It is going to be a long, arduous journey, so good luck! Onwards to Mars!`
-                },
+                }
+            ]
+        },
+        conclusionTutorial: {
+            nextStage: '',
+            prevStage: 'chatTutorial',
+
+            steps: [
                 {
                     text: `IMPORTANT: It should not be a problem, but try to avoid refreshing the browser page during the
                     experiment.`
@@ -445,10 +444,11 @@ const state = {
                     monitoring you that you are ready. DO NOT click Next until he/she has given you explicit permission.`
                 },
                 {
+                    id: 'lastStep',
                     text: `You should be seeing this only if you have been granted permission. Click on Next to start
                     the experiment.`
                 },
-            ],
+            ]
         },
         with_daphne: {
             restrictedQuestions: null,
@@ -479,8 +479,7 @@ const actions = {
             if (response.ok) {
                 let experimentStages = await response.json();
                 // Start the experiment: set the order of the conditions after the tutorial
-                commit('setNextStage', { experimentStage: 'preTutorial', nextStage: 'tutorial' });
-                commit('setNextStage', { experimentStage: 'tutorial', nextStage: experimentStages[0] });
+                commit('setNextStage', { experimentStage: 'conclusionTutorial', nextStage: experimentStages[0] });
 
                 for (let i = 0; i < experimentStages.length - 1; ++i) {
                     commit('setNextStage', { experimentStage: experimentStages[i], nextStage: experimentStages[i+1] });

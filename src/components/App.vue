@@ -56,12 +56,20 @@
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import * as _ from 'lodash-es';
 
+    let currentID = 'firstStep'; // global variable for switch statement
+
     export default {
         name: 'app',
         data: function () {
             return {
                 preTutorial: {},
-                tutorial: {},
+                introTutorial: {},
+                telemetryTutorial: {},
+                detectionTutorial: {},
+                diagnosisTutorial: {},
+                responseTutorial: {},
+                chatTutorial: {},
+                conclusionTutorial: {}
             }
         },
         props: ["isViewer", "viewUserId"],
@@ -135,6 +143,99 @@
                 if (_.isArray(objValue)) {
                     return objValue.concat(srcValue);
                 }
+            },
+            clearTutorialSequence() {
+                this.preTutorial.off("complete");
+                this.preTutorial.off("cancel");
+                this.introTutorial.off("complete");
+                this.introTutorial.off("cancel");
+                this.telemetryTutorial.off("complete");
+                this.telemetryTutorial.off("cancel");
+                this.detectionTutorial.off("complete");
+                this.detectionTutorial.off("cancel");
+                this.diagnosisTutorial.off("complete");
+                this.diagnosisTutorial.off("cancel");
+                this.responseTutorial.off("complete");
+                this.responseTutorial.off("cancel");
+                this.chatTutorial.off("complete");
+                this.chatTutorial.off("cancel");
+                this.conclusionTutorial.off("complete");
+                this.conclusionTutorial.off("cancel");
+            },
+            telemetryTutorialI() {
+                this.preTutorial.show();
+                this.preTutorial.on("complete", () => {
+                    this.telemetryTutorial.show('firstStep');
+                });
+                this.telemetryTutorial.on("cancel", () => {
+                    this.preTutorial.show();
+                });
+                this.preTutorial.on("cancel", () => {
+                    this.clearTutorialSequence();
+                });
+                this.telemetryTutorial.on("complete", () => {
+                    this.clearTutorialSequence();
+                });
+            },
+            detectionTutorialI() {
+                this.preTutorial.show();
+                this.preTutorial.on("complete", () => {
+                    this.detectionTutorial.show('firstStep');
+                });
+                this.detectionTutorial.on("cancel", () => {
+                    this.preTutorial.show();
+                });
+                this.preTutorial.on("cancel", () => {
+                    this.clearTutorialSequence();
+                });
+                this.detectionTutorial.on("complete", () => {
+                    this.clearTutorialSequence();
+                });
+            },
+            diagnosisTutorialI() {
+                this.preTutorial.show();
+                this.preTutorial.on("complete", () => {
+                    this.diagnosisTutorial.show('firstStep');
+                });
+                this.diagnosisTutorial.on("cancel", () => {
+                    this.preTutorial.show();
+                });
+                this.preTutorial.on("cancel", () => {
+                    this.clearTutorialSequence();
+                });
+                this.diagnosisTutorial.on("complete", () => {
+                    this.clearTutorialSequence();
+                });
+            },
+            responseTutorialI() {
+                this.preTutorial.show();
+                this.preTutorial.on("complete", () => {
+                    this.responseTutorial.show('firstStep');
+                });
+                this.responseTutorial.on("cancel", () => {
+                    this.preTutorial.show();
+                });
+                this.preTutorial.on("cancel", () => {
+                    this.clearTutorialSequence();
+                });
+                this.responseTutorial.on("complete", () => {
+                    this.clearTutorialSequence();
+                });
+            },
+            chatTutorialI() {
+                this.preTutorial.show();
+                this.preTutorial.on("complete", () => {
+                    this.chatTutorial.show('firstStep');
+                });
+                this.chatTutorial.on("cancel", () => {
+                    this.preTutorial.show();
+                });
+                this.preTutorial.on("cancel", () => {
+                    this.clearTutorialSequence();
+                });
+                this.chatTutorial.on("complete", () => {
+                    this.clearTutorialSequence();
+                });
             }
         },
         components: {
@@ -170,15 +271,365 @@
                     useModalOverlay: true,
                     exitOnEsc: false
                 });
+                // add steps
+                this.preTutorial.addStep({
+                    text: 'Would you like to continue with the tutorial?',
+                    buttons: [
+                        {
+                            text: 'No',
+                            action: this.preTutorial.cancel
+                        },
+                        {
+                            text: 'Yes',
+                            action: this.preTutorial.next
+                        }
+                    ]
+                });
 
                 // Tutorial
-                this.tutorial = new Shepherd.Tour({
+
+                // introTutorial
+                this.introTutorial = new Shepherd.Tour({
                     defaultStepOptions: {
                         classes: 'shadow-md bg-purple-dark',
                         scrollTo: true
                     },
                     useModalOverlay: true,
                     exitOnEsc: false
+                });
+                // add first step
+                this.introTutorial.addStep({
+                    id: 'firstStep',
+                    text: `Hello astronaut! Congratulations for being selected as one of the crew members for the
+                        mission to Mars.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.introTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.introTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.introTutorial.steps.forEach(step => {
+                    this.introTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.introTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.introTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // telemetry tutorial
+                this.telemetryTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.telemetryTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#telemetry-feed',
+                        on: 'bottom'
+                    },
+                    text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
+                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
+                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
+                    orange and red ones) stand for the warning and critic limits of such measurement.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.telemetryTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.telemetryTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.telemetryTutorial.steps.forEach(step => {
+                    this.telemetryTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.telemetryTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.telemetryTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // detection tutorial
+                this.detectionTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.detectionTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#anomaly-detection',
+                            on: 'bottom'
+                    },
+                    text: `This is the  <b>Anomaly Detection</b> window. I will use this area to notify you about any
+                    anomalies that I might find within the sensor data readings. As you can see right now, I will
+                    basically provide you with a list of the measurements that exceed any of its limits.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.detectionTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.detectionTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.detectionTutorial.steps.forEach(step => {
+                    this.detectionTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.detectionTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.detectionTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // diagnosis tutorial
+                this.diagnosisTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.diagnosisTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `This is the <b>Anomaly Diagnosis</b> window. Whenever you select an anomalous measurement, it
+                    will appear on the upper slot. In fact, if you select more than one, I will display a list of all
+                    of your selections. Right now, if you followed my instructions, you should be seeing 'ppN2(L1): is
+                    above Upper Critic Limit' and 'Level Cabin Pressure (L1): is above Upper Critic Limit'.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.diagnosisTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.diagnosisTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.diagnosisTutorial.steps.forEach(step => {
+                    this.diagnosisTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.diagnosisTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.diagnosisTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // response tutorial
+                this.responseTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.responseTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
+                    to treat each of the anomaly causes that you selected.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.responseTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.responseTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.responseTutorial.steps.forEach(step => {
+                    this.responseTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.responseTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.responseTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // chatTutorial
+                this.chatTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.chatTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
+                    treatment process.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.chatTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.chatTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.chatTutorial.steps.forEach(step => {
+                    this.chatTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.chatTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.chatTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // conclusion tutorial
+                this.conclusionTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.conclusionTutorial.addStep({
+                    id: 'firstStep',
+                    text: `Now you know all the tools available to you in order to solve anomalies during this mission.
+                    It is going to be a long, arduous journey, so good luck! Onwards to Mars!`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.conclusionTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.conclusionTutorial.next
+                        }
+                    ]
+                });
+                // add rest of steps
+                this.$store.state.experiment.stageInformation.conclusionTutorial.steps.forEach(step => {
+                    this.conclusionTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.conclusionTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.conclusionTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // individual telemetry tutorial
+                this.$root.$on('telemetryTutorialI', () => {
+                    this.telemetryTutorialI();
+                });
+
+                // individual detection tutorial
+                this.$root.$on('detectionTutorialI', () => {
+                    this.detectionTutorialI();
+                });
+
+                // individual diagnosis tutorial
+                this.$root.$on('diagnosisTutorialI', () => {
+                    this.diagnosisTutorialI();
+                });
+
+                // individual response tutorial
+                this.$root.$on('responseTutorialI', () => {
+                    this.responseTutorialI();
+                });
+
+                // individual chat tutorial
+                this.$root.$on('chatTutorialI', () => {
+                    this.chatTutorialI();
                 });
 
                 // Experiment
@@ -193,7 +644,9 @@
             }
         },
         watch: {
+
             experimentStage: function (val, oldVal) {
+
                 if (this.inExperiment && !this.isRecovering) {
                     // TODO: Initialize Daphne for the new stage
                     // First the general code (nothing right now, Prachi will add something here)
@@ -205,64 +658,80 @@
                     // Stage specific behaviour
                     switch (this.experimentStage) {
                     case 'preTutorial': {
-                        this.$store.state.experiment.stageInformation.preTutorial.steps.forEach(step => {
-                            this.preTutorial.addStep(_.mergeWith({
-                                // ...step,
-                                buttons: [
-                                    {
-                                        text: 'No',
-                                        action: this.preTutorial.cancel
-                                    },
-                                    {
-                                        text: 'Yes',
-                                        action: this.preTutorial.next
-                                    }
-                                ]
-                            }, step, this.customizer));
-                        });
                         this.preTutorial.on("complete", () => {
-                            this.$store.commit('setExperimentStage', this.stageInformation.preTutorial.nextStage);
+                            this.introTutorial.show('firstStep');
                         });
                         this.preTutorial.on("cancel", () => {
-                            this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
-                                this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
+                            this.$store.dispatch('startStage', this.stageInformation.conclusionTutorial.nextStage).then(() => {
+                                this.$store.commit('setExperimentStage', this.stageInformation.conclusionTutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
                                 this.$store.dispatch('loadAllAnomalies')
                             });
+
+                            this.clearTutorialSequence();
                         });
-                        this.preTutorial.start();
-                        break;
-                    }
-                    case 'tutorial': {
-                        this.$store.state.experiment.stageInformation.tutorial.steps.forEach(step => {
-                            this.tutorial.addStep(_.mergeWith({
-                                // ...step,
-                                buttons: [
-                                    {
-                                        text: 'Previous',
-                                        action: this.tutorial.back
-                                    },
-                                    {
-                                        text: 'Next',
-                                        action: this.tutorial.next
-                                    }
-                                ]
-                            }, step, this.customizer));
+
+                        this.introTutorial.on("complete", () => {
+                            this.telemetryTutorial.show('firstStep');
                         });
-                        this.tutorial.on("complete", () => {
-                            this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
-                                this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
+                        this.introTutorial.on("cancel", () => {
+                            this.preTutorial.show();
+                        });
+
+                        this.telemetryTutorial.on("complete", () => {
+                            this.detectionTutorial.show('firstStep');
+                        });
+                        this.telemetryTutorial.on("cancel", () => {
+                            this.introTutorial.show('lastStep');
+                        });
+
+                        this.detectionTutorial.on("complete", () => {
+                            this.diagnosisTutorial.show('firstStep');
+                        });
+                        this.detectionTutorial.on("cancel", () => {
+                            this.telemetryTutorial.show('lastStep');
+                        });
+
+                        this.diagnosisTutorial.on("complete", () => {
+                            this.responseTutorial.show('firstStep');
+                        });
+                        this.diagnosisTutorial.on("cancel", () => {
+                            this.detectionTutorial.show('lastStep');
+                        });
+
+                        this.responseTutorial.on("complete", () => {
+                            this.chatTutorial.show('firstStep');
+                        });
+                        this.responseTutorial.on("cancel", () => {
+                            this.diagnosisTutorial.show('lastStep');
+                        });
+
+                        this.chatTutorial.on("complete", () => {
+                            this.conclusionTutorial.show('firstStep');
+                        });
+                        this.chatTutorial.on("cancel", () => {
+                            this.responseTutorial.show('lastStep');
+                        });
+
+                        this.conclusionTutorial.on("complete", () => {
+                            this.$store.dispatch('startStage', this.stageInformation.conclusionTutorial.nextStage).then(() => {
+                                this.$store.commit('setExperimentStage', this.stageInformation.conclusionTutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
                                 this.$store.dispatch('loadAllAnomalies')
                             });
+                            this.clearTutorialSequence();
                         });
-                        this.tutorial.start();
+                        this.conclusionTutorial.on("cancel", () => {
+                            this.chatTutorial.show('lastStep');
+                        });
+
+                        this.preTutorial.show();
                         break;
                     }
                     case 'with_daphne': {
