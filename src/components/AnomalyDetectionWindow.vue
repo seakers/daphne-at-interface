@@ -2,6 +2,9 @@
     <div id="anomaly-detection">
         <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
             Anomaly Detection
+            <span class="tutorialLink">
+            <u v-on:click.prevent="detectionTutorial">?</u>
+            </span>
         </div>
         <div v-if="(this.symptomsList.length === 0)" class="is-content" style="min-height: 100px">
             No anomalous symptoms detected.
@@ -66,6 +69,9 @@
         methods: {
             selectSymptom(symptom) {
                 this.$store.dispatch('addSelectedSymptom', symptom);
+            },
+            detectionTutorial(event) {
+                this.$root.$emit('detectionTutorialI');
             }
         },
 

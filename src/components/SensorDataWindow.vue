@@ -2,6 +2,9 @@
     <div id="telemetry-feed">
         <div class="is-title">
             Sensor Data
+            <span class="tutorialLink">
+            <u v-on:click.prevent="telemetryTutorial">?</u>
+            </span>
         </div>
         <div class="is-centered is-content">
             <div class="is-content is-multiselect">
@@ -86,6 +89,9 @@
                     newSelectedVariables[i] = newElement[i]['name'];
                 }
                 this.$store.dispatch('updateSelectedVariables', newSelectedVariables);
+            },
+            telemetryTutorial(event) {
+                this.$root.$emit('telemetryTutorialI');
             }
         },
 

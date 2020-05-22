@@ -1,6 +1,11 @@
 <template>
     <div>
         <div class="chat-container">
+            <div>
+                <span class="tutorialLink">
+                    <u v-on:click.prevent="chatTutorial">?</u>
+                </span>
+            </div>
             <section ref="chatArea" class="chat-area">
                 <div v-for="piece in dialogueHistory" class="chat-message content" :class="{ 'chat-message-user': piece.writer === 'user', 'chat-message-daphne': piece.writer === 'daphne' }">
                     <component v-for="(response, index) in piece['visual_message']" v-bind:is="responseTypes[piece['visual_message_type'][index]]" :response="response" :key="index"></component>
@@ -31,18 +36,6 @@
                     <a href="/question_cheatsheet.html" target="_blank">
                         Here's a list of the questions that I can answer!
                     </a>
-                </div>
-                <div class="control">
-                    <h5 align="middle">Tutorials</h5>
-                    <div align="middle">
-                        <a  v-on:click.prevent="detectionTutorial"><u>Detection</u></a>
-                        <a  v-on:click.prevent="telemetryTutorial"><u>Sensor Data</u></a>
-                        <a  v-on:click.prevent="diagnosisTutorial"><u>Diagnosis</u></a>
-                    </div>
-                    <div align="middle">
-                        <a  v-on:click.prevent="responseTutorial"><u>Response</u></a>
-                        <a  v-on:click.prevent="chatTutorial"><u>Chat</u></a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -116,18 +109,6 @@
             switchVoice(event) {
                 console.log(this.speakOut);
                 this.speakOut = !this.speakOut;
-            },
-            telemetryTutorial(event) {
-                this.$root.$emit('telemetryTutorialI');
-            },
-            detectionTutorial(event) {
-                this.$root.$emit('detectionTutorialI');
-            },
-            diagnosisTutorial(event) {
-                this.$root.$emit('diagnosisTutorialI');
-            },
-            responseTutorial(event) {
-                this.$root.$emit('responseTutorialI');
             },
             chatTutorial(event) {
                 this.$root.$emit('chatTutorialI');

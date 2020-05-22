@@ -2,6 +2,9 @@
     <div id="anomaly_diagnosis">
         <div class="is-title">
             Anomaly Diagnosis
+            <span class="tutorialLink">
+                <u v-on:click.prevent="diagnosisTutorial">?</u>
+            </span>
         </div>
         <div class="is-content">
             <div class="is-content">
@@ -96,6 +99,9 @@
             recoverSymptomsList() {
                 this.$store.dispatch('recoverSymptomsList')
             },
+            diagnosisTutorial(event) {
+                this.$root.$emit('diagnosisTutorialI');
+            }
         }
     }
 </script>

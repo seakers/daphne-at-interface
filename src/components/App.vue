@@ -3,6 +3,9 @@
         <div class="columns is-vertical-filler" style="margin-bottom: 5px">
             <div class="column is-8.9 is-vertical-filler">
                 <div class="is-sticky" >
+                    <div v-if="timerExperimentCondition">
+                        <timer v-bind:startTime=Date.now() v-bind:duration="3600"></timer>
+                    </div>
                     <div style="height: 5px; background-color: #111111"></div>
                     <div class="box is-main" style="margin: 0px;">
                         <anomaly-detection-window></anomaly-detection-window>
@@ -21,7 +24,8 @@
                     <anomaly-response-window></anomaly-response-window>
                 </div>
                 <div style="margin-top: 20px">
-                    <the-footer></the-footer>
+                    <the-footer>
+                    </the-footer>
                 </div>
 <!--                <div class="box is-main" style="margin-bottom: 5px">-->
 <!--                    <telemetry-buttons></telemetry-buttons>-->
@@ -55,8 +59,6 @@
     import ChatWindow from "./ChatWindow";
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import * as _ from 'lodash-es';
-
-    let currentID = 'firstStep'; // global variable for switch statement
 
     export default {
         name: 'app',
@@ -641,6 +643,11 @@
                         this.$store.commit('activateModal', 'LoginModal');
                     }
                 });
+
+                // finish experiment when time is up (allow for function to call in timer.vue)
+                this.$root.$on('endExperiment', () => {
+                    this.$store.dispatch('finishExperiment');
+                });
             }
         },
         watch: {
@@ -762,5 +769,10 @@
     .vertical-divider {
         background: $grey-light;
         width: 1px;
+    }
+
+    .tutorialLink {
+        float:right;
+        cursor:pointer;
     }
 </style>

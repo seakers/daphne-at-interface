@@ -2,6 +2,9 @@
     <div id="anomaly_response">
         <div class="is-title">
             Anomaly Response
+            <span class="tutorialLink">
+                <u v-on:click.prevent="responseTutorial">?</u>
+            </span>
         </div>
         <div class="is-content is-multiselect">
             <multiselect
@@ -204,6 +207,9 @@
                 procedureDict['procedureIsOpen'] = !procedureDict['procedureIsOpen'];
                 this.$store.dispatch('updateProcedureDict', procedureDict);
             },
+            responseTutorial(event) {
+                this.$root.$emit('responseTutorialI');
+            }
         },
 
         mounted: function() {

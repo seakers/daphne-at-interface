@@ -6,6 +6,8 @@
 </template>
 
 <script>
+    import Shepherd from "shepherd.js";
+
     export default {
         name: 'timer',
         props: ['duration', 'startTime'],
@@ -18,6 +20,9 @@
         computed: {
             endTime() {
                 return this.startTime + 1000*this.duration;
+            },
+            endTimer() {
+                return (Math.floor(this.endTime - this.now) <= 0);
             },
             minutes() {
                 let t = this.endTime - this.now;
@@ -39,6 +44,35 @@
                         this.$emit('countdown-end');
                     }
                 }, 1000);
+            },
+            timeUp() {
+                this.$root.$emit('endExperiment');
+                // set up pop up to link
+                const surveyLink = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add steps
+                surveyLink.addStep({
+                    text: `The time for the experiment has expired. Please click the "Survey Link" button to
+                    fill out the survey. Thank you.`,
+                    buttons: [
+                        {
+                            text: 'Survey Link',
+                            action: surveyLink.next
+                        }
+                    ]
+                });
+                // show the closing pop up
+                surveyLink.show();
+                // once the button is clicked, the tour is over and redirect to survey
+                surveyLink.on("complete", () => {
+                    window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7");
+                });
             }
         },
         mounted() {
@@ -47,6 +81,11 @@
         watch: {
             startTime: function (val, oldVal) {
                 this.createTimeInterval();
+            },
+            now: function(val, oldVal) {
+                if (this.endTimer) {
+                    this.timeUp();
+                }
             }
         }
     }
@@ -56,6 +95,6 @@
     #experiment-timer {
         position: fixed;
         bottom: 40px;
-        left: 40px;
+        left: 100px;
     }
 </style>
