@@ -63,14 +63,7 @@ store.subscribe(async (mutation, state) => {
                             delete partialState['daphneat'][key];
                         }
                     }
-                    delete partialState['experiment']['stageInformation']['preTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['introTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['telemetryTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['detectionTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['diagnosisTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['responseTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['chatTutorial']['steps'];
-                    delete partialState['experiment']['stageInformation']['conclusionTutorial']['steps'];
+                    delete partialState['experiment']['stageInformation']['tutorial']['steps'];
 
                     wsTools.experimentWebsocket.send(JSON.stringify({
                         msg_type: 'update_state',
