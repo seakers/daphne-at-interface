@@ -130,6 +130,12 @@ const actions = {
         currentSelectedSymptoms.splice(index, 1);
         commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
     },
+    async clearSelectedSymptoms({state, commit}) {
+        commit('mutateSelectedSymptomsList', []);
+    },
+    async clearDiagnosisReport({state, commit}) {
+        commit('mutateDiagnosisReport', []);;
+    },
     async retrieveProceduresFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
         reqData.append('anomaly_name',  JSON.stringify(anomalyName));
