@@ -219,47 +219,29 @@ const actions = {
         // the other selected anomalies that is also related to the procedure)
         for (let index in thisAnomalyProcedures['anomalyProcedures']) {
             let procedure = thisAnomalyProcedures[index];
-            let isRelatedToAnotherAnomaly = false;
-            for (let otherAnomalyName in newSelectedAnomaliesInfo) {
-                // Note that the entry to the anomaly that has to be deleted has already been removed from the dictionary
-                let otherAnomalyProcedures = newSelectedAnomaliesInfo[otherAnomalyName]['anomalyProcedures'];
-                if (otherAnomalyProcedures.includes(procedure)) {
-                    isRelatedToAnotherAnomaly = true;
-                }
-            }
-            if (!isRelatedToAnotherAnomaly) {
-                if (procedureName == procedure) {
-                    newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].splice(index,1);
-                    if (newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].length == 0) {
-                        for (let anomalyIndex in newSelectedAnomaliesList) {
-                            if (newSelectedAnomaliesList[anomalyIndex] == anomalyName) {
-                                newSelectedAnomaliesList.splice(anomalyIndex, 1);
-                            }
+            if (procedureName == procedure) {
+                newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].splice(index, 1);
+                if (newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].length == 0) {
+                    for (let anomalyIndex in newSelectedAnomaliesList) {
+                        if (newSelectedAnomaliesList[anomalyIndex] == anomalyName) {
+                            newSelectedAnomaliesList.splice(anomalyIndex, 1);
                         }
-                        for (let anomalyIndex in newSelectedAnomaliesInfo) {
-                            if (newSelectedAnomaliesInfo[anomalyIndex] == anomalyName) {
-                                newSelectedAnomaliesInfo.splice(anomalyIndex, 1);
-                            }
+                    }
+                    for (let anomalyIndex in newSelectedAnomaliesInfo) {
+                        if (newSelectedAnomaliesInfo[anomalyIndex] == anomalyName) {
+                            newSelectedAnomaliesInfo.splice(anomalyIndex, 1);
                         }
                     }
                 }
             }
-        }
-
-        // For the procedure to be deleted...
-        // ... find the index of the procedure to be deleted from the procedure list...
-        let indexProcedureToDelete = 0;
-        for (let index in newSelectedProceduresList) {
-            let procedure = newSelectedProceduresList[index];
-            if (procedure === procedureName) {
-                indexProcedureToDelete = index;
+            // find procedure in procedure lists to remove
+            for (let indexProcedure in newSelectedProceduresList) {
+                if (newSelectedProceduresList[indexProcedure] == procedure) {
+                    newSelectedProceduresList.splice(indexProcedure, 1);
+                }
             }
+            delete newSelectedProceduresInfo[procedureName];
         }
-
-        // Delete the procedure list item and the procedure info key
-        newSelectedProceduresList.splice(indexProcedureToDelete, 1);
-        delete newSelectedProceduresInfo[indexProcedureToDelete];
-
         // Perform the commits
         commit('mutateSelectedAnomaliesList', newSelectedAnomaliesList);
         commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
@@ -294,7 +276,7 @@ const actions = {
         // For each procedure related to the anomaly, check if it has to be deleted or not (that is, if there is any of
         // the other selected anomalies that is also related to the procedure)
         let proceduresToDelete = [];
-        for (let index in thisAnomalyProcedures) {
+        for (let index in thisAnomalyProcedures['anomalyProcedures']) {
             let procedure = thisAnomalyProcedures[index];
             let isRelatedToAnotherAnomaly = false;
             for (let otherAnomalyName in newSelectedAnomaliesInfo) {
