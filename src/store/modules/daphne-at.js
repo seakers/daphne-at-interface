@@ -1,5 +1,9 @@
 import {fetchPost} from "../../scripts/fetch-helpers";
 
+// Sound files
+import startAnomalySound from '../../sounds/woopwoop.mp3';
+import endAnomalySound from '../../sounds/endgame.mp3';
+
 const state = {
     // Telemetry related variables
     telemetryInputVariables: [], // A list of all the telemetry variables. Used for the telemetry plot dropdown menu.
@@ -391,13 +395,11 @@ const actions = {
     },
     async triggerAlarm(state, alarm) {
         if (alarm === 'alarmIn') {
-            let newAnomalySound = require('../../sounds/woopwoop.mp3');
-            let audio = new Audio(newAnomalySound);
+            let audio = new Audio(startAnomalySound);
             await audio.play();
         }
         else if (alarm === 'alarmOut') {
-            let newAnomalySound = require('../../sounds/endgame.mp3');
-            let audio = new Audio(newAnomalySound);
+            let audio = new Audio(endAnomalySound);
             await audio.play();
         }
     }
