@@ -205,7 +205,9 @@ const actions = {
         // Update the loading bool
         commit('mutateLoadingNewAnomaly', false);
     },
-    removeProcedures({state, commit}, anomalyName, procedureName) {
+    removeProcedures({state, commit}, anomalyAndProcedure) {
+        let anomalyName = anomalyAndProcedure[0];
+        let procedureName = anomalyAndProcedure[1];
         // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
         // changes will be committed at the end of the action.
         let newSelectedAnomaliesList = JSON.parse(JSON.stringify(state.selectedAnomaliesList));
@@ -218,7 +220,7 @@ const actions = {
         // For each procedure related to be deleted, check if it has to be deleted or not (that is, if there is any of
         // the other selected anomalies that is also related to the procedure)
         for (let index in thisAnomalyProcedures['anomalyProcedures']) {
-            let procedure = thisAnomalyProcedures[index];
+            let procedure = thisAnomalyProcedures['anomalyProcedures'][index];
             if (procedureName == procedure) {
                 newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].splice(index, 1);
                 if (newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].length == 0) {
@@ -234,9 +236,8 @@ const actions = {
                     }
                 }
             }
-            // find procedure in procedure lists to remove
             for (let indexProcedure in newSelectedProceduresList) {
-                if (newSelectedProceduresList[indexProcedure] == procedure) {
+                if (newSelectedProceduresList[indexProcedure] == procedureName) {
                     newSelectedProceduresList.splice(indexProcedure, 1);
                 }
             }
@@ -277,7 +278,7 @@ const actions = {
         // the other selected anomalies that is also related to the procedure)
         let proceduresToDelete = [];
         for (let index in thisAnomalyProcedures['anomalyProcedures']) {
-            let procedure = thisAnomalyProcedures[index];
+            let procedure = thisAnomalyProcedures['anomalyProcedures'][index];
             let isRelatedToAnotherAnomaly = false;
             for (let otherAnomalyName in newSelectedAnomaliesInfo) {
                 // Note that the entry to the anomaly that has to be deleted has already been removed from the dictionary

@@ -229,7 +229,7 @@
             responseTutorial(event) {
                 this.$root.$emit('responseTutorialI');
             },
-            async clearCompletedProcedures() {
+            clearCompletedProcedures() {
                 for (let anomalyIndex in this.anomalyList) {
                     let proceduresToDelete = [];
                     let anomalyName = this.selectedAnomaliesList[anomalyIndex];
@@ -241,8 +241,9 @@
                     }
                     if (proceduresToDelete.length > 0) {
                         for (let procedure in proceduresToDelete) {
-                            let thisProcedure = procedure;
-                            await this.$store.dispatch('removeProcedures', anomalyName, thisProcedure);
+                            let procedureName = proceduresToDelete[procedure];
+                            let anomalyAndProcedure = [anomalyName, procedureName];
+                            this.$store.dispatch('removeProcedures', anomalyAndProcedure);
                         }
                     }
                 }
