@@ -1084,10 +1084,12 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopTelemetry').then(() => {
+                            /*this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
                                 this.$store.dispatch('loadAllAnomalies')
-                            });
+                            });*/
+                            this.$store.dispatch('startTelemetry');
+                            this.$store.dispatch('loadAllAnomalies');
 
                             this.clearTutorialSequence();
                         });
@@ -1139,10 +1141,12 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopTelemetry').then(() => {
+                            /*this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
                                 this.$store.dispatch('loadAllAnomalies')
-                            });
+                            });*/
+                            this.$store.dispatch('startTelemetry');
+                            this.$store.dispatch('loadAllAnomalies');
                             this.clearTutorialSequence();
                         });
                         this.conclusionTutorial.on("cancel", () => {
