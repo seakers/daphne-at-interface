@@ -130,9 +130,9 @@
                     await wsTools.wsConnect(this.$store);
 
                     // If not already ongoing, start receiving a fake telemetry for the tutorial
-                    /*if (!this.telemetryIsOngoing) {
+                    if (!this.telemetryIsOngoing) {
                         await this.$store.dispatch('startFakeTelemetry');
-                    }*/
+                    }
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
@@ -1084,13 +1084,10 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            /*this.$store.dispatch('stopTelemetry').then(() => {
+                            this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
                                 this.$store.dispatch('loadAllAnomalies')
-                            });*/
-                            this.$store.dispatch('startTelemetry');
-                            this.$store.dispatch('loadAllAnomalies');
-
+                            });
                             this.clearTutorialSequence();
                         });
 
@@ -1141,12 +1138,10 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            /*this.$store.dispatch('stopTelemetry').then(() => {
+                            this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
                                 this.$store.dispatch('loadAllAnomalies')
-                            });*/
-                            this.$store.dispatch('startTelemetry');
-                            this.$store.dispatch('loadAllAnomalies');
+                            });
                             this.clearTutorialSequence();
                         });
                         this.conclusionTutorial.on("cancel", () => {
