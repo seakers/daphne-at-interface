@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div class="chat-container">
-            <div>
-                <span class="tutorialLink">
-                    <u v-on:click.prevent="chatTutorial">?</u>
-                </span>
-            </div>
+        <div class="chat-container" style="margin-top:10px">
             <section ref="chatArea" class="chat-area">
                 <div v-for="piece in dialogueHistory" class="chat-message content" :class="{ 'chat-message-user': piece.writer === 'user', 'chat-message-daphne': piece.writer === 'daphne' }">
                     <component v-for="(response, index) in piece['visual_message']" v-bind:is="responseTypes[piece['visual_message_type'][index]]" :response="response" :key="index"></component>
@@ -15,22 +10,27 @@
 
             <div class="sticky-textbox">
                 <div class="field has-addons is-fullwidth">
-                    <div class="control is-expanded">
-                        <input class="input" type="text" name="command" placeholder="Ask a question / Give a command / Speak it out!" v-model="command" v-on:keyup.enter="sendCommand">
-                    </div>
-                    <div class="control">
-                        <a class="button is-info" v-on:click.prevent="switchVoice">
-                    <span class="icon is-small">
-                        <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
-                    </span>
-                        </a>
-                    </div>
-                    <div class="control">
-                        <a class="button is-info" id="clear_history" v-on:click.prevent="clearHistory">Clear</a>
-                    </div>
-                    <div class="control">
-                        <a class="button is-info" id="send_command" v-on:click.prevent="sendCommand">Send</a>
-                    </div>
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="command" placeholder="Ask a question / Give a command / Speak it out!" v-model="command" v-on:keyup.enter="sendCommand">
+                        </div>
+                </div>
+                <div class="field has-addons is-fullwidth">
+                        <div class="control">
+                            <a class="button is-info" v-on:click.prevent="switchVoice">
+                                <span class="icon is-small">
+                                    <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="control">
+                            <a class="button is-info" id="clear_history" v-on:click.prevent="clearHistory">Clear</a>
+                        </div>
+                        <div class="control">
+                            <a class="button is-info" id="send_command" v-on:click.prevent="sendCommand">Send</a>
+                        </div>
+                        <div class="control">
+                            <a class="button is-info" v-on:click.prevent="chatTutorial">?</a>
+                        </div>
                 </div>
                 <div>
                     <a href="/question_cheatsheet.html" target="_blank">

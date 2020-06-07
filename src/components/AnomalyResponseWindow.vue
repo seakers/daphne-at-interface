@@ -26,6 +26,11 @@
                     @select="newSelection"
                     @remove="newDeselection">
             </multiselect>
+            <div v-if="clearButtonBoolean">
+                <a class="button is-small-button" v-on:click.prevent="clearCompletedProcedures" style="float:right">
+                    Clear Completed Procedures
+                </a>
+            </div>
         </div>
         <div v-if="isLoading" class="is-content">
             <img v-if="isLoading"
@@ -156,6 +161,16 @@
                 }
                 return anomalyList;
             },
+            clearButtonBoolean() {
+                for (let anomalyIndex in this.anomalyList) {
+                    for (let procedureIndex in this.anomalyList[anomalyIndex]['anomalyProcedures']) {
+                        if (this.isComplete(this.anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex])) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
         },
 
         methods: {
@@ -175,9 +190,13 @@
             computeLeftMargin(stepItem) {
                 let margin = '0px';
                 let depth = stepItem['depth'];
-                if (depth === 0) {margin = '10px'}
-                else if (depth === 1) {margin = '25px'}
-                else if (depth === 2) {margin = '40px'}
+                if (depth === 0) {
+                    margin = '10px'
+                } else if (depth === 1) {
+                    margin = '25px'
+                } else if (depth === 2) {
+                    margin = '40px'
+                }
                 return margin
             },
             isComplete(procedureDict) {
@@ -209,9 +228,26 @@
             },
             responseTutorial(event) {
                 this.$root.$emit('responseTutorialI');
+            },
+            async clearCompletedProcedures() {
+                for (let anomalyIndex in this.anomalyList) {
+                    let proceduresToDelete = [];
+                    let anomalyName = this.selectedAnomaliesList[anomalyIndex];
+                    for (let procedureIndex in this.anomalyList[anomalyIndex]['anomalyProcedures']) {
+                        if (this.isComplete(this.anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex])) {
+                            let procedure = this.anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureName'];
+                            proceduresToDelete.push(procedure);
+                        }
+                    }
+                    if (proceduresToDelete.length > 0) {
+                        for (let procedure in proceduresToDelete) {
+                            let thisProcedure = procedure;
+                            await this.$store.dispatch('removeProcedures', anomalyName, thisProcedure);
+                        }
+                    }
+                }
             }
         },
-
         mounted: function() {
             this.loadAnomalies()
         },

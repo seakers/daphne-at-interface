@@ -1,13 +1,11 @@
 <template>
-    <div class="notification" id="experiment-timer">
-        <p class="is-size-1">{{minutes}} : {{seconds}}</p>
+    <div id="experiment-timer">
+        <p>{{minutes}} : {{seconds}}</p>
     </div>
 
 </template>
 
 <script>
-    import Shepherd from "shepherd.js";
-
     export default {
         name: 'timer',
         props: ['duration', 'startTime'],
@@ -47,32 +45,6 @@
             },
             timeUp() {
                 this.$root.$emit('endExperiment');
-                // set up pop up to link
-                const surveyLink = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                // add steps
-                surveyLink.addStep({
-                    text: `The time for the experiment has expired. Please click the "Survey Link" button to
-                    fill out the survey. Thank you.`,
-                    buttons: [
-                        {
-                            text: 'Survey Link',
-                            action: surveyLink.next
-                        }
-                    ]
-                });
-                // show the closing pop up
-                surveyLink.show();
-                // once the button is clicked, the tour is over and redirect to survey
-                surveyLink.on("complete", () => {
-                    window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7");
-                });
             }
         },
         mounted() {
@@ -94,7 +66,15 @@
 <style scoped>
     #experiment-timer {
         position: fixed;
-        bottom: 40px;
-        left: 100px;
+        top: 5px;
+        right: 235px;
+        background: #002E2E;
+        font-size: 18px;
+        font-weight: bold;
+        color: #0AFEFF;
+        border-width: 1px 1px 1px 1px !important;
+        border-color: #0AFEFF !important;
+        border-style: solid !important;
+        border-radius: 5px 5px 5px 5px;
     }
 </style>

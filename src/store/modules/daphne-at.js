@@ -171,10 +171,8 @@ const actions = {
         let newSelectedProceduresList = JSON.parse(JSON.stringify(state.selectedProceduresList));
         let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
 
-
         // Retrieve a list with the names of all the procedures related to the anomaly
         let procedures = await Promise.resolve(this.dispatch('retrieveProceduresFromAnomaly', anomalyName));
-
         // Update the copy of the state variables.
         newSelectedAnomaliesList.push(anomalyName);
         newSelectedAnomaliesInfo[anomalyName] = {'anomalyProcedures': procedures};
@@ -198,7 +196,6 @@ const actions = {
                 newSelectedProceduresInfo[procedureName] = procedureInfo;
             }
         }
-
         // Perform the commits
         commit('mutateSelectedAnomaliesList', newSelectedAnomaliesList);
         commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
@@ -207,6 +204,68 @@ const actions = {
 
         // Update the loading bool
         commit('mutateLoadingNewAnomaly', false);
+    },
+    removeProcedures({state, commit}, anomalyName, procedureName) {
+        // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the
+        // changes will be committed at the end of the action.
+        let newSelectedAnomaliesList = JSON.parse(JSON.stringify(state.selectedAnomaliesList));
+        let newSelectedAnomaliesInfo = JSON.parse(JSON.stringify(state.selectedAnomaliesInfo));
+        let newSelectedProceduresList = JSON.parse(JSON.stringify(state.selectedProceduresList));
+        let newSelectedProceduresInfo = JSON.parse(JSON.stringify(state.selectedProceduresInfo));
+
+        // For comfort, retrieve the list that the procedure will be removed from
+        let thisAnomalyProcedures = JSON.parse(JSON.stringify(state.selectedAnomaliesInfo[anomalyName]));
+        // For each procedure related to be deleted, check if it has to be deleted or not (that is, if there is any of
+        // the other selected anomalies that is also related to the procedure)
+        for (let index in thisAnomalyProcedures['anomalyProcedures']) {
+            let procedure = thisAnomalyProcedures[index];
+            let isRelatedToAnotherAnomaly = false;
+            for (let otherAnomalyName in newSelectedAnomaliesInfo) {
+                // Note that the entry to the anomaly that has to be deleted has already been removed from the dictionary
+                let otherAnomalyProcedures = newSelectedAnomaliesInfo[otherAnomalyName]['anomalyProcedures'];
+                if (otherAnomalyProcedures.includes(procedure)) {
+                    isRelatedToAnotherAnomaly = true;
+                }
+            }
+            if (!isRelatedToAnotherAnomaly) {
+                if (procedureName == procedure) {
+                    newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].splice(index,1);
+                    if (newSelectedAnomaliesInfo[anomalyName]['anomalyProcedures'].length == 0) {
+                        for (let anomalyIndex in newSelectedAnomaliesList) {
+                            if (newSelectedAnomaliesList[anomalyIndex] == anomalyName) {
+                                newSelectedAnomaliesList.splice(anomalyIndex, 1);
+                            }
+                        }
+                        for (let anomalyIndex in newSelectedAnomaliesInfo) {
+                            if (newSelectedAnomaliesInfo[anomalyIndex] == anomalyName) {
+                                newSelectedAnomaliesInfo.splice(anomalyIndex, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // For the procedure to be deleted...
+        // ... find the index of the procedure to be deleted from the procedure list...
+        let indexProcedureToDelete = 0;
+        for (let index in newSelectedProceduresList) {
+            let procedure = newSelectedProceduresList[index];
+            if (procedure === procedureName) {
+                indexProcedureToDelete = index;
+            }
+        }
+
+        // Delete the procedure list item and the procedure info key
+        newSelectedProceduresList.splice(indexProcedureToDelete, 1);
+        delete newSelectedProceduresInfo[indexProcedureToDelete];
+
+        // Perform the commits
+        commit('mutateSelectedAnomaliesList', newSelectedAnomaliesList);
+        commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
+        commit('mutateSelectedProceduresList', newSelectedProceduresList);
+        commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+
     },
     removeSelectedAnomaly({state, commit}, anomalyName) {
         // A copy of each state variable to be modified is made. Modifications will be made upon such copy, and the

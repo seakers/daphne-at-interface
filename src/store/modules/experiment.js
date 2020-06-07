@@ -2,6 +2,7 @@
 import * as _ from "lodash-es";
 import {fetchGet} from "../../scripts/fetch-helpers";
 import {wsTools} from "../../scripts/websocket-tools";
+import Shepherd from "shepherd.js";
 
 const state = {
     inExperiment: false,
@@ -111,6 +112,32 @@ const actions = {
             else {
                 console.error('Error finishing the experiment.');
             }
+            // set up pop up to link
+            const surveyLink = new Shepherd.Tour({
+                defaultStepOptions: {
+                    classes: 'shadow-md bg-purple-dark',
+                    scrollTo: true
+                },
+                useModalOverlay: true,
+                exitOnEsc: false
+            });
+            // add steps
+            surveyLink.addStep({
+                text: `The time for the experiment has expired. Please click the "Survey Link" button to
+                    fill out the survey. Thank you.`,
+                buttons: [
+                    {
+                        text: 'Survey Link',
+                        action: surveyLink.next
+                    }
+                ]
+            });
+            // show the closing pop up
+            surveyLink.show();
+            // once the button is clicked, the tour is over and redirect to survey
+            surveyLink.on("complete", () => {
+                window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7");
+            });
         }
         catch(e) {
             console.error('Networking error:', e);

@@ -4,7 +4,7 @@
             <div class="column is-8.9 is-vertical-filler">
                 <div class="is-sticky" >
                     <div v-if="timerExperimentCondition">
-                        <timer v-bind:startTime=Date.now() v-bind:duration="3600"></timer>
+                        <timer v-bind:startTime=Date.now() v-bind:duration="3602"></timer>
                     </div>
                     <div style="height: 5px; background-color: #111111"></div>
                     <div class="box is-main" style="margin: 0px;">
@@ -130,9 +130,9 @@
                     await wsTools.wsConnect(this.$store);
 
                     // If not already ongoing, start receiving a fake telemetry for the tutorial
-                    if (!this.telemetryIsOngoing) {
+                    /*if (!this.telemetryIsOngoing) {
                         await this.$store.dispatch('startFakeTelemetry');
-                    }
+                    }*/
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
