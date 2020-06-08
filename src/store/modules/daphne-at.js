@@ -406,7 +406,7 @@ const actions = {
 };
 
 const mutations = {
-    mutateTelemetryIsOngoing(state) {state.telemetryIsOngoing = !state.telemetryIsOngoing},
+    mutateTelemetryIsOngoing(state) {state.telemetryIsOngoing = !state.telemetryIsOngoing;},
     mutateTelemetryPlotData(state, newVal) {state.telemetryPlotData = newVal},
     mutateTelemetryValues(state, newVal) {state.telemetryValues = newVal},
     mutateTelemetryInfo(state, newVal) {state.telemetryInfo = newVal},

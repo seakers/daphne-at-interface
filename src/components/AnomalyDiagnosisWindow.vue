@@ -48,7 +48,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="column is-two-fifths" style="margin: 0px; padding: 0px">
+                    <div class="column is-6" style="margin: 0px; padding: 0px">
                         <u style="margin-bottom:200px">Could be caused by:</u>
                         <ul>
                             <li  v-on:click="selectAnomaly(anomaly['name'])" v-for="anomaly in diagnosisReport['diagnosis_list']" style="cursor: pointer">
@@ -56,9 +56,9 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="column is-1" style="margin: 0px; padding: 0px">
-                        <a class="button is-small-button" v-on:click.prevent="clearFullDiagnosisReport">
-                            Clear Report
+                    <div style="margin: 0px; padding: 0px">
+                        <a script="float:right" v-on:click.prevent="clearFullDiagnosisReport">
+                            x
                         </a>
                     </div>
                 </div>
