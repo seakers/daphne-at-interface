@@ -18,7 +18,7 @@ class WebsocketTools {
                 pingIntervalId = setInterval(() => {
                     console.log("Ping sent to the backend!");
                     websocket.send(JSON.stringify({'msg_type': 'ping'}));
-                }, 30000);
+                }, 10000);
 
                 // Resolve the promise
                 this.websocket = websocket;
