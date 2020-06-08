@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import {mapGetters, mapState} from 'vuex';
+    import { mapState } from 'vuex';
     import {wsTools} from "../scripts/websocket-tools";
     import Shepherd from 'shepherd.js';
     import SensorDataWindow from "./SensorDataWindow";
@@ -59,6 +59,10 @@
     import ChatWindow from "./ChatWindow";
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import * as _ from 'lodash-es';
+
+    // Sound files
+    import startAnomalySound from '../sounds/woopwoop.mp3';
+    import endAnomalySound from '../sounds/endgame.mp3';
 
     export default {
         name: 'app',
@@ -84,9 +88,6 @@
                 stageInformation: state => state.experiment.stageInformation,
                 isRecovering: state => state.experiment.isRecovering,
                 currentStageNum: state => state.experiment.currentStageNum,
-            }),
-            ...mapGetters({
-                telemetryIsOngoing: 'getTelemetryIsOngoing',
             }),
             timerExperimentCondition() {
                 if (!this.inExperiment) {
@@ -132,6 +133,10 @@
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
 
+                    // Start both Hub and AT threads if not already started before
+                    await this.$store.dispatch('startHubThread')
+                    await this.$store.dispatch('startATThread')
+
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
                     // Set the tutorial
@@ -159,6 +164,8 @@
                 this.responseTutorial.off("cancel");
                 this.chatTutorial.off("complete");
                 this.chatTutorial.off("cancel");
+                this.conclusionTutorial.off("complete");
+                this.conclusionTutorial.off("cancel");
             },
             telemetryTutorialI() {
                 this.tutorial.show();
@@ -260,7 +267,7 @@
                 // Generate the session
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
 
-                // skip tutorial button
+                // preTutorial
                 this.tutorial = new Shepherd.Tour({
                     defaultStepOptions: {
                         classes: 'shadow-md bg-purple-dark',
@@ -285,7 +292,8 @@
                 });
 
                 // Tutorial
-                // full tutorial at the beginning
+
+                // introTutorial
                 this.introTutorial = new Shepherd.Tour({
                     defaultStepOptions: {
                         classes: 'shadow-md bg-purple-dark',
@@ -297,9 +305,8 @@
                 // add first step
                 this.introTutorial.addStep({
                     id: 'firstStep',
-                    text: `Hello astronaut! My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
-                    monitor the Environmental Control and Life Support System (ECLSS), and I will assist you with any
-                    anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`,
+                    text: `Hello astronaut! Congratulations for being selected as one of the crew members for the
+                        mission to Mars.`,
                     buttons: [
                         {
                             text: 'Prev',
@@ -314,15 +321,66 @@
                 // list of steps
                 const introSteps = [
                     {
-                        attachTo: {
-                            element: '#telemetry-feed',
-                            on: 'bottom'
-                        },
-                        text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
+                        text: `In the next few minutes, I will tell you more about myself and how I can help you during the
+                    process of treating an anomaly. So please, pay close attention!`
+                    },
+                    {
+                        id: 'lastStep',
+                        text: `My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
+                    monitor the Environment Control and Life Support System (ECLSS), and I will assist you with any
+                    anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`
+                    }
+                ];
+                // add rest of steps
+                introSteps.forEach(step => {
+                    this.introTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.introTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.introTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // telemetry tutorial
+                this.telemetryTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.telemetryTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#telemetry-feed',
+                        on: 'bottom'
+                    },
+                    text: `This is the <b>Sensor Data</b> window. The purpose of this area is to plot the evolution
                     of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red lines) stand for the warning and critical limits of the selected measurement.`
-                    },
+                    orange and red lines) stand for the warning and critical limits of the selected measurement.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.telemetryTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.telemetryTutorial.next
+                        }
+                    ]
+                });
+                // list of steps
+                const telemetrySteps = [
                     {
                         attachTo: {
                             element: '#telemetry-feed',
@@ -338,18 +396,60 @@
                             element: '#telemetry-feed',
                             on: 'bottom'
                         },
+                        id: 'lastStep',
                         text: `Try clicking on the dropdown menu and adding a new measurement to the
                     plot. After that, try clicking on the little cross 'x' next to the measurement name to deselect it.
                     When you are done, click 'Next'.`
+                    }
+                ];
+                // add rest of steps
+                telemetrySteps.forEach(step => {
+                    this.telemetryTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.telemetryTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.telemetryTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // detection tutorial
+                this.detectionTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
                     },
-                    {
-                        attachTo: {
-                            element: '#anomaly-detection',
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.detectionTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#anomaly-detection',
                             on: 'bottom'
-                        },
-                        text: `This is the  <b>Anomaly Detection</b> window. As you can see right now, I will use this area
-                    to provide you with a list of measurements that exceed any of their limits.`
                     },
+                    text: `This is the  <b>Anomaly Detection</b> window. As you can see right now, I will use this area
+                    to provide you with a list of measurements that exceed any of their limits.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.detectionTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.detectionTutorial.next
+                        }
+                    ]
+                });
+                // list of steps
+                const detectionSteps = [
                     {
                         attachTo: {
                             element: '#anomaly-detection',
@@ -358,7 +458,7 @@
                         text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
                     of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
                     the color of this window to bring your attention, as well as to inform you about which limits are
-                    being exceeded by the measurements. I will use orange when any detected measurement exceeds its
+                    being exceeded by the measurements. I will use orange when every detected measurement exceeds its
                     warning limit, but not its critical limit, and I will use red when any detected measurement exceeds
                     its critical limit.`
                     },
@@ -371,8 +471,7 @@
                             {
                                 text: 'Alarm IN',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/woopwoop.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(startAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -392,8 +491,7 @@
                             {
                                 text: 'Alarm OUT',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/endgame.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(endAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -409,29 +507,70 @@
                             element: '#anomaly-detection',
                             on: 'bottom'
                         },
-                        text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear<b>Anomaly Diagnosis</b> window. Try selecting the ppN2 (L1)
-                        and Level Cabin Pressure (L1) anomalous measurements, then click ‘Next’.`
+                        id: 'lastStep',
+                        text: `Once an anomalous measurement is detected, you can click on it to select it. This will
+                        appear in the <b>Anomaly Diagnosis</b> window and will soon tell you what it is useful for. Try
+                        selecting the ppN2 (L1) and Level Cabin Pressure (L1) anomalous measurements, then click ‘Next’.`
+                    }
+                ];
+                // add rest of steps
+                detectionSteps.forEach(step => {
+                    this.detectionTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.detectionTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.detectionTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // diagnosis tutorial
+                this.diagnosisTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
                     },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement, it
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.diagnosisTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#anomaly_diagnosis',
+                        on: 'bottom'
+                    },
+                    text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement, it
                     will appear in the upper slot. In fact, if you select more than one, I will display a list of all
                     your selections. Right now, if you followed my instructions, you should be seeing ‘ppN2(L1):
-                    is above Upper Critical Limit’ and ‘Level Cabin Pressure (L1): is above Upper Critic Limit’.`
-                    },
+                    is above Upper Critical Limit’ and ‘Level Cabin Pressure (L1): is above Upper Critic Limit’.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.diagnosisTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.diagnosisTutorial.next
+                        }
+                    ]
+                });
+                // list of steps
+                const diagnosisSteps = [
                     {
                         attachTo: {
                             element: '#anomaly_diagnosis',
                             on: 'bottom'
                         },
                         text: `You can also deselect any item from this list by clicking on it. Try this by clicking on
-                        ‘Level Cabin Pressure (L1): is above Upper Critical Limit’ and see that it disappears. You can
-                         also click the 'Clear All' button to deselect all the items from this list. Click ‘Next’ when
-                         you are ready.`
+                        ‘Level Cabin Pressure (L1): is above Upper Critical Limit’ and see that it disappears, then
+                        click ‘Next’.`
                     },
                     {
                         attachTo: {
@@ -439,7 +578,7 @@
                             on: 'bottom'
                         },
                         text: `As you might have noticed, a ‘Diagnose’ button appears on the right side of the upper
-                        slot. This button will only be available when you have some anomalous measurements selected. Do not
+                        slot. This button only be available when you have some anomalous measurements selected. Do not
                         click it yet!`
                     },
                     {
@@ -465,19 +604,18 @@
                             element: '#anomaly_diagnosis',
                             on: 'bottom'
                         },
-                        text: `Also, some new information appeared on the lower slot. This is how I
+                        text: `Apart from the previous, some new information appeared on the lower slot. This is how I
                         provide you with my possible explanations of what might be causing an anomaly along. On the
                         left, you can see the list of the anomalous measurements that were selected when you
                         clicked on ‘Diagnose’. On the right, you can see a lit of some possible causes for such
-                        anomalous measurements. If at any point you would like to clear this report, you can click the
-                        'x' in the top right corner of the lower slot.`
+                        anomalous measurements.`
                     },
                     {
                         attachTo: {
                             element: '#anomaly_diagnosis',
                             on: 'bottom'
                         },
-                        text: `You might want to recover the exact same list of anomalous measurements that you
+                        text: `As I said, you might want to recover the exact same list of anomalous measurements that you
                     had selected before clicking the diagnose button, and then modify it. To do so, click on the list on
                     the left part of the lower slot, and it will appear in the upper slot again. Try doing it now, and
                     then click 'Next'.`
@@ -488,8 +626,8 @@
                             on: 'bottom'
                         },
                         text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
-                    I provided a list of them, and each item has an associated confidence level between 0 and 1. This score stands
-                    for how confident I am for each cause to be the one that is actually happening. The higher the score,
+                    I provided a list of them, and each item has an associated score between 0 and 1. This score stands
+                    for how confident I am for each cause to be the one that is actually happening. The higher score,
                     the more confident I am in my suggestion.`
                     },
                     {
@@ -505,17 +643,59 @@
                             element: '#anomaly_diagnosis',
                             on: 'bottom'
                         },
+                        id: 'lastStep',
                         text: `If you want to further explore any of my suggestions, you can click on it to select it. Try
                     selecting the 'N2 Tank Burst' now, and then click on 'Next'.`
+                    }
+                ];
+                // add rest of steps
+                diagnosisSteps.forEach(step => {
+                    this.diagnosisTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.diagnosisTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.diagnosisTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // response tutorial
+                this.responseTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
                     },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.responseTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '#anomaly_response',
+                        on: 'top'
+                    },
+                    text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
+                    to treat each of the anomaly causes that you selected.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.responseTutorial.cancel
                         },
-                        text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
-                    to treat each of the anomaly causes that you select.`
-                    },
+                        {
+                            text: 'Next',
+                            action: this.responseTutorial.next
+                        }
+                    ]
+                });
+                // list of steps
+                const responseSteps = [
                     {
                         attachTo: {
                             element: '#anomaly_response',
@@ -564,9 +744,7 @@
                         text: `At the top right side of the procedure slot, I will display the status of such procedure. I
                     will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
                     selecting all the steps of this procedure now to see the difference (you only need to check the last
-                    step). You will also see that once a procedure is complete that a new button appears. This button
-                    'Clear Completed Procedures' will remove all the procedures that you have completed. Click 'Next'
-                    when you are ready.`
+                    step). Click 'Next' when you are ready.`
                     },
                     {
                         attachTo: {
@@ -589,19 +767,61 @@
                             element: '#anomaly_response',
                             on: 'top'
                         },
-                        text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
+                        id: 'lastStep',
+                        text: `I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
                     with me, you can use the dropdown menu at the top of this window to explore the procedures of other
                     anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
                     cross next 'x' to it. Click 'Next' when you are ready.`
+                    }
+                ];
+                // add rest of steps
+                responseSteps.forEach(step => {
+                    this.responseTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.responseTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.responseTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // chatTutorial
+                this.chatTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
                     },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.chatTutorial.addStep({
+                    id: 'firstStep',
+                    attachTo: {
+                        element: '.sticky-textbox',
+                        on: 'top'
+                    },
+                    text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
+                    treatment process.`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.chatTutorial.cancel
                         },
-                        text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
-                    treatment process.`
-                    },
+                        {
+                            text: 'Next',
+                            action: this.chatTutorial.next
+                        }
+                    ]
+                });
+                // list of steps
+                const chatSteps = [
                     {
                         attachTo: {
                             element: '.sticky-textbox',
@@ -722,618 +942,11 @@
                             targetAttachment: 'top right',
                             offset: '200px -30px'
                         },
-                        text: `Finally, click again on the microphone to deactivate the speech recognition. Then click 'Next'.`
-                    },
-                    {
-                        text: `Now you know all the tools available to you to solve anomalies during this mission.
-                    It is going to be a long, arduous journey, so good luck!`
-                    },
-                    {
-                        text: `IMPORTANT: It should not be a problem but try to avoid refreshing the browser page during the
-                    experiment.`
-                    },
-                    {
-                        text: `Now the experiment is about to start. Before you click 'Next', tell the person that is
-                    monitoring you that you are ready. DO NOT click 'Next' until he/she has given you explicit permission.`
-                    },
-                    {
-                        text: `You should be seeing this only if you have been granted permission. Click on 'Next' to start
-                    the experiment.`
-                    },
+                        id: 'lastStep',
+                        text: `Finally, click again on the mcrophone to deactivate the speech recognition. Then click 'Next'.`
+                    }
                 ];
                 // add rest of steps
-                introSteps.forEach(step => {
-                    this.introTutorial.addStep(_.mergeWith({
-                        // ...step,
-                        buttons: [
-                            {
-                                text: 'Previous',
-                                action: this.introTutorial.back
-                            },
-                            {
-                                text: 'Next',
-                                action: this.introTutorial.next
-                            }
-                        ]
-                    }, step, this.customizer));
-                });
-
-                // individual tutorial for ? links
-                // telemetry
-                this.telemetryTutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                this.telemetryTutorial.addStep({
-                    id: 'firstStep',
-                    attachTo: {
-                        element: '#telemetry-feed',
-                        on: 'bottom'
-                    },
-                    text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
-                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
-                    sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red lines) stand for the warning and critical limits of the selected measurement.`,
-                    buttons: [
-                        {
-                            text: 'Prev',
-                            action: this.telemetryTutorial.cancel
-                        },
-                        {
-                            text: 'Next',
-                            action: this.telemetryTutorial.next
-                        }
-                    ]
-                });
-                const telemetrySteps = [
-                    {
-                        attachTo: {
-                            element: '#telemetry-feed',
-                            on: 'bottom'
-                        },
-                        text: `Note that there is a dropdown menu above the graph. You can use it to choose which
-                    measurements you want me to display. I can even display more than one measurement at once! Bear in
-                    mind that if you want me to do so, I will not show the limits of each measurement because there
-                    would be too many lines!.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#telemetry-feed',
-                            on: 'bottom'
-                        },
-                        id: 'lastStep',
-                        text: `Try clicking on the dropdown menu and adding a new measurement to the
-                    plot. After that, try clicking on the little cross 'x' next to the measurement name to deselect it.
-                    When you are done, click 'Next'.`
-                    }
-                ];
-                telemetrySteps.forEach(step => {
-                    this.telemetryTutorial.addStep(_.mergeWith({
-                        // ...step,
-                        buttons: [
-                            {
-                                text: 'Previous',
-                                action: this.telemetryTutorial.back
-                            },
-                            {
-                                text: 'Next',
-                                action: this.telemetryTutorial.next
-                            }
-                        ]
-                    }, step, this.customizer));
-                });
-
-                // detection
-                this.detectionTutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                this.detectionTutorial.addStep({
-                    id: 'firstStep',
-                    attachTo: {
-                        element: '#anomaly-detection',
-                        on: 'bottom'
-                    },
-                    text: `This is the  <b>Anomaly Detection</b> window. I will use this area
-                    to provide you with a list of measurements that exceed any of their limits.`,
-                    buttons: [
-                        {
-                            text: 'Prev',
-                            action: this.detectionTutorial.cancel
-                        },
-                        {
-                            text: 'Next',
-                            action: this.detectionTutorial.next
-                        }
-                    ]
-                });
-                const detectionSteps = [
-                    {
-                        attachTo: {
-                            element: '#anomaly-detection',
-                            on: 'bottom'
-                        },
-                        text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
-                    of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
-                    the color of this window to bring your attention, as well as to inform you about which limits are
-                    being exceeded by the measurements. I will use orange when any detected measurement exceeds its
-                    warning limit, but not its critical limit, and I will use red when any detected measurement exceeds
-                    its critical limit.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly-detection',
-                            on: 'bottom'
-                        },
-                        buttons: [
-                            {
-                                text: 'Alarm IN',
-                                action: async function () {
-                                    let newAnomalySound = require('../sounds/woopwoop.mp3');
-                                    let audio = new Audio(newAnomalySound);
-                                    await audio.play();
-                                },
-                                secondary: true,
-                            },
-                        ],
-                        text: `Additionally, I will trigger an alarm every time this window changes. That is, if an
-                        anomalous measurement either appears, disappears or exceeds a new limit, I will make this sound.
-                        Try clicking the 'Alarm IN' button to hear this alarm and become familiar with it. Click 'Next'
-                        when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly-detection',
-                            on: 'bottom'
-                        },
-                        buttons: [
-                            {
-                                text: 'Alarm OUT',
-                                action: async function () {
-                                    let newAnomalySound = require('../sounds/endgame.mp3');
-                                    let audio = new Audio(newAnomalySound);
-                                    await audio.play();
-                                },
-                                secondary: true,
-                            },
-                        ],
-                        text: `Similarly, I will trigger a different alarm every time I think that an anomaly has
-                        been resolved and the situation is back to normal. This is a new sound that you have not heard
-                        yet. Try clicking ‘Alarm OUT’ button to listen to this alarm and become familiar with it.
-                        Click ‘Next’ when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly-detection',
-                            on: 'bottom'
-                        },
-                        text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear<b>Anomaly Diagnosis</b> window. When you are ready click ‘Next’.`
-                    }
-                ];
-                detectionSteps.forEach(step => {
-                    this.detectionTutorial.addStep(_.mergeWith({
-                        // ...step,
-                        buttons: [
-                            {
-                                text: 'Previous',
-                                action: this.detectionTutorial.back
-                            },
-                            {
-                                text: 'Next',
-                                action: this.detectionTutorial.next
-                            }
-                        ]
-                    }, step, this.customizer));
-                });
-
-                // diagnosis
-                this.diagnosisTutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                this.diagnosisTutorial.addStep({
-                    id: 'firstStep',
-                    attachTo: {
-                        element: '#anomaly_diagnosis',
-                        on: 'bottom'
-                    },
-                    text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement, it
-                    will appear in the upper slot. In fact, if you select more than one, I will display a list of all
-                    your selections.`,
-                    buttons: [
-                        {
-                            text: 'Prev',
-                            action: this.diagnosisTutorial.cancel
-                        },
-                        {
-                            text: 'Next',
-                            action: this.diagnosisTutorial.next
-                        }
-                    ]
-                });
-                const diagnosisSteps = [
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `You can also deselect any item from this list by clicking on it. You can also click the
-                        'Clear All' button to deselect all the items from this list. The 'Clear All' button will appear
-                        on the right side of the lower slot when anomalous measurements are selected. Click ‘Next’
-                        when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `A ‘Diagnose’ button will appear on the right side of the upper slot. This button will
-                         only be available when you have some anomalous measurements selected.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `Whenever you click on this button, I will try to provide you with possible causes for
-                        the selected anomalous measurements. It takes me a while to think sometimes, especially if you
-                        select a lot of measurements, so be patient! Click 'Next' when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `When you click 'Diagnosis' several things happened here. First, I will clean all your
-                        selected measurements from the upper slot. If you want to recover the exact same list of anomalous
-                        measurements that you had selected before clicking the diagnose button, click on the list that
-                        appears on the left side of the lower slot, and it will appear in the upper slot again. Click 'Next'
-                        when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `Also, some new information will on the lower slot. This is how I
-                        provide you with my possible explanations of what might be causing an anomaly along. On the
-                        left, you would see the list of the anomalous measurements that were selected when you
-                        clicked on ‘Diagnose’. On the right, you would see a list of some possible causes for such
-                        anomalous measurements. If at any point you would like to clear this report, you could click the
-                        'x' in the top right corner of the lower slot.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `We will focus now on how to deal with my suggested explanations. I will provide a list of
-                        them, and each item has an associated confidence level between 0 and 1. The higher the score,
-                    the more confident I am in my suggestion.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `Bear in mind two important things: first, this list is only a suggestion, and second, more
-                    than one of such causes might be happening at once!`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_diagnosis',
-                            on: 'bottom'
-                        },
-                        text: `If you want to further explore any of my suggestions, you can click on it to select it.
-                        Click on 'Next' when you are ready.`
-                    }
-                ];
-                diagnosisSteps.forEach(step => {
-                    this.diagnosisTutorial.addStep(_.mergeWith({
-                        // ...step,
-                        buttons: [
-                            {
-                                text: 'Previous',
-                                action: this.diagnosisTutorial.back
-                            },
-                            {
-                                text: 'Next',
-                                action: this.diagnosisTutorial.next
-                            }
-                        ]
-                    }, step, this.customizer));
-                });
-
-                // response
-                this.responseTutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                this.responseTutorial.addStep({
-                    id: 'firstStep',
-                    attachTo: {
-                        element: '#anomaly_response',
-                        on: 'bottom'
-                    },
-                    text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
-                    to treat each of the anomaly causes that you select.`,
-                    buttons: [
-                        {
-                            text: 'Prev',
-                            action: this.responseTutorial.cancel
-                        },
-                        {
-                            text: 'Next',
-                            action: this.responseTutorial.next
-                        }
-                    ]
-                });
-                const responseSteps = [
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `Try selecting the 'N2 Tank Burst' from the dropdown menu. You can see 'N2 Tank Burst'
-                        has only one related procedure, the 'N2 Ballast Tank Replacement'. Other anomaly causes might
-                        have more than one associated procedure though.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `You can click on the slot for the 'N2 Ballast Tank Replacement' procedure to see detailed
-                    information about it. Try clicking on it now, then click 'Next'.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `For each procedure, I will show you three important pieces of information: its objective, the
-                    required material to perform it and the steps that you should follow to complete it.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `Pay close attention on how I display the steps to be followed now. As you can see, I am
-                    showing a scrollable box with all the steps. Each step has a checkbox on its left, so that you can
-                    check it whenever you complete it. Try checking some steps now, then click 'Next'.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `When performing a procedure, make sure you check each step when you complete it!`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `At the top right side of the procedure slot, I will display the status of such procedure. I
-                    will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
-                    selecting all the steps of this procedure now to see the difference (you only need to check the last
-                    step). You will also see that once a procedure is complete that a new button appears. This button
-                    'Clear Completed Procedures' will remove all the procedures that you have completed. Click 'Next'
-                    when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `Try clicking on the 'N2 Ballast Tank Replacement' procedure slot again now. This will hide
-                    all its details, to ease navigation through the screen. Click 'Next' when you are ready.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `You can also explore multiple causes of an anomaly simultaneously. This might be useful
-                        in case I provided more than one suggestion, or if more than one anomaly is happening at the same time.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#anomaly_response',
-                            on: 'top'
-                        },
-                        text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
-                    with me, you can use the dropdown menu at the top of this window to explore the procedures of other
-                    anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
-                    cross next 'x' to it. Click 'Next' when you are ready.`
-                    }
-                ];
-                responseSteps.forEach(step => {
-                    this.responseTutorial.addStep(_.mergeWith({
-                        // ...step,
-                        buttons: [
-                            {
-                                text: 'Previous',
-                                action: this.responseTutorial.back
-                            },
-                            {
-                                text: 'Next',
-                                action: this.responseTutorial.next
-                            }
-                        ]
-                    }, step, this.customizer));
-                });
-
-                // chat
-                this.chatTutorial = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                this.chatTutorial.addStep({
-                    id: 'firstStep',
-                    attachTo: {
-                        element: '.sticky-textbox',
-                        on: 'bottom'
-                    },
-                    text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
-                    treatment process.`,
-                    buttons: [
-                        {
-                            text: 'Prev',
-                            action: this.chatTutorial.cancel
-                        },
-                        {
-                            text: 'Next',
-                            action: this.chatTutorial.next
-                        }
-                    ]
-                });
-                const chatSteps = [
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
-                    the current value of such measurement. Try writing or copying the above question into the text box,
-                    area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
-                    then click 'Next'.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `There are other questions that I can answer too, apart from the one you tried. If you want to
-                    know about them, click on the link just below this question bar. A new tab will be opened with a
-                    list of the questions that I am able to answer. This is a good moment for you to get familiar with
-                    this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `As you can see, there are three buttons attached to this question bar. Two of them are very
-                    straightforward: the 'Send' button does the same as hitting the enter key when you type a
-                    question, and the 'Clear' button clears all the messages from our chat. We will talk about the third
-                    button soon.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `Now, the final feature: I have the ability to speak with you!`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `First, you can ask me questions out loud and I will recognize and process your speech.
-                    Second, I can read my own answers out loud. Both features are independent: you can activate either
-                    of them, both or none. It is up to you! I will now explain you how to do so.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted,
-                    I will read all the answers to your questions out loud!`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `Try clicking on the Speaker button to unmute me now, then click Next.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#skitt-ui',
-                        },
-                        tetherOptions: {
-                            target: '#skitt-toggle-button',
-                            attachment: 'top left',
-                            targetAttachment: 'top right',
-                            offset: '200px -30px'
-                        },
-                        text: `The purpose of the small add-on at the bottom left part of the screen (with a microphone on
-                    it) is to activate or deactivate the voice recognition feature. When activated, I'll listen to what
-                    you are saying all the time.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#skitt-ui',
-                        },
-                        tetherOptions: {
-                            target: '#skitt-toggle-button',
-                            attachment: 'top left',
-                            targetAttachment: 'top right',
-                            offset: '200px -30px'
-                        },
-                        text: `Try clicking on the microphone, then say "Hello there" loud and clear, and wait for a
-                    bit. Then click 'Next'.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `You can see that a message with what I understood from your speech has appeared in the chat.
-                    Also, if you followed my instructions, you should have heard me reading my answer.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `As you can see, I do not always understand your questions. This is my way of telling you so.`
-                    },
-                    {
-                        attachTo: {
-                            element: '.sticky-textbox',
-                            on: 'top'
-                        },
-                        text: `Now click again on the 'Speaker' button to mute me, then click 'Next'.`
-                    },
-                    {
-                        attachTo: {
-                            element: '#skitt-ui',
-                        },
-                        tetherOptions: {
-                            target: '#skitt-toggle-button',
-                            attachment: 'top left',
-                            targetAttachment: 'top right',
-                            offset: '200px -30px'
-                        },
-                        text: `Finally, click again on the microphone to deactivate the speech recognition. Then click 'Next'.`
-                    }
-                ];
                 chatSteps.forEach(step => {
                     this.chatTutorial.addStep(_.mergeWith({
                         // ...step,
@@ -1345,6 +958,64 @@
                             {
                                 text: 'Next',
                                 action: this.chatTutorial.next
+                            }
+                        ]
+                    }, step, this.customizer));
+                });
+
+                // conclusion tutorial
+                this.conclusionTutorial = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add first step
+                this.conclusionTutorial.addStep({
+                    id: 'firstStep',
+                    text: `Now you know all the tools available to you to solve anomalies during this mission.
+                    It is going to be a long, arduous journey, so good luck! Onwards to Mars!`,
+                    buttons: [
+                        {
+                            text: 'Prev',
+                            action: this.conclusionTutorial.cancel
+                        },
+                        {
+                            text: 'Next',
+                            action: this.conclusionTutorial.next
+                        }
+                    ]
+                });
+                // list of steps
+                const conclusionSteps = [
+                    {
+                        text: `IMPORTANT: It should not be a problem but try to avoid refreshing the browser page during the
+                    experiment.`
+                    },
+                    {
+                        text: `Now the experiment is about to start. Before you click 'Next', tell the person that is
+                    monitoring you that you are ready. DO NOT click 'Next' until he/she has given you explicit permission.`
+                    },
+                    {
+                        id: 'lastStep',
+                        text: `You should be seeing this only if you have been granted permission. Click on 'Next' to start
+                    the experiment.`
+                    },
+                ];
+                // add rest of steps
+                conclusionSteps.forEach(step => {
+                    this.conclusionTutorial.addStep(_.mergeWith({
+                        // ...step,
+                        buttons: [
+                            {
+                                text: 'Previous',
+                                action: this.conclusionTutorial.back
+                            },
+                            {
+                                text: 'Next',
+                                action: this.conclusionTutorial.next
                             }
                         ]
                     }, step, this.customizer));
@@ -1406,45 +1077,90 @@
                     // Stage specific behaviour
                     switch (this.experimentStage) {
                     case 'tutorial': {
-                        this.tutorial.on("complete", () => {
-                            this.introTutorial.show();
+                        this.tutorial.on("complete", async () => {
                             // If not already ongoing, start receiving a fake telemetry for the tutorial
                             if (!this.telemetryIsOngoing) {
-                                this.$store.dispatch('startFakeTelemetry');
-                                this.$store.dispatch('mutateTelemetryIsOngoing');
+                                await this.$store.dispatch('startFakeTelemetry');
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
                             }
+
+                            this.introTutorial.show();
                         });
                         this.tutorial.on("cancel", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            if (this.telemetryIsOngoing) {
-                                this.$store.dispatch('stopTelemetry').then(() => {
-                                    this.$store.dispatch('startTelemetry');
-                                    this.$store.dispatch('loadAllAnomalies')
-                                });
-                            }
-                            else {
+                            this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
                                 this.$store.dispatch('loadAllAnomalies');
-                            }
+                            });
                             this.clearTutorialSequence();
                         });
 
                         this.introTutorial.on("complete", () => {
+                            this.telemetryTutorial.show('firstStep');
+                        });
+                        this.introTutorial.on("cancel", () => {
+                            this.tutorial.show();
+                        });
+
+                        this.telemetryTutorial.on("complete", () => {
+                            this.detectionTutorial.show('firstStep');
+                        });
+                        this.telemetryTutorial.on("cancel", () => {
+                            this.introTutorial.show('lastStep');
+                        });
+
+                        this.detectionTutorial.on("complete", () => {
+                            this.diagnosisTutorial.show('firstStep');
+                        });
+                        this.detectionTutorial.on("cancel", () => {
+                            this.telemetryTutorial.show('lastStep');
+                        });
+
+                        this.diagnosisTutorial.on("complete", () => {
+                            this.responseTutorial.show('firstStep');
+                        });
+                        this.diagnosisTutorial.on("cancel", () => {
+                            this.detectionTutorial.show('lastStep');
+                        });
+
+                        this.responseTutorial.on("complete", () => {
+                            this.chatTutorial.show('firstStep');
+                        });
+                        this.responseTutorial.on("cancel", () => {
+                            this.diagnosisTutorial.show('lastStep');
+                        });
+
+                        this.chatTutorial.on("complete", () => {
+                            this.conclusionTutorial.show('firstStep');
+                        });
+                        this.chatTutorial.on("cancel", () => {
+                            this.responseTutorial.show('lastStep');
+                        });
+
+                        this.conclusionTutorial.on("complete", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
-                                this.$store.dispatch('loadAllAnomalies')
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
+                                this.$store.dispatch('loadAllAnomalies');
                             });
                             this.clearTutorialSequence();
                         });
-                        this.introTutorial.on("cancel", () => {
-                            this.tutorial.show();
+                        this.conclusionTutorial.on("cancel", () => {
+                            this.chatTutorial.show('lastStep');
                         });
 
                         this.tutorial.show();

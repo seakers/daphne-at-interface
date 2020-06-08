@@ -35,12 +35,18 @@ export default new Vuex.Store({
                     dispatch('initializeTelemetry', telemetryDict);
                 }
             } else if (received_info['type'] === 'telemetry_update') {
-                console.log('TELEMETRY UPDATE');
-                let telemetryDict = received_info['content'];
-                let selectedVariables = state.daphneat.telemetryPlotSelectedVariables;
-                let plotData = processedPlotData(telemetryDict, selectedVariables);
-                dispatch('updateTelemetryPlotData', plotData);
-                dispatch('updateTelemetryValuesAndInfo', telemetryDict);
+                // Only update telemetry plot if it is initialized
+                if (state.daphneat.isTelemetryInitialized) {
+                    console.log('Telemetry Update Received - All good');
+                    let telemetryDict = received_info['content'];
+                    let selectedVariables = state.daphneat.telemetryPlotSelectedVariables;
+                    let plotData = processedPlotData(telemetryDict, selectedVariables);
+                    dispatch('updateTelemetryPlotData', plotData);
+                    dispatch('updateTelemetryValuesAndInfo', telemetryDict);
+                }
+                else {
+                    console.log('Telemetry Update Received - Not yet initialized');
+                }
             } else if (received_info['type'] === 'symptoms_report') {
                 let content = received_info['content'];
                 let symptoms_report = content['symptoms_report'];
