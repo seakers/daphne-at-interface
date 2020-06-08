@@ -11,6 +11,7 @@ const state = {
     telemetryPlotData: [], // Contains formatted telemetry feed values so that they can be properly plotted using vue.plotly.
     telemetryIsOngoing: false, // Self descriptive.
     isTelemetryInitialized: false,
+    telemetryType: null,
     telemetryValues: '', // A string that stores the telemetry values as a jsoned dataframe.
     telemetryInfo: '', // A string that stores the telemetry info as a jsoned dataframe. To be deprecated.
 
@@ -150,6 +151,7 @@ const actions = {
             console.error('Networking error:', e);
         }
         commit('mutateTelemetryIsOngoing', true);
+        commit('setTelemetryType', 'fake');
     },
     async startTelemetry({state, commit}) {
         // this.dispatch('loadAllAnomalies');
@@ -179,6 +181,7 @@ const actions = {
             console.error('Networking error:', e);
         }
         commit('mutateTelemetryIsOngoing', true);
+        commit('setTelemetryType', 'real');
     },
     async stopTelemetry({state, commit}) {
         console.log('Trying to stop Telemetry Thread...');
@@ -220,6 +223,7 @@ const actions = {
         commit('mutateSelectedProceduresList', []);
         commit('mutateSelectedProceduresInfo', {});
         commit('setIsTelemetryInitialized', false);
+        commit('setTelemetryType', null);
     },
     async updateSymptomsList({state, commit}, symptomsList) {
         commit('mutateSymptomsList', symptomsList);
@@ -540,6 +544,7 @@ const mutations = {
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
+    setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {
             state[key] = recoveredState[key];

@@ -1152,6 +1152,9 @@
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
                                 this.$store.dispatch('loadAllAnomalies');
                             });
                             this.clearTutorialSequence();
