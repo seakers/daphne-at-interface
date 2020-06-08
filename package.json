@@ -22,7 +22,6 @@
     "d3-selection-multi": "^1.0.1",
     "eslint": "^7.2.0",
     "ify-loader": "^1.1.0",
-    "intro.js": "^2.9.3",
     "js-cookie": "^2.2.1",
     "lodash-es": "^4.17.15",
     "plotly.js": "^1.54.1",

@@ -60,6 +60,10 @@
     import AnomalyResponseWindow from "./AnomalyResponseWindow";
     import * as _ from 'lodash-es';
 
+    // Sound files
+    import startAnomalySound from '../sounds/woopwoop.mp3';
+    import endAnomalySound from '../sounds/endgame.mp3';
+
     export default {
         name: 'app',
         data: function () {
@@ -129,10 +133,9 @@
                     // Restart WS after login
                     await wsTools.wsConnect(this.$store);
 
-                    // If not already ongoing, start receiving a fake telemetry for the tutorial
-                    if (!this.telemetryIsOngoing) {
-                        await this.$store.dispatch('startFakeTelemetry');
-                    }
+                    // Start both Hub and AT threads if not already started before
+                    await this.$store.dispatch('startHubThread')
+                    await this.$store.dispatch('startATThread')
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
@@ -468,8 +471,7 @@
                             {
                                 text: 'Alarm IN',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/woopwoop.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(startAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -489,8 +491,7 @@
                             {
                                 text: 'Alarm OUT',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/endgame.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(endAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -1076,7 +1077,15 @@
                     // Stage specific behaviour
                     switch (this.experimentStage) {
                     case 'tutorial': {
-                        this.tutorial.on("complete", () => {
+                        this.tutorial.on("complete", async () => {
+                            // If not already ongoing, start receiving a fake telemetry for the tutorial
+                            if (!this.telemetryIsOngoing) {
+                                await this.$store.dispatch('startFakeTelemetry');
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
+                            }
+
                             this.introTutorial.show();
                         });
                         this.tutorial.on("cancel", () => {
@@ -1086,7 +1095,10 @@
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
-                                this.$store.dispatch('loadAllAnomalies')
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
+                                this.$store.dispatch('loadAllAnomalies');
                             });
                             this.clearTutorialSequence();
                         });
@@ -1140,7 +1152,7 @@
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
                             this.$store.dispatch('stopTelemetry').then(() => {
                                 this.$store.dispatch('startTelemetry');
-                                this.$store.dispatch('loadAllAnomalies')
+                                this.$store.dispatch('loadAllAnomalies');
                             });
                             this.clearTutorialSequence();
                         });

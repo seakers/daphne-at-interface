@@ -10,6 +10,7 @@ const state = {
     telemetryPlotSelectedVariables: [], // A list of the telemetry variables selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
     telemetryPlotData: [], // Contains formatted telemetry feed values so that they can be properly plotted using vue.plotly.
     telemetryIsOngoing: false, // Self descriptive.
+    isTelemetryInitialized: false,
     telemetryValues: '', // A string that stores the telemetry values as a jsoned dataframe.
     telemetryInfo: '', // A string that stores the telemetry info as a jsoned dataframe. To be deprecated.
 
@@ -60,36 +61,152 @@ const actions = {
     },
     async initializeTelemetry({state, commit}, telemetryDict) {
         let telemetryVariablesNames = telemetryDict['variables_names'];
-        let telemetryValues = JSON.parse(telemetryDict['values']);
-        let telemetryInfo = JSON.parse(telemetryDict['info']);
         commit('mutateTelemetryInputVariables', telemetryVariablesNames);
         commit('mutateTelemetryPlotSelectedVariables', [telemetryVariablesNames[0]]);
-        commit('mutateTelemetryValues', telemetryValues);
-        commit('mutateTelemetryInfo', telemetryInfo);
+        commit('setIsTelemetryInitialized', true);
     },
     async updateSelectedVariables({state, commit}, newVariables) {
         commit('mutateTelemetryPlotSelectedVariables', newVariables);
     },
+    async startHubThread() {
+        console.log('Trying to start Hub Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/start_hub_thread', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error starting the Hub Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+    },
+    async startATThread() {
+        console.log('Trying to start AT Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/start_at_thread', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error starting the AT Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+    },
     async startFakeTelemetry({state, commit}) {
         // this.dispatch('loadAllAnomalies');
-        console.log('START FAKE TELEMETRY');
-        let reqData = new FormData();
-        await fetchPost('/api/at/startFakeTelemetry', reqData);
-        commit('mutateTelemetryIsOngoing');
-        console.log('TELEMETRY STARTED');
+        console.log('Trying to start Fake Telemetry Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/start_fake_telemetry', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error starting the Fake Telemetry Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+        commit('mutateTelemetryIsOngoing', true);
     },
     async startTelemetry({state, commit}) {
         // this.dispatch('loadAllAnomalies');
-        console.log('START TELEMETRY');
-        let reqData = new FormData();
-        await fetchPost('/api/at/startTelemetry', reqData);
-        commit('mutateTelemetryIsOngoing');
-        console.log('TELEMETRY STARTED');
+        console.log('Trying to start Real Telemetry Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/start_telemetry', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error starting the Real Telemetry Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+        commit('mutateTelemetryIsOngoing', true);
     },
     async stopTelemetry({state, commit}) {
-        let reqData = new FormData();
-        await fetchPost('/api/at/stop', reqData);
-        commit('mutateTelemetryIsOngoing');
+        console.log('Trying to stop Telemetry Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/stop_telemetry', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error stopping the Telemetry Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+        commit('mutateTelemetryIsOngoing', false);
         commit('mutateTelemetryPlotData', []);
         commit('mutateTelemetryInputVariables', []);
         commit('mutateTelemetryPlotSelectedVariables', []);
@@ -102,7 +219,7 @@ const actions = {
         commit('mutateSelectedAnomaliesInfo', {});
         commit('mutateSelectedProceduresList', []);
         commit('mutateSelectedProceduresInfo', {});
-        console.log('TELEMETRY STOP');
+        commit('setIsTelemetryInitialized', false);
     },
     async updateSymptomsList({state, commit}, symptomsList) {
         commit('mutateSymptomsList', symptomsList);
@@ -406,22 +523,23 @@ const actions = {
 };
 
 const mutations = {
-    mutateTelemetryIsOngoing(state) {state.telemetryIsOngoing = !state.telemetryIsOngoing},
-    mutateTelemetryPlotData(state, newVal) {state.telemetryPlotData = newVal},
-    mutateTelemetryValues(state, newVal) {state.telemetryValues = newVal},
-    mutateTelemetryInfo(state, newVal) {state.telemetryInfo = newVal},
-    mutateTelemetryInputVariables(state, newVal) {state.telemetryInputVariables = newVal},
-    mutateTelemetryPlotSelectedVariables(state, newVal) {state.telemetryPlotSelectedVariables = newVal},
-    mutateSymptomsList(state, newVal) {state.symptomsList = newVal},
-    mutateSelectedSymptomsList(state, newVal) {state.selectedSymptomsList = newVal},
-    mutateLastSelectedSymptomsList(state, newVal) {state.lastSelectedSymptomsList = newVal},
-    mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal},
-    mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal},
-    mutateSelectedAnomaliesList(state, newVal) {state.selectedAnomaliesList = newVal},
-    mutateSelectedAnomaliesInfo(state, newVal) {state.selectedAnomaliesInfo = newVal},
-    mutateSelectedProceduresList(state, newVal) {state.selectedProceduresList = newVal},
-    mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal},
-    mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal},
+    mutateTelemetryIsOngoing(state, telemetryIsOngoing) {state.telemetryIsOngoing = telemetryIsOngoing; },
+    mutateTelemetryPlotData(state, newVal) {state.telemetryPlotData = newVal; },
+    mutateTelemetryValues(state, newVal) {state.telemetryValues = newVal; },
+    mutateTelemetryInfo(state, newVal) {state.telemetryInfo = newVal; },
+    mutateTelemetryInputVariables(state, newVal) {state.telemetryInputVariables = newVal; },
+    mutateTelemetryPlotSelectedVariables(state, newVal) {state.telemetryPlotSelectedVariables = newVal; },
+    mutateSymptomsList(state, newVal) {state.symptomsList = newVal; },
+    mutateSelectedSymptomsList(state, newVal) {state.selectedSymptomsList = newVal; },
+    mutateLastSelectedSymptomsList(state, newVal) {state.lastSelectedSymptomsList = newVal; },
+    mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal; },
+    mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal; },
+    mutateSelectedAnomaliesList(state, newVal) {state.selectedAnomaliesList = newVal; },
+    mutateSelectedAnomaliesInfo(state, newVal) {state.selectedAnomaliesInfo = newVal; },
+    mutateSelectedProceduresList(state, newVal) {state.selectedProceduresList = newVal; },
+    mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
+    mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
+    setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {
             state[key] = recoveredState[key];
