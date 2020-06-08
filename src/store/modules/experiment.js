@@ -173,13 +173,13 @@ const actions = {
                     await dispatch('startATThread')
 
                     // Check which telemetry to load from and initialize everything again
-                    if (rootState.daphneat.telemetryType === 'real') {
+                    if (rootState.daphneat.telemetryType === 'fake') {
                         dispatch('startFakeTelemetry');
                         wsTools.websocket.send(JSON.stringify({
                             msg_type: 'get_telemetry_params'
                         }));
                     }
-                    else if (rootState.daphneat.telemetryType === 'fake') {
+                    else if (rootState.daphneat.telemetryType === 'real') {
                         dispatch('startTelemetry');
                         wsTools.websocket.send(JSON.stringify({
                             msg_type: 'get_telemetry_params'
