@@ -111,7 +111,7 @@
                 this.speakOut = !this.speakOut;
             },
             chatTutorial(event) {
-                this.$root.$emit('chatTutorialI');
+                this.$root.$emit('chatTutorialIndividual');
             }
         },
         watch: {

@@ -227,7 +227,7 @@
                 this.$store.dispatch('updateProcedureDict', procedureDict);
             },
             responseTutorial(event) {
-                this.$root.$emit('responseTutorialI');
+                this.$root.$emit('responseTutorialIndividual');
             },
             clearCompletedProcedures() {
                 for (let anomalyIndex in this.anomalyList) {

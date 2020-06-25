@@ -71,7 +71,7 @@
                 this.$store.dispatch('addSelectedSymptom', symptom);
             },
             detectionTutorial(event) {
-                this.$root.$emit('detectionTutorialI');
+                this.$root.$emit('detectionTutorialIndividual');
             }
         },
 

@@ -150,8 +150,8 @@
                 }
             },
             clearTutorialSequence() {
-                this.tutorial.off("complete");
-                this.tutorial.off("cancel");
+                this.tutorialConfirm.off("complete");
+                this.tutorialConfirm.off("cancel");
                 this.introTutorial.off("complete");
                 this.introTutorial.off("cancel");
                 this.telemetryTutorial.off("complete");
@@ -165,75 +165,75 @@
                 this.chatTutorial.off("complete");
                 this.chatTutorial.off("cancel");
             },
-            telemetryTutorialI() {
-                this.tutorial.show();
-                this.tutorial.on("complete", () => {
+            telemetryTutorialIndividual() {
+                this.tutorialConfirm.show();
+                this.tutorialConfirm.on("complete", () => {
                     this.telemetryTutorial.show('firstStep');
                 });
                 this.telemetryTutorial.on("cancel", () => {
-                    this.tutorial.show();
+                    this.clearTutorialSequence();
                 });
-                this.tutorial.on("cancel", () => {
+                this.tutorialConfirm.on("cancel", () => {
                     this.clearTutorialSequence();
                 });
                 this.telemetryTutorial.on("complete", () => {
                     this.clearTutorialSequence();
                 });
             },
-            detectionTutorialI() {
-                this.tutorial.show();
-                this.tutorial.on("complete", () => {
+            detectionTutorialIndividual() {
+                this.tutorialConfirm.show();
+                this.tutorialConfirm.on("complete", () => {
                     this.detectionTutorial.show('firstStep');
                 });
                 this.detectionTutorial.on("cancel", () => {
-                    this.tutorial.show();
+                    this.clearTutorialSequence();
                 });
-                this.tutorial.on("cancel", () => {
+                this.tutorialConfirm.on("cancel", () => {
                     this.clearTutorialSequence();
                 });
                 this.detectionTutorial.on("complete", () => {
                     this.clearTutorialSequence();
                 });
             },
-            diagnosisTutorialI() {
-                this.tutorial.show();
-                this.tutorial.on("complete", () => {
+            diagnosisTutorialIndividual() {
+                this.tutorialConfirm.show();
+                this.tutorialConfirm.on("complete", () => {
                     this.diagnosisTutorial.show('firstStep');
                 });
                 this.diagnosisTutorial.on("cancel", () => {
-                    this.tutorial.show();
+                    this.clearTutorialSequence();
                 });
-                this.tutorial.on("cancel", () => {
+                this.tutorialConfirm.on("cancel", () => {
                     this.clearTutorialSequence();
                 });
                 this.diagnosisTutorial.on("complete", () => {
                     this.clearTutorialSequence();
                 });
             },
-            responseTutorialI() {
-                this.tutorial.show();
-                this.tutorial.on("complete", () => {
+            responseTutorialIndividual() {
+                this.tutorialConfirm.show();
+                this.tutorialConfirm.on("complete", () => {
                     this.responseTutorial.show('firstStep');
                 });
                 this.responseTutorial.on("cancel", () => {
-                    this.tutorial.show();
+                    this.clearTutorialSequence();
                 });
-                this.tutorial.on("cancel", () => {
+                this.tutorialConfirm.on("cancel", () => {
                     this.clearTutorialSequence();
                 });
                 this.responseTutorial.on("complete", () => {
                     this.clearTutorialSequence();
                 });
             },
-            chatTutorialI() {
-                this.tutorial.show();
-                this.tutorial.on("complete", () => {
+            chatTutorialIndividual() {
+                this.tutorialConfirm.show();
+                this.tutorialConfirm.on("complete", () => {
                     this.chatTutorial.show('firstStep');
                 });
                 this.chatTutorial.on("cancel", () => {
-                    this.tutorial.show();
+                    this.clearTutorialSequence();
                 });
-                this.tutorial.on("cancel", () => {
+                this.tutorialConfirm.on("cancel", () => {
                     this.clearTutorialSequence();
                 });
                 this.chatTutorial.on("complete", () => {
@@ -266,7 +266,7 @@
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
 
                 // skip tutorial button
-                this.tutorial = new Shepherd.Tour({
+                this.tutorialConfirm = new Shepherd.Tour({
                     defaultStepOptions: {
                         classes: 'shadow-md bg-purple-dark',
                         scrollTo: true
@@ -275,16 +275,16 @@
                     exitOnEsc: false
                 });
                 // add steps
-                this.tutorial.addStep({
+                this.tutorialConfirm.addStep({
                     text: 'Would you like to continue with the tutorial?',
                     buttons: [
                         {
                             text: 'No',
-                            action: this.tutorial.cancel
+                            action: this.tutorialConfirm.cancel
                         },
                         {
                             text: 'Yes',
-                            action: this.tutorial.next
+                            action: this.tutorialConfirm.next
                         }
                     ]
                 });
@@ -307,7 +307,7 @@
                     anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`,
                     buttons: [
                         {
-                            text: 'Prev',
+                            text: 'Skip',
                             action: this.introTutorial.cancel
                         },
                         {
@@ -752,7 +752,11 @@
                         // ...step,
                         buttons: [
                             {
-                                text: 'Previous',
+                                text:'Skip',
+                                action: this.introTutorial.cancel
+                            },
+                            {
+                                text: 'Back',
                                 action: this.introTutorial.back
                             },
                             {
@@ -785,12 +789,12 @@
                     orange and red lines) stand for the warning and critical limits of the selected measurement.`,
                     buttons: [
                         {
-                            text: 'Prev',
-                            action: this.telemetryTutorial.cancel
-                        },
-                        {
                             text: 'Next',
                             action: this.telemetryTutorial.next
+                        },
+                        {
+                            text: 'Exit',
+                            action: this.telemetryTutorial.cancel
                         }
                     ]
                 });
@@ -821,12 +825,16 @@
                         // ...step,
                         buttons: [
                             {
-                                text: 'Previous',
+                                text: 'Back',
                                 action: this.telemetryTutorial.back
                             },
                             {
                                 text: 'Next',
                                 action: this.telemetryTutorial.next
+                            },
+                            {
+                                text:'Exit',
+                                action: this.telemetryTutorial.cancel
                             }
                         ]
                     }, step, this.customizer));
@@ -851,12 +859,12 @@
                     to provide you with a list of measurements that exceed any of their limits.`,
                     buttons: [
                         {
-                            text: 'Prev',
-                            action: this.detectionTutorial.cancel
-                        },
-                        {
                             text: 'Next',
                             action: this.detectionTutorial.next
+                        },
+                        {
+                            text: 'Exit',
+                            action: this.detectionTutorial.cancel
                         }
                     ]
                 });
@@ -929,12 +937,16 @@
                         // ...step,
                         buttons: [
                             {
-                                text: 'Previous',
+                                text: 'Back',
                                 action: this.detectionTutorial.back
                             },
                             {
                                 text: 'Next',
                                 action: this.detectionTutorial.next
+                            },
+                            {
+                                text:'Exit',
+                                action: this.detectionTutorial.cancel
                             }
                         ]
                     }, step, this.customizer));
@@ -960,12 +972,12 @@
                     your selections.`,
                     buttons: [
                         {
-                            text: 'Prev',
-                            action: this.diagnosisTutorial.cancel
-                        },
-                        {
                             text: 'Next',
                             action: this.diagnosisTutorial.next
+                        },
+                        {
+                            text: 'Exit',
+                            action: this.diagnosisTutorial.cancel
                         }
                     ]
                 });
@@ -1051,12 +1063,16 @@
                         // ...step,
                         buttons: [
                             {
-                                text: 'Previous',
+                                text: 'Back',
                                 action: this.diagnosisTutorial.back
                             },
                             {
                                 text: 'Next',
                                 action: this.diagnosisTutorial.next
+                            },
+                            {
+                                text: 'Exit',
+                                action: this.diagnosisTutorial.cancel
                             }
                         ]
                     }, step, this.customizer));
@@ -1081,12 +1097,12 @@
                     to treat each of the anomaly causes that you select.`,
                     buttons: [
                         {
-                            text: 'Prev',
-                            action: this.responseTutorial.cancel
-                        },
-                        {
                             text: 'Next',
                             action: this.responseTutorial.next
+                        },
+                        {
+                            text: 'Exit',
+                            action: this.responseTutorial.cancel
                         }
                     ]
                 });
@@ -1176,12 +1192,16 @@
                         // ...step,
                         buttons: [
                             {
-                                text: 'Previous',
+                                text: 'Back',
                                 action: this.responseTutorial.back
                             },
                             {
                                 text: 'Next',
                                 action: this.responseTutorial.next
+                            },
+                            {
+                                text: 'Exit',
+                                action: this.responseTutorial.cancel
                             }
                         ]
                     }, step, this.customizer));
@@ -1206,12 +1226,12 @@
                     treatment process.`,
                     buttons: [
                         {
-                            text: 'Prev',
-                            action: this.chatTutorial.cancel
-                        },
-                        {
                             text: 'Next',
                             action: this.chatTutorial.next
+                        },
+                        {
+                            text: 'Exit',
+                            action: this.chatTutorial.cancel
                         }
                     ]
                 });
@@ -1344,40 +1364,44 @@
                         // ...step,
                         buttons: [
                             {
-                                text: 'Previous',
+                                text: 'Back',
                                 action: this.chatTutorial.back
                             },
                             {
                                 text: 'Next',
                                 action: this.chatTutorial.next
+                            },
+                            {
+                                text: 'Exit',
+                                action: this.chatTutorial.cancel
                             }
                         ]
                     }, step, this.customizer));
                 });
 
                 // individual telemetry tutorial
-                this.$root.$on('telemetryTutorialI', () => {
-                    this.telemetryTutorialI();
+                this.$root.$on('telemetryTutorialIndividual', () => {
+                    this.telemetryTutorialIndividual();
                 });
 
                 // individual detection tutorial
-                this.$root.$on('detectionTutorialI', () => {
-                    this.detectionTutorialI();
+                this.$root.$on('detectionTutorialIndividual', () => {
+                    this.detectionTutorialIndividual();
                 });
 
                 // individual diagnosis tutorial
-                this.$root.$on('diagnosisTutorialI', () => {
-                    this.diagnosisTutorialI();
+                this.$root.$on('diagnosisTutorialIndividual', () => {
+                    this.diagnosisTutorialIndividual();
                 });
 
                 // individual response tutorial
-                this.$root.$on('responseTutorialI', () => {
-                    this.responseTutorialI();
+                this.$root.$on('responseTutorialIndividual', () => {
+                    this.responseTutorialIndividual();
                 });
 
                 // individual chat tutorial
-                this.$root.$on('chatTutorialI', () => {
-                    this.chatTutorialI();
+                this.$root.$on('chatTutorialIndividual', () => {
+                    this.chatTutorialIndividual();
                 });
 
                 // Experiment
@@ -1411,18 +1435,17 @@
                     // Stage specific behaviour
                     switch (this.experimentStage) {
                     case 'tutorial': {
-                        this.tutorial.on("complete", async () => {
+                        this.tutorialConfirm.on("complete", async () => {
                             // If not already ongoing, start receiving a fake telemetry for the tutorial
-                            if (!this.telemetryIsOngoing) {
-                                await this.$store.dispatch('startFakeTelemetry');
-                                wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_telemetry_params'
-                                }));
-                            }
+                            await this.$store.dispatch('stopTelemetry');
+                            await this.$store.dispatch('startFakeTelemetry');
+                            wsTools.websocket.send(JSON.stringify({
+                                msg_type: 'get_telemetry_params'
+                            }));
 
                             this.introTutorial.show();
                         });
-                        this.tutorial.on("cancel", () => {
+                        this.tutorialConfirm.on("cancel", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
@@ -1452,10 +1475,21 @@
                             this.clearTutorialSequence();
                         });
                         this.introTutorial.on("cancel", () => {
-                            this.tutorial.show();
+                            this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
+                                this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
+                            });
+                            // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
+                            this.$store.dispatch('stopTelemetry').then(() => {
+                                this.$store.dispatch('startTelemetry');
+                                wsTools.websocket.send(JSON.stringify({
+                                    msg_type: 'get_telemetry_params'
+                                }));
+                                this.$store.dispatch('loadAllAnomalies');
+                            });
+                            this.clearTutorialSequence();
                         });
 
-                        this.tutorial.show();
+                        this.tutorialConfirm.show();
                         break;
                     }
                     case 'with_daphne': {

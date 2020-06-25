@@ -91,7 +91,7 @@
                 this.$store.dispatch('updateSelectedVariables', newSelectedVariables);
             },
             telemetryTutorial(event) {
-                this.$root.$emit('telemetryTutorialI');
+                this.$root.$emit('telemetryTutorialIndividual');
             }
         },
 

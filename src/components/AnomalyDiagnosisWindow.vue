@@ -114,7 +114,7 @@
                 this.$store.dispatch('recoverSymptomsList')
             },
             diagnosisTutorial(event) {
-                this.$root.$emit('diagnosisTutorialI');
+                this.$root.$emit('diagnosisTutorialIndividual');
             }
         }
     }
