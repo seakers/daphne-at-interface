@@ -37,11 +37,12 @@ function dataframeToArray(df) {
     return array
 }
 
-function buildTrace(variable, values, xaxis) {
+function buildTrace(variable, values, xaxis, unit) {
     let trace = {};
+    let variableName = variable + ' [' + unit + ']';
     if (values.hasOwnProperty(variable)) {
         let yaxis = dataframeToArray(values[variable]);
-        trace = { x: xaxis, y: yaxis, mode: 'lines', name: variable };
+        trace = { x: xaxis, y: yaxis, mode: 'lines', name: variableName };
     }
     return trace
 }
@@ -61,7 +62,7 @@ function buildThresholdTrace(xaxis, yval, the_color, the_style, the_name, the_bo
 
     return trace
 }
-
+/*
 function normalizeTrace(rawTrace, info) {
     // Prse input
     let variable = rawTrace['name'];
@@ -80,8 +81,8 @@ function normalizeTrace(rawTrace, info) {
     rawTrace['y'] = newy;
     return rawTrace
 }
-
-function buildRange(plotData, variable, telemetryInfo) {
+*/
+function buildRange(plotData, variable, variableName, telemetryInfo) {
     let variableIndex = 0;
     for (let index in plotData) {
         let traceInfo = plotData[index];
@@ -93,8 +94,8 @@ function buildRange(plotData, variable, telemetryInfo) {
     let yaxis = plotData[variableIndex]['y'];
     let lastValue = yaxis[yaxis.length - 1];
 
-    let upperLimit = telemetryInfo[variable]['high_critic_threshold'];
-    let lowerLimit = telemetryInfo[variable]['low_critic_threshold'];
+    let upperLimit = telemetryInfo[variableName]['high_critic_threshold'];
+    let lowerLimit = telemetryInfo[variableName]['low_critic_threshold'];
 
     let upperRange = Math.max(lastValue, upperLimit);
     let lowerRange = Math.min(lastValue, lowerLimit);
@@ -129,11 +130,36 @@ let darkpink = 'rgba(153, 0, 76, 0.8)';
 let colors = [blue, green, yellow, violet, pink, lightblue, lightgreen, lightyellow, lightviolet, lightpink,
     darkblue, darkgreen, darkyellow, darkviolet, darkpink];
 
+let gridblue = 'rgba(0, 0, 255, 0.2)';
+let gridlightblue = 'rgba(0, 128, 55, 0.2)';
+let griddarkblue = 'rgba(0, 0, 153, 0.2)';
+let gridgreen = 'rgba(0, 255, 0, 0.2)';
+let gridlightgreen = 'rgba(128, 255, 0, 0.2)';
+let griddarkgreen = 'rgba(0, 153, 0, 0.2)';
+let gridyellow = 'rgba(255, 255, 0, 0.2)';
+let gridlightyellow = 'rgba(255, 255, 153, 0.2)';
+let griddarkyellow = 'rgba(153, 153, 0, 0.2)';
+let gridviolet = 'rgba(153, 52, 255, 0.2)';
+let gridlightviolet = 'rgba(178, 102, 255, 0.2)';
+let griddarkviolet = 'rgba(102, 0, 102, 0.2)';
+let gridpink = 'rgba(255, 0, 127, 0.2)';
+let gridlightpink = 'rgba(255, 153, 204, 0.2)';
+let griddarkpink = 'rgba(153, 0, 76, 0.2)';
+
+let gridcolors = [gridblue, gridgreen, gridyellow, gridviolet, gridpink, gridlightblue, gridlightgreen, gridlightyellow,
+    gridlightviolet, gridlightpink, griddarkblue, griddarkgreen, griddarkyellow, griddarkviolet, griddarkpink];
+
 
 export function processedPlotData(telemetryDict, selectedVariables) {
     // Parse de jsoned dataframe to a javascript object
     let values = JSON.parse(telemetryDict['values']);
     let info = JSON.parse(telemetryDict['info']);
+    let selectedVariablesUnits = {};
+    for (let index in selectedVariables) {
+        let variable = selectedVariables[index];
+        let units = info[variable]['units'];
+        selectedVariablesUnits[variable] = units;
+    }
 
     // Build a time array for the xaxis
     let xaxis = [];
@@ -150,7 +176,7 @@ export function processedPlotData(telemetryDict, selectedVariables) {
         let variable = selectedVariables[0];
 
         // Build main trace
-        let trace = buildTrace(variable, values, xaxis);
+        let trace = buildTrace(variable, values, xaxis, selectedVariablesUnits[variable]);
         // trace['line'] = {color: pink};
         processedData.push(trace);
 
@@ -194,7 +220,8 @@ export function processedPlotData(telemetryDict, selectedVariables) {
             } else {
                 axisName = 'y';
             }
-            trace = buildTrace(selectedVariables[index], values, xaxis);
+            let units = selectedVariablesUnits[selectedVariables[index]];
+            trace = buildTrace(selectedVariables[index], values, xaxis, units);
 
             if (colorIndex == colors.length - 1) {
                 colorIndex = 0;
@@ -219,8 +246,7 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
     }
 
     let layout = {
-        height: 200,
-        width: 900,
+        autosize: true,
         margin: {l: 35, r: 10, b: 25, t: 20, pad: 0},
         showlegend: true,
         legend: {orientation: 'h'},
@@ -277,19 +303,18 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
         let axisIndex = 1;
         let axisName = '';
         let currentVariable = selectedVariables[0];
-        let units = selectedVariablesUnits[currentVariable];
-        let shift = 0.05;
+        let shift = 0.04;
         for (let i = 0; i < selectedVariables.length; i++) {
             currentVariable = selectedVariables[i];
-            units = selectedVariablesUnits[currentVariable];
+            let currentVariableWithUnits = currentVariable + ' [' + selectedVariablesUnits[currentVariable] + ']';
             if (i == 0) {
                 axisName = 'yaxis';
-                layout[axisName]['range'] = buildRange(plotData, currentVariable, telemetryInfo);
+                layout[axisName]['range'] = buildRange(plotData, currentVariableWithUnits, currentVariable, telemetryInfo);
             }
             else {
                 axisName = 'yaxis' + axisIndex;
                 layout[axisName] = JSON.parse(JSON.stringify(layout['yaxis']));
-                layout[axisName]['range'] = buildRange(plotData, currentVariable, telemetryInfo);
+                layout[axisName]['range'] = buildRange(plotData, currentVariableWithUnits, currentVariable, telemetryInfo);
                 layout[axisName]['overlaying'] = 'y';
                 layout[axisName]['position'] = shift*i + 0.01;
             }
@@ -297,10 +322,11 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
             if (colorIndex == colors.length - 1) {
                 colorIndex = 0;
             }
-            layout[axisName]['title'] = {text: units, position: (0.04*i-0.005), font: {size: 10, color: colors[colorIndex]}};
-            layout[axisName]['titlecolor'] = colors[colorIndex];
+
             layout[axisName]['tickfont'] = {color: colors[colorIndex]};
             layout[axisName]['tickcolor'] = colors[colorIndex];
+            layout[axisName]['gridcolor'] = gridcolors[colorIndex];
+            layout[axisName]['linecolor'] = gridcolors[colorIndex];
 
             colorIndex++;
             axisIndex++;
