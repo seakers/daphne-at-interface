@@ -105,12 +105,30 @@ function buildRange(plotData, variable, telemetryInfo) {
     return range
 }
 
-let blue = '#0AFEFF';
+
 let red = 'rgba(255,0,0,0.8)';
 let orange = 'rgba(196,126,0,0.8)';
 
-let green = 'rgb(33,255,0)';
-let pink = 'rgb(255,0,240)';
+// colors for graph
+let blue = 'rgba(0, 0, 255, 0.8)';
+let lightblue = 'rgba(0, 128, 255, 0.8)';
+let darkblue = 'rgba(0, 0, 153, 0.8)';
+let green = 'rgba(0, 255, 0, 0.8)';
+let lightgreen = 'rgba(128, 255, 0, 0.8)';
+let darkgreen = 'rgba(0, 153, 0, 0.8)';
+let yellow = 'rgba(255, 255, 0, 0.8)';
+let lightyellow = 'rgba(255, 255, 153, 0.8)';
+let darkyellow = 'rgba(153, 153, 0, 0.8)';
+let violet = 'rgba(153, 52, 255, 0.8)';
+let lightviolet = 'rgba(178, 102, 255, 0.8)';
+let darkviolet = 'rgba(102, 0, 102, 0.8)';
+let pink = 'rgba(255, 0, 127, 0.8)';
+let lightpink = 'rgba(255, 153, 204, 0.8)';
+let darkpink = 'rgba(153, 0, 76, 0.8)';
+
+let colors = [blue, green, yellow, violet, pink, lightblue, lightgreen, lightyellow, lightviolet, lightpink,
+    darkblue, darkgreen, darkyellow, darkviolet, darkpink];
+
 
 export function processedPlotData(telemetryDict, selectedVariables) {
     // Parse de jsoned dataframe to a javascript object
@@ -148,7 +166,7 @@ export function processedPlotData(telemetryDict, selectedVariables) {
         trace = buildThresholdTrace(xaxis, info[variable]['high_critic_threshold'], red, 'dot', 'Critical Limits', false);
         processedData.push(trace);
     }
-    else if (selectedVariables.length === 2) {
+    /*else if (selectedVariables.length === 2) {
         // If two variables are selected, display only its absolute values with two different vertical axis
         let trace = {};
 
@@ -162,13 +180,30 @@ export function processedPlotData(telemetryDict, selectedVariables) {
         // trace['line'] = {color: green};
         trace['yaxis'] = 'y2';
         processedData.push(trace);
-    }
+
+    }*/
     else {
-        // If more than two variables are selected, display its normalized values and deviation from nominal
+        // If two variables are selected, display only its absolute values with two different vertical axis
+        let trace = {};
+        let colorIndex = 0;
+        let axisIndex = 1;
+        let axisName = '';
         for (let index in selectedVariables) {
-            let rawTrace = buildTrace(selectedVariables[index], values, xaxis);
-            let trace = normalizeTrace(rawTrace, info);
+            if (axisIndex != 1) {
+                axisName = 'y' + axisIndex;
+            } else {
+                axisName = 'y';
+            }
+            trace = buildTrace(selectedVariables[index], values, xaxis);
+
+            if (colorIndex == colors.length - 1) {
+                colorIndex = 0;
+            }
+            trace['line'] = {color: colors[colorIndex]};
+            trace['yaxis'] = axisName;
             processedData.push(trace);
+            axisIndex++;
+            colorIndex++;
         }
     }
 
@@ -185,7 +220,8 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
 
     let layout = {
         height: 200,
-        margin: {l: 60, r: 20, b: 20, t: 20, pad: 0},
+        width: 900,
+        margin: {l: 35, r: 10, b: 25, t: 20, pad: 0},
         showlegend: true,
         legend: {orientation: 'h'},
         plot_bgcolor: '#111111',
@@ -193,48 +229,84 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
         xaxis: {
             tickcolor: '#666666',
             showgrid: false,
+            domain: [0, 4],
         },
         yaxis: {
             side: 'left',
-            title: '',
             titlefont: {color: '#0AFEFF',},
             tickfont: {color: '#0AFEFF',},
             tickcolor: '#0AFEFF',
             gridcolor: '#666666',
             linecolor: '#666666',
+            anchor:'free',
+            position: 0.01,
         }
     };
 
     if (selectedVariables.length === 1) {
-        let variable = selectedVariables[0];
-        let units = selectedVariablesUnits[variable];
-        let label = variable + ' [' + units + ']';
-        layout['yaxis']['title'] = label;
+        //let variable = selectedVariables[0];
+        //let units = selectedVariablesUnits[variable];
+        //let label = variable + ' [' + units + ']';
+        //layout['yaxis']['title'] = label;
     }
-    else if (selectedVariables.length === 2) {
-        layout['margin']['r'] = 60;
-
+    /*else if (selectedVariables.length === 2) {
+        //layout['margin']['r'] = 60;
+        layout['xaxis']['domain'] = [0.05, 1.05];
         let variableLeft = selectedVariables[0];
-        let unitsLeft = selectedVariablesUnits[variableLeft];
-        let labelLeft = variableLeft + ' [' + unitsLeft + ']';
+        //let unitsLeft = selectedVariablesUnits[variableLeft];
+        //let labelLeft = variableLeft + ' [' + unitsLeft + ']';
 
         let variableRight = selectedVariables[1];
-        let unitsRight = selectedVariablesUnits[variableRight];
-        let labelRight = variableRight + ' [' + unitsRight + ']';
+        //let unitsRight = selectedVariablesUnits[variableRight];
+        //let labelRight = variableRight + ' [' + unitsRight + ']';
 
-        layout['yaxis']['title'] = labelLeft;
+        //layout['yaxis']['title'] = labelLeft;
         layout['yaxis']['range'] = buildRange(plotData, variableLeft, telemetryInfo);
 
         layout['yaxis2'] = JSON.parse(JSON.stringify(layout['yaxis']));
-        layout['yaxis2']['title'] = labelRight;
+        //layout['yaxis2']['title'] = labelRight;
         layout['yaxis2']['range'] = buildRange(plotData, variableRight, telemetryInfo);
-        layout['yaxis2']['side'] = 'right';
+        layout['yaxis2']['side'] = 'left';
         layout['yaxis2']['overlaying'] = 'y';
+        layout['yaxis2']['position'] = 0.05;
 
         layout['showlegend'] = true;
-    }
-    else if (selectedVariables.length > 2) {
-        layout['yaxis']['title'] = 'Nominal deviation [%]';
+    }*/
+    else if (selectedVariables.length > 1) {
+        let colorIndex = 0;
+        let axisIndex = 1;
+        let axisName = '';
+        let currentVariable = selectedVariables[0];
+        let units = selectedVariablesUnits[currentVariable];
+        let shift = 0.05;
+        for (let i = 0; i < selectedVariables.length; i++) {
+            currentVariable = selectedVariables[i];
+            units = selectedVariablesUnits[currentVariable];
+            if (i == 0) {
+                axisName = 'yaxis';
+                layout[axisName]['range'] = buildRange(plotData, currentVariable, telemetryInfo);
+            }
+            else {
+                axisName = 'yaxis' + axisIndex;
+                layout[axisName] = JSON.parse(JSON.stringify(layout['yaxis']));
+                layout[axisName]['range'] = buildRange(plotData, currentVariable, telemetryInfo);
+                layout[axisName]['overlaying'] = 'y';
+                layout[axisName]['position'] = shift*i + 0.01;
+            }
+
+            if (colorIndex == colors.length - 1) {
+                colorIndex = 0;
+            }
+            layout[axisName]['title'] = {text: units, position: (0.04*i-0.005), font: {size: 10, color: colors[colorIndex]}};
+            layout[axisName]['titlecolor'] = colors[colorIndex];
+            layout[axisName]['tickfont'] = {color: colors[colorIndex]};
+            layout[axisName]['tickcolor'] = colors[colorIndex];
+
+            colorIndex++;
+            axisIndex++;
+        }
+        layout['xaxis']['domain'] = [0.01+shift*(selectedVariables.length-1), 1];
+        layout['showlegend'] = true;
     }
 
     return layout
