@@ -170,19 +170,20 @@ const actions = {
 
                     // Start the threads just in case
                     await dispatch('startHubThread')
-                    await dispatch('startATThread')
 
                     // Check which telemetry to load from and initialize everything again
                     if (rootState.daphneat.telemetryType === 'fake') {
+                        dispatch('startFakeATThread')
                         dispatch('startFakeTelemetry');
                         wsTools.websocket.send(JSON.stringify({
-                            msg_type: 'get_telemetry_params'
+                            msg_type: 'get_fake_telemetry_params'
                         }));
                     }
                     else if (rootState.daphneat.telemetryType === 'real') {
-                        dispatch('startTelemetry');
+                        dispatch('startRealATThread')
+                        dispatch('startRealTelemetry');
                         wsTools.websocket.send(JSON.stringify({
-                            msg_type: 'get_telemetry_params'
+                            msg_type: 'get_real_telemetry_params'
                         }));
                         dispatch('loadAllAnomalies');
                     }

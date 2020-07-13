@@ -96,8 +96,8 @@ const actions = {
             console.error('Networking error:', e);
         }
     },
-    async startATThread() {
-        console.log('Trying to start AT Thread...');
+    async startRealATThread() {
+        console.log('Trying to start Real AT Thread...');
         try {
             let reqData = new FormData();
             let numRetries = 0;
@@ -106,7 +106,7 @@ const actions = {
 
             while (!isRequestSuccessful && numRetries < maxRetries) {
                 numRetries += 1;
-                let dataResponse = await fetchPost(API_URL + 'at/start_at_thread', reqData);
+                let dataResponse = await fetchPost(API_URL + 'at/start_real_at_thread', reqData);
                 if (dataResponse.ok) {
                     let result = await dataResponse.json();
                     if (result["status"] !== "error") {
@@ -115,7 +115,34 @@ const actions = {
                     console.log(result["message"]);
                 }
                 else {
-                    console.error('Error starting the AT Thread. Please check server logs for error.');
+                    console.error('Error starting the Real AT Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+    },
+    async startFakeATThread() {
+        console.log('Trying to start FAke AT Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/start_fake_at_thread', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error starting the Fake AT Thread. Please check server logs for error.');
                 }
             }
         }
@@ -153,7 +180,7 @@ const actions = {
         commit('mutateTelemetryIsOngoing', true);
         commit('setTelemetryType', 'fake');
     },
-    async startTelemetry({state, commit}) {
+    async startRealTelemetry({state, commit}) {
         // this.dispatch('loadAllAnomalies');
         console.log('Trying to start Real Telemetry Thread...');
         try {
@@ -164,7 +191,7 @@ const actions = {
 
             while (!isRequestSuccessful && numRetries < maxRetries) {
                 numRetries += 1;
-                let dataResponse = await fetchPost(API_URL + 'at/start_telemetry', reqData);
+                let dataResponse = await fetchPost(API_URL + 'at/start_real_telemetry', reqData);
                 if (dataResponse.ok) {
                     let result = await dataResponse.json();
                     if (result["status"] !== "error") {
@@ -183,8 +210,8 @@ const actions = {
         commit('mutateTelemetryIsOngoing', true);
         commit('setTelemetryType', 'real');
     },
-    async stopTelemetry({state, commit}) {
-        console.log('Trying to stop Telemetry Thread...');
+    async stopRealTelemetry({state, commit}) {
+        console.log('Trying to stop Real Telemetry Thread...');
         try {
             let reqData = new FormData();
             let numRetries = 0;
@@ -193,7 +220,7 @@ const actions = {
 
             while (!isRequestSuccessful && numRetries < maxRetries) {
                 numRetries += 1;
-                let dataResponse = await fetchPost(API_URL + 'at/stop_telemetry', reqData);
+                let dataResponse = await fetchPost(API_URL + 'at/stop_real_telemetry', reqData);
                 if (dataResponse.ok) {
                     let result = await dataResponse.json();
                     if (result["status"] !== "error") {
@@ -202,7 +229,49 @@ const actions = {
                     console.log(result["message"]);
                 }
                 else {
-                    console.error('Error stopping the Telemetry Thread. Please check server logs for error.');
+                    console.error('Error stopping the Real Telemetry Thread. Please check server logs for error.');
+                }
+            }
+        }
+        catch(e) {
+            console.error('Networking error:', e);
+        }
+        commit('mutateTelemetryIsOngoing', false);
+        commit('mutateTelemetryPlotData', []);
+        commit('mutateTelemetryInputVariables', []);
+        commit('mutateTelemetryPlotSelectedVariables', []);
+        commit('mutateTelemetryValues', '');
+        commit('mutateTelemetryInfo', '');
+        commit('mutateSymptomsList', []);
+        commit('mutateSelectedSymptomsList', []);
+        commit('mutateDiagnosisReport', []);
+        commit('mutateSelectedAnomaliesList', []);
+        commit('mutateSelectedAnomaliesInfo', {});
+        commit('mutateSelectedProceduresList', []);
+        commit('mutateSelectedProceduresInfo', {});
+        commit('setIsTelemetryInitialized', false);
+        commit('setTelemetryType', null);
+    },
+    async stopFakeTelemetry({state, commit}) {
+        console.log('Trying to stop Fake Telemetry Thread...');
+        try {
+            let reqData = new FormData();
+            let numRetries = 0;
+            let maxRetries = 5;
+            let isRequestSuccessful = false;
+
+            while (!isRequestSuccessful && numRetries < maxRetries) {
+                numRetries += 1;
+                let dataResponse = await fetchPost(API_URL + 'at/stop_fake_telemetry', reqData);
+                if (dataResponse.ok) {
+                    let result = await dataResponse.json();
+                    if (result["status"] !== "error") {
+                        isRequestSuccessful = true;
+                    }
+                    console.log(result["message"]);
+                }
+                else {
+                    console.error('Error stopping the Fake Telemetry Thread. Please check server logs for error.');
                 }
             }
         }

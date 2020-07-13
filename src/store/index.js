@@ -56,7 +56,8 @@ export default new Vuex.Store({
             } else if (received_info['type'] === 'finish_experiment_from_mcc') {
                 dispatch('finishStage').then(() => {
                     dispatch('finishExperiment').then(() => {
-                        dispatch('stopTelemetry');
+                        dispatch('stopRealTelemetry');
+                        dispatch('stopFakeTelemetry');
                     });
                 });
             }

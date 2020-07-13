@@ -135,7 +135,6 @@
 
                     // Start both Hub and AT threads if not already started before
                     await this.$store.dispatch('startHubThread')
-                    await this.$store.dispatch('startATThread')
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
@@ -1437,10 +1436,11 @@
                     case 'tutorial': {
                         this.tutorialConfirm.on("complete", async () => {
                             // If not already ongoing, start receiving a fake telemetry for the tutorial
-                            await this.$store.dispatch('stopTelemetry');
+                            await this.$store.dispatch('stopRealTelemetry');
+                            await this.$store.dispatch('startFakeATThread');
                             await this.$store.dispatch('startFakeTelemetry');
                             wsTools.websocket.send(JSON.stringify({
-                                msg_type: 'get_telemetry_params'
+                                msg_type: 'get_fake_telemetry_params'
                             }));
 
                             this.introTutorial.show();
@@ -1450,10 +1450,11 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopTelemetry').then(() => {
-                                this.$store.dispatch('startTelemetry');
+                            this.$store.dispatch('stopFakeTelemetry').then(() => {
+                                this.$store.dispatch('startRealATThread');
+                                this.$store.dispatch('startRealTelemetry');
                                 wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_telemetry_params'
+                                    msg_type: 'get_real_telemetry_params'
                                 }));
                                 this.$store.dispatch('loadAllAnomalies');
                             });
@@ -1465,10 +1466,11 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopTelemetry').then(() => {
-                                this.$store.dispatch('startTelemetry');
+                            this.$store.dispatch('stopFakeTelemetry').then(() => {
+                                this.$store.dispatch('startRealATThread');
+                                this.$store.dispatch('startRealTelemetry');
                                 wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_telemetry_params'
+                                    msg_type: 'get_real_telemetry_params'
                                 }));
                                 this.$store.dispatch('loadAllAnomalies');
                             });
@@ -1479,10 +1481,11 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopTelemetry').then(() => {
-                                this.$store.dispatch('startTelemetry');
+                            this.$store.dispatch('stopFakeTelemetry').then(() => {
+                                this.$store.dispatch('startRealATThread');
+                                this.$store.dispatch('startRealTelemetry');
                                 wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_telemetry_params'
+                                    msg_type: 'get_real_telemetry_params'
                                 }));
                                 this.$store.dispatch('loadAllAnomalies');
                             });

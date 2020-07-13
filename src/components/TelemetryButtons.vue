@@ -10,7 +10,7 @@
                 START RECEIVING
             </a>
             <a v-else
-               class="button is-telemetry-button is-red" v-on:click.prevent="stopTelemetry">
+               class="button is-telemetry-button is-red" v-on:click.prevent="stopFakeTelemetry">
                 STOP RECEIVING
             </a>
         </div>
@@ -33,8 +33,8 @@
             startTelemetry() {
                 this.$store.dispatch('startFakeTelemetry');
             },
-            stopTelemetry() {
-                this.$store.dispatch('stopTelemetry');
+            stopFakeTelemetry() {
+                this.$store.dispatch('stopFakeTelemetry');
             },
         },
     }
