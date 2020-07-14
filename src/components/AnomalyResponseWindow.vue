@@ -92,7 +92,21 @@
                                            v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
                                            v-on:click="checkIt(procedureDict, stepIndex)"
                                            :checked="stepItem['isDone']">
-                                    <label>{{stepItem['label']}} - {{stepItem['action']}}</label>
+                                    <label>{{stepItem['label']}} - {{stepItem['action']}}
+                                        <span v-if="stepItem['hasFigure']">
+                                             (see
+                                            <a v-on:click="openFigure(stepItem['figure'])">
+                                                  Figure {{stepItem['fNumber']}}
+                                            </a>
+                                            <span v-if="stepItem['hasFigure2']">
+                                                 and
+                                                <a  v-on:click="openFigure(stepItem['figure2'])">
+                                                     Figure {{stepItem['fNumber2']}}
+                                                </a>
+                                            </span>
+                                            )
+                                        </span>
+                                    </label>
                                     <br />
                                 </div>
                             </div>
