@@ -172,6 +172,7 @@
                         let procedureIsOpen = this.selectedProceduresInfo[procedureName]['procedureIsOpen'];
                         procedureDict['procedureName'] = procedureName;
                         procedureDict['procedureSteps'] = procedureSteps;
+                        console.log(procedureSteps);
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;
