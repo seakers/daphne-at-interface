@@ -92,7 +92,7 @@
                                            v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
                                            v-on:click="checkIt(procedureDict, stepIndex)"
                                            :checked="stepItem['isDone']">
-                                    <label>{{stepItem['label']}} - {{stepItem['action']}} Hello World
+                                    <label>{{stepItem['label']}} - {{stepItem['action']}} {{stepItem['hasFigure']}}
                                         <span v-if="stepItem['hasFigure']">
                                              (see
                                             <a v-on:click="openFigure(stepItem['figure'])">
