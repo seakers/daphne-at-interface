@@ -382,6 +382,7 @@ const actions = {
                     'procedureCurrentStep': 0,
                     'procedureObjective': info['procedureObjective'],
                     'procedureEquipment': info['procedureEquipment'],
+                    'procedureFigures': info['procedureFigures'],
                     'procedureIsOpen': false,
                 };
 
@@ -519,6 +520,7 @@ const actions = {
         let procedureCurrentStep = newProcedureDict['procedureCurrentStep'];
         let procedureObjective = newProcedureDict['procedureObjective'];
         let procedureEquipment = newProcedureDict['procedureEquipment'];
+        let procedureFigures = newProcedureDict['procedureFigures'];
         let procedureIsOpen = newProcedureDict['procedureIsOpen'];
 
         // The copy is modified
@@ -527,6 +529,7 @@ const actions = {
             'procedureCurrentStep': procedureCurrentStep,
             'procedureObjective': procedureObjective,
             'procedureEquipment': procedureEquipment,
+            'procedureFigures': procedureFigures,
             'procedureIsOpen': procedureIsOpen,
         };
 

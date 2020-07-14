@@ -71,6 +71,14 @@
                                     {{item}}
                                 </li>
                             </ul>
+                            <p v-if="procedureDict['procedureFigures'].length > 0" style="margin-top: 10px">
+                                <span style="color: #0AFEFF">Figures </span>
+                            </p>
+                            <ul v-for="(item, itemIndex) in procedureDict['procedureFigures']">
+                                <li v-on:click="openFigure(item)" style="margin-left: 20px; cursor: pointer">
+                                    Figure {{itemIndex+1}}
+                                </li>
+                            </ul>
                             <p style="margin-top: 10px">
                                 <span style="color: #0AFEFF">Steps to follow</span>
                                 ({{procedureDict['procedureCurrentStep']}}
@@ -146,12 +154,14 @@
                         let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['procedureCurrentStep'];
                         let procedureObjective = this.selectedProceduresInfo[procedureName]['procedureObjective'];
                         let procedureEquipment = this.selectedProceduresInfo[procedureName]['procedureEquipment'];
+                        let procedureFigures = this.selectedProceduresInfo[procedureName]['procedureFigures'];
                         let procedureIsOpen = this.selectedProceduresInfo[procedureName]['procedureIsOpen'];
                         procedureDict['procedureName'] = procedureName;
                         procedureDict['procedureSteps'] = procedureSteps;
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;
+                        procedureDict['procedureFigures'] = procedureFigures;
                         procedureDict['procedureIsOpen'] = procedureIsOpen;
                         procedureList.push(procedureDict);
                     }
@@ -247,6 +257,9 @@
                         }
                     }
                 }
+            },
+            openFigure(url) {
+                window.open(url, '_blank')
             }
         },
         mounted: function() {

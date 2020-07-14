@@ -3,9 +3,9 @@
         <div class="columns is-vertical-filler" style="margin-bottom: 5px">
             <div class="column is-8.9 is-vertical-filler">
                 <div class="is-sticky" >
-                    <div v-if="timerExperimentCondition">
+                    <!-- <div v-if="timerExperimentCondition">
                         <timer v-bind:startTime=Date.now() v-bind:duration="3602"></timer>
-                    </div>
+                    </div> -->
                     <div style="height: 5px; background-color: #111111"></div>
                     <div class="box is-main" style="margin: 0px;">
                         <anomaly-detection-window></anomaly-detection-window>
