@@ -93,7 +93,7 @@
                                            v-on:click="checkIt(procedureDict, stepIndex)"
                                            :checked="stepItem['isDone']">
                                     <label>{{stepItem['label']}} - {{stepItem['action']}}
-                                        <span>
+                                        <span v-if="stepItem['hasFigure']">
                                              (see
                                             <a v-on:click="openFigure(stepItem['figure'])">
                                                   Figure {{stepItem['fNumber']}}
