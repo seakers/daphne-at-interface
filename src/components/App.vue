@@ -1437,7 +1437,7 @@
                         this.tutorialConfirm.on("complete", async () => {
                             // If not already ongoing, start receiving a fake telemetry for the tutorial
                             this.$store.dispatch('stopRealTelemetry').then(() => {
-                                this.$store.dispatch('startFakeTelemetry');
+                                //this.$store.dispatch('startFakeTelemetry');
                                 this.$store.dispatch('startFakeATThread');
                             });
                             wsTools.websocket.send(JSON.stringify({
