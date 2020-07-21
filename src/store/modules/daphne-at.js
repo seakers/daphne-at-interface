@@ -124,7 +124,7 @@ const actions = {
         }
     },
     async startFakeATThread() {
-        console.log('Trying to start FAke AT Thread...');
+        console.log('Trying to start Fake AT Thread...');
         try {
             let reqData = new FormData();
             let numRetries = 0;
