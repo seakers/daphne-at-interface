@@ -19,6 +19,7 @@
 
 <script>
     import { mapGetters, mapMutations } from 'vuex';
+    import {wsTools} from "../scripts/websocket-tools";
 
     export default {
         name: "TelemetryButtons",
@@ -31,10 +32,18 @@
 
         methods: {
             startTelemetry() {
-                this.$store.dispatch('startFakeTelemetry');
+                // Start fake telemetry
+                console.log('Trying to start fake telemetry...');
+                wsTools.websocket.send(JSON.stringify({
+                    'type': 'start_fake_telemetry',
+                    'attempt': '1'
+                }));
             },
             stopFakeTelemetry() {
-                this.$store.dispatch('stopFakeTelemetry');
+                wsTools.websocket.send(JSON.stringify({
+                    'type': 'stop_telemetry',
+                    'attempt': '1'
+                }));
             },
         },
     }

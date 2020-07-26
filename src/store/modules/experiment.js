@@ -169,22 +169,35 @@ const actions = {
                     await wsTools.wsConnect(this);
 
                     // Start the threads just in case
-                    await dispatch('startHubThread')
+                    console.log("Trying to start hub thread...")
+                    wsTools.websocket.send(JSON.stringify({
+                        type: 'start_hub_thread',
+                        attempt: '1'
+                    }));
 
                     // Check which telemetry to load from and initialize everything again
                     if (rootState.daphneat.telemetryType === 'fake') {
-                        await dispatch('startFakeTelemetry');
-                        await dispatch('startFakeATThread');
+                        // Start fake telemetry
+                        console.log('Trying to start fake telemetry...');
+                        wsTools.websocket.send(JSON.stringify({
+                            'type': 'start_fake_telemetry',
+                            'attempt': '1'
+                        }));
+                        /* Should get parameters from starting
                         wsTools.websocket.send(JSON.stringify({
                             msg_type: 'get_fake_telemetry_params'
-                        }));
+                        }));*/
                     }
                     else if (rootState.daphneat.telemetryType === 'real') {
-                        dispatch('startRealATThread')
-                        dispatch('startRealTelemetry');
+                        console.log('Trying to start real telemetry...');
+                        wsTools.websocket.send(JSON.stringify({
+                            'type': 'start_real_telemetry',
+                            'attempt': '1'
+                        }));
+                        /* Should get parameters from starting
                         wsTools.websocket.send(JSON.stringify({
                             msg_type: 'get_real_telemetry_params'
-                        }));
+                        }));*/
                         dispatch('loadAllAnomalies');
                     }
                 }

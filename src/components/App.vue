@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import {mapGetters, mapState} from 'vuex';
     import {wsTools} from "../scripts/websocket-tools";
     import Shepherd from 'shepherd.js';
     import SensorDataWindow from "./SensorDataWindow";
@@ -89,6 +89,9 @@
                 isRecovering: state => state.experiment.isRecovering,
                 currentStageNum: state => state.experiment.currentStageNum,
             }),
+            ...mapGetters({
+                telemetryIsOngoing: 'getTelemetryIsOngoing'
+            }),
             timerExperimentCondition() {
                 if (!this.inExperiment) {
                     return false;
@@ -129,12 +132,16 @@
                 }
             },
             async initExperiment() {
+                // Start the experiment for data collection
                 this.$store.dispatch('startExperiment').then(async () => {
-                    // Restart WS after login
-                    await wsTools.wsConnect(this.$store);
 
-                    // Start both Hub and AT threads if not already started before
-                    await this.$store.dispatch('startHubThread')
+                    // Start hub thread, the hub thread is the main thread that the backend communicates with
+                    await wsTools.wsConnect(this.$store);
+                    console.log("Trying to start hub thread...")
+                    wsTools.websocket.send(JSON.stringify({
+                        type: 'start_hub_thread',
+                        attempt: 1
+                    }));
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
@@ -1435,12 +1442,19 @@
                     switch (this.experimentStage) {
                     case 'tutorial': {
                         this.tutorialConfirm.on("complete", async () => {
-                            // If not already ongoing, start receiving a fake telemetry for the tutorial
-                            await this.$store.dispatch('stopRealTelemetry');
-                            await this.$store.dispatch('startFakeTelemetry');
-                            await this.$store.dispatch('startFakeATThread');
+                            // Stop any telemetry that is running
+                            if (this.telemetryIsOngoing) {
+                                console.log('Trying to stop telemetry...');
+                                wsTools.websocket.send(JSON.stringify({
+                                    type: 'stop_telemetry',
+                                    attempt: '1'
+                                }))
+                            }
+                            // Start fake telemetry
+                            console.log('Trying to start fake telemetry...');
                             wsTools.websocket.send(JSON.stringify({
-                                msg_type: 'get_fake_telemetry_params'
+                                'type': 'start_fake_telemetry',
+                                'attempt': '1'
                             }));
 
                             this.introTutorial.show();
@@ -1450,30 +1464,45 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopFakeTelemetry').then(() => {
-                                this.$store.dispatch('startRealATThread');
-                                this.$store.dispatch('startRealTelemetry');
-                                wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_real_telemetry_params'
-                                }));
-                                this.$store.dispatch('loadAllAnomalies');
-                            });
+                            console.log('Trying to stop telemetry...');
+                            wsTools.websocket.send(JSON.stringify({
+                                'type': 'stop_telemetry',
+                                'attempt': '1'
+                            }));
+                            console.log('Trying to start real telemetry...');
+                            wsTools.websocket.send(JSON.stringify({
+                                'type': 'start_real_telemetry',
+                                'attempt': '1'
+                            }));
+                            /* Should get parameters from starting
+                            wsTools.websocket.send(JSON.stringify({
+                                msg_type: 'get_real_telemetry_params'
+                            }));*/
+                            this.$store.dispatch('loadAllAnomalies');
                             this.clearTutorialSequence();
-                        });
+                            });
+
 
                         this.introTutorial.on("complete", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopFakeTelemetry').then(() => {
-                                this.$store.dispatch('startRealATThread');
-                                this.$store.dispatch('startRealTelemetry');
-                                wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_real_telemetry_params'
-                                }));
-                                this.$store.dispatch('loadAllAnomalies');
-                            });
+                            console.log('Trying to stop telemetry...');
+                            wsTools.websocket.send(JSON.stringify({
+                                'type': 'stop_telemetry',
+                                'attempt': '1'
+                            }));
+                            console.log('Trying to start real telemetry...');
+                            wsTools.websocket.send(JSON.stringify({
+                                'type': 'start_real_telemetry',
+                                'attempt': '1'
+                            }));
+                            /* Should get parameters from starting
+                            wsTools.websocket.send(JSON.stringify({
+                                msg_type: 'get_real_telemetry_params'
+                            }));*/
+                            this.$store.dispatch('loadAllAnomalies');
                             this.clearTutorialSequence();
                         });
                         this.introTutorial.on("cancel", () => {
@@ -1481,14 +1510,21 @@
                                 this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
                             });
                             // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
-                            this.$store.dispatch('stopFakeTelemetry').then(() => {
-                                this.$store.dispatch('startRealATThread');
-                                this.$store.dispatch('startRealTelemetry');
-                                wsTools.websocket.send(JSON.stringify({
-                                    msg_type: 'get_real_telemetry_params'
-                                }));
-                                this.$store.dispatch('loadAllAnomalies');
-                            });
+                            console.log('Trying to stop telemetry...');
+                            wsTools.websocket.send(JSON.stringify({
+                                'type': 'stop_telemetry',
+                                'attempt': '1'
+                            }));
+                            console.log('Trying to start real telemetry...');
+                            wsTools.websocket.send(JSON.stringify({
+                                'type': 'start_real_telemetry',
+                                'attempt': '1'
+                            }));
+                            /* Should get parameters from starting
+                            wsTools.websocket.send(JSON.stringify({
+                                msg_type: 'get_real_telemetry_params'
+                            }));*/
+                            this.$store.dispatch('loadAllAnomalies');
                             this.clearTutorialSequence();
                         });
 
