@@ -124,6 +124,7 @@ export default new Vuex.Store({
             }
             // Get initialized telemetry and set initialized telemetry flag to true
             else if (received_info['type'] === 'initialize_telemetry') {
+                console.log("Telemetry initialized.");
                 let telemetryDict = received_info['content'];
                 if (telemetryDict !== '') {
                     let telemetryVariablesNames = telemetryDict['variables_names'];
