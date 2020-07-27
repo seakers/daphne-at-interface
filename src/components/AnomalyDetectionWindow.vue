@@ -5,6 +5,11 @@
             <span class="tutorialLink">
             <u v-on:click.prevent="detectionTutorial">?</u>
             </span>
+            <span class="tutorialLink">&#8287; &#8287;</span>
+            <span class="tutorialLink">
+                <u v-on:click.prevent="clear">Clear</u>
+            </span>
+
         </div>
         <div v-if="(this.symptomsList.length === 0)" class="is-content" style="min-height: 100px">
             No anomalous symptoms detected.
@@ -72,6 +77,20 @@
             },
             detectionTutorial(event) {
                 this.$root.$emit('detectionTutorialIndividual');
+            },
+            clear() {
+                this.$store.commit('mutateTelemetryPlotData', []);
+                this.$store.commit('mutateTelemetryInputVariables', []);
+                this.$store.commit('mutateTelemetryPlotSelectedVariables', []);
+                this.$store.commit('mutateTelemetryValues', '');
+                this.$store.commit('mutateTelemetryInfo', '');
+                this.$store.commit('mutateSymptomsList', []);
+                this.$store.commit('mutateSelectedSymptomsList', []);
+                this.$store.commit('mutateDiagnosisReport', []);
+                this.$store.commit('mutateSelectedAnomaliesList', []);
+                this.$store.commit('mutateSelectedAnomaliesInfo', {});
+                this.$store.commit('mutateSelectedProceduresList', []);
+                this.$store.commit('mutateSelectedProceduresInfo', {});
             }
         },
 
