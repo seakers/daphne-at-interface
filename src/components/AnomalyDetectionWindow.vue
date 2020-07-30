@@ -79,18 +79,8 @@
                 this.$root.$emit('detectionTutorialIndividual');
             },
             clear() {
-                this.$store.commit('mutateTelemetryPlotData', []);
-                this.$store.commit('mutateTelemetryInputVariables', []);
-                this.$store.commit('mutateTelemetryPlotSelectedVariables', []);
-                this.$store.commit('mutateTelemetryValues', '');
-                this.$store.commit('mutateTelemetryInfo', '');
                 this.$store.commit('mutateSymptomsList', []);
                 this.$store.commit('mutateSelectedSymptomsList', []);
-                this.$store.commit('mutateDiagnosisReport', []);
-                this.$store.commit('mutateSelectedAnomaliesList', []);
-                this.$store.commit('mutateSelectedAnomaliesInfo', {});
-                this.$store.commit('mutateSelectedProceduresList', []);
-                this.$store.commit('mutateSelectedProceduresInfo', {});
             }
         },
 

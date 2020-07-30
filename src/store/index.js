@@ -156,7 +156,7 @@ export default new Vuex.Store({
                 let content = received_info['content'];
                 let symptoms_report = content['symptoms_report'];
                 let alarm = content['alarm'];
-                dispatch('triggerAlarm', alarm);
+                //dispatch('triggerAlarm', alarm);
                 dispatch('updateSymptomsList', symptoms_report);
             }
             // Finish the experiment

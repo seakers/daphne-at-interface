@@ -382,8 +382,7 @@
                             {
                                 text: 'Alarm IN',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/woopwoop.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(startAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -403,8 +402,7 @@
                             {
                                 text: 'Alarm OUT',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/endgame.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(endAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -896,8 +894,7 @@
                             {
                                 text: 'Alarm IN',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/woopwoop.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(startAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
@@ -917,8 +914,7 @@
                             {
                                 text: 'Alarm OUT',
                                 action: async function () {
-                                    let newAnomalySound = require('../sounds/endgame.mp3');
-                                    let audio = new Audio(newAnomalySound);
+                                    let audio = new Audio(endAnomalySound);
                                     await audio.play();
                                 },
                                 secondary: true,
