@@ -263,11 +263,6 @@
         },
         async mounted() {
             if (!this.isViewer) {
-                // // Normal init code
-                // await fetchPost('/api/auth/generate-session', new FormData());
-                // // Connect to Websocket
-                // await wsTools.wsConnect(this.$store);
-
                 // Generate the session
                 await fetchPost(API_URL + 'auth/generate-session', new FormData());
 

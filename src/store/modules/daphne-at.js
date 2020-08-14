@@ -11,6 +11,7 @@ const state = {
     telemetryPlotData: [], // Contains formatted telemetry feed values so that they can be properly plotted using vue.plotly.
     telemetryIsOngoing: false, // Self descriptive.
     telemetryType: null,
+    playAlarms: false,
     isTelemetryInitialized: false,
     telemetryValues: '', // A string that stores the telemetry values as a jsoned dataframe.
     telemetryInfo: '', // A string that stores the telemetry info as a jsoned dataframe. To be deprecated.
@@ -48,6 +49,7 @@ const getters = {
     getSelectedProceduresList(state) {return state.selectedProceduresList},
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
+    getPlayAlarms(state) {return state.playAlarms},
 };
 
 const actions = {
@@ -386,6 +388,7 @@ const mutations = {
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
+    mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {

@@ -156,7 +156,9 @@ export default new Vuex.Store({
                 let content = received_info['content'];
                 let symptoms_report = content['symptoms_report'];
                 let alarm = content['alarm'];
-                //dispatch('triggerAlarm', alarm);
+                if (state.daphneat.playAlarms) {
+                    dispatch('triggerAlarm', alarm);
+                }
                 dispatch('updateSymptomsList', symptoms_report);
             }
             // Finish the experiment
@@ -170,6 +172,9 @@ export default new Vuex.Store({
                         }));
                     });
                 });
+            }
+            else if (received_info['type'] === 'turn_off_alarms') {
+                commit('mutatePlayAlarms');
             }
         },
     },

@@ -42,6 +42,13 @@
                     </div>
                     <div class="is-content" style="float: right">
                         <div class="control">
+                            <a class="button is-info" v-on:click.prevent="switchAlarms">
+                                <span class="icon is-small">
+                                    <i class="fas" v-bind:class="[ this.playAlarms ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="control">
                             <button type="submit" class="button is-primary" v-on:click="finishExperiment" style="background-color: red">
                                 Finish Experiment
                             </button>
@@ -58,6 +65,7 @@
     import {fetchPost} from "../../scripts/fetch-helpers";
     import ChatArea from "../ChatArea";
     import {actions} from "../../store/modules/daphne-at";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "SubjectViewer",
@@ -71,6 +79,7 @@
                 selectedProceduresList: [],
                 selectedProceduresInfo: {},
                 lastProvidedDiagnosis: [],
+                playAlarms: false,
             }
         },
         components: {
@@ -119,6 +128,14 @@
                 let reqData = new FormData();
                 reqData.append('user_id', this.userId);
                 await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
+            },
+            async switchAlarms() {
+                console.log("Alarm was on " + this.playAlarms);
+                this.playAlarms = !this.playAlarms;
+                console.log("Alarm is now on " + this.playAlarms)
+                let reqData = new FormData();
+                reqData.append('user_id', this.userId);
+                await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
             },
             writeCurrentStep(procedureDict, procedureName) {
                 let stepsList = procedureDict['procedureStepsList'];
