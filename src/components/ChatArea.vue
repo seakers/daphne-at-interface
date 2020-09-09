@@ -64,7 +64,8 @@
         margin-bottom: .8em;
     }
     .chat-message-daphne {
-        background: $white-ter;
+        background: #303030;
+        color: $white;
     }
     .chat-message-user {
         margin-left: 5%;

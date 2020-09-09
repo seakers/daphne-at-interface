@@ -5,10 +5,6 @@ import {fetchGet, fetchPost} from "../../scripts/fetch-helpers";
 const state = {
     command: '',
     dialogueHistory: [
-        {"voice_message": 'Hello Daphne',
-            "visual_message_type": ["text"],
-            "visual_message": ['Hello Daphne'],
-            "writer": "user"},
         {"voice_message": 'Hi User',
             "visual_message_type": ["text"],
             "visual_message": ['Hi User, how can I help?'],

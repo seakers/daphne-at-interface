@@ -11,30 +11,30 @@
             <div class="sticky-textbox">
                 <div class="field has-addons is-fullwidth">
                         <div class="control is-expanded">
-                            <input class="input" type="text" name="command" placeholder="Ask a question / Give a command / Speak it out!" v-model="command" v-on:keyup.enter="sendCommand">
+                            <input class="input" type="text" name="command" placeholder="Ask me something" v-model="command" v-on:keyup.enter="sendCommand">
                         </div>
                 </div>
                 <div class="field has-addons is-fullwidth">
-                        <div class="control">
+                        <div class="control is-expanded">
                             <a class="button is-info" v-on:click.prevent="switchVoice">
                                 <span class="icon is-small">
                                     <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
                                 </span>
                             </a>
                         </div>
-                        <div class="control">
+                        <div class="control is-expanded">
+                          <a class="button is-info" v-on:click.prevent="chatTutorial">?</a>
+                        </div>
+                        <div class="control is-fullwidth">
                             <a class="button is-info" id="clear_history" v-on:click.prevent="clearHistory">Clear</a>
                         </div>
-                        <div class="control">
+                        <div class="control is-fullwidth">
                             <a class="button is-info" id="send_command" v-on:click.prevent="sendCommand">Send</a>
                         </div>
-                        <div class="control">
-                            <a class="button is-info" v-on:click.prevent="chatTutorial">?</a>
-                        </div>
                 </div>
-                <div>
+                <div style="padding-bottom: 10px;">
                     <a href="/question_cheatsheet.html" target="_blank">
-                        Here's a list of the questions that I can answer!
+                        Click here for Question Cheatsheet
                     </a>
                 </div>
             </div>
@@ -44,7 +44,6 @@
 
 <script>
     import * as _ from 'lodash-es';
-    // import QuestionBar from "./QuestionBar";
     import TextResponse from './TextResponse';
     import ListResponse from './ListResponse';
     import {mapState} from "vuex";
@@ -69,7 +68,7 @@
                     timeline_plot: 'TimelineResponse',
                     active_message: 'ActiveMessage',
                 },
-                speakOut: false
+                speakOut: true
             }
         },
         computed: {
@@ -145,29 +144,35 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        padding-bottom: 1em;
     }
     .chat-area {
         width: 100%;
-        padding: 1em;
+        padding-right: 1em;
         overflow: auto;
         flex-grow: 1;
     }
     .chat-message {
-        width: 95%;
+        width: 100%;
         border-radius: 10px;
         padding: .8em;
         margin-bottom: .8em;
+        font-size: 15px;
     }
     .chat-message-daphne {
-        background: $white-ter;
+        float: left;
+        background: #303030;
+        color: $white;
+        width: 80%;
     }
     .chat-message-user {
-        margin-left: 5%;
+        float: right;
         color: $white;
         background: $cyan;
+        width: 80%;
     }
     .sticky-textbox {
-        padding: 1em;
+        padding-right: 1em;
         bottom: 0;
     }
 </style>

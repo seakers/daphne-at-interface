@@ -136,15 +136,34 @@ let app = new Vue({
 
 // Voice recognition
 if (annyang) {
-    annyang.addCallback('result', phrases => {
-        if (responsiveVoice.isPlaying()) {
-            return;
-        }
-        app.$store.commit('setCommand', phrases[0]);
-        app.$store.dispatch('executeCommand');
-    });
 
+    var wakeWord = {
+        'Hey Daphne': function() {
+            annyang.addCallback('result', phrases => {
+                app.$store.commit('setCommand', phrases[0]);
+                app.$store.dispatch('executeCommand');
+            });
+            setTimeout(
+                function () {
+                    annyang.removeCallback();
+                    annyang.removeCommands(wakeWord);
+                    annyang.addCommands(commands);
+                    console.log('Commands1 removed');
+                }, 10000);
+        }
+    }
+
+    var commands = {
+        function () {
+            annyang.removeCommands(commands);
+            annyang.addCommands(wakeWord);
+            console.log('Commands2 removed');
+        }
+    }
+
+    annyang.addCommands(wakeWord);
     annyang.debug();
+    annyang.start();
 
     // Tell KITT to use annyang
     SpeechKITT.annyang();
@@ -154,5 +173,4 @@ if (annyang) {
 
     // Render KITT's interface
     SpeechKITT.vroom();
-    //SpeechKITT.startRecognition();
 }

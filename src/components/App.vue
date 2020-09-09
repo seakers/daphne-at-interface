@@ -255,7 +255,6 @@
             SensorDataWindow,
             RegisterModal,
             DaphneAnswer,
-            // QuestionBar,
             TheFooter,
             TelemetryButtons,
             Modal,
@@ -1550,6 +1549,8 @@
     .vertical-divider {
         background: $grey-light;
         width: 1px;
+        padding: 0;
+        margin: 0;
     }
 
     .tutorialLink {
