@@ -144,6 +144,8 @@
                 selectedProceduresList: 'getSelectedProceduresList',
                 selectedProceduresInfo: 'getSelectedProceduresInfo',
                 isLoading: 'getLoadingNewAnomaly',
+                response: 'getResponse',
+                prevResponse: 'getPrevResponse',
             }),
             value()  {
                 let aux = [];
@@ -278,6 +280,40 @@
         },
         mounted: function() {
             this.loadAnomalies()
+        },
+        watch: {
+            response: function (val, oldval) {
+                for (let anomaly in this.anomalyList) {
+                    for (let procedure in this.anomalyList[anomaly]['anomalyProcedures']) {
+                        for (let step in this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps']) {
+                            let currComparison = this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][step]['label'] + ", " + this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][step]['action'];
+                            if (currComparison == this.response) {
+                                let nextPrev;
+                                let prevPrev;
+                                if ((parseInt(step)-1) > -1) {
+                                    nextPrev = this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step)-1]['label'] + ", " + this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step)-1]['action'];
+                                }
+
+                                if ((parseInt(step)+1) < this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'].length) {
+                                    prevPrev = this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step)+1]['label'] + ", " + this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step)+1]['action'];
+                                }
+
+                                if (this.prevResponse == nextPrev) {
+                                    this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step)-1]['isDone'] = true;
+                                }
+                                else if (this.prevResponse == prevPrev) {
+                                    this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][step]['isDone'] = false;
+                                }
+                                else if (step == 1) {
+                                    this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step)-1]['isDone'] = true;
+                                }
+                                console.log("Previous " + this.prevResponse);
+                                console.log("PrevPrev " + prevPrev);
+                            }
+                        }
+                    }
+                }
+            },
         },
 
         components: {

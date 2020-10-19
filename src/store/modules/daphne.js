@@ -11,7 +11,9 @@ const state = {
             "writer": "daphne"}
     ],
     response: {},
-    isLoading: false
+    prevResponse: {},
+    isLoading: false,
+    isListening: false
 };
 
 const initialState = _.cloneDeep(state);
@@ -21,8 +23,14 @@ const getters = {
     getResponse(state) {
         return state.response;
     },
+    getPrevResponse(state) {
+        return state.prevResponse;
+    },
     getIsLoading(state) {
         return state.isLoading;
+    },
+    getIsListening(state) {
+        return state.isListening;
     }
 };
 
@@ -74,11 +82,15 @@ const actions = {
             let reqData = new FormData();
             reqData.append('command', state.command);
             let dataResponse = await fetchPost('/api/at/dialogue/command', reqData);
+            console.log("COMMAND" + state.command);
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
-                console.log(data['response']['visual_message_type']);
                 commit('addDialoguePiece', data['response']);
+                commit('setResponse', data['response']['visual_message']);
+                console.log("VOICE MESSAGE" + data['response']['voice_message']);
+                console.log("VISUAL MESSAGE" + data['response']['visual_message']);
+
             }
             else {
                 console.error('Error processing the command.');
@@ -96,7 +108,11 @@ const mutations = {
     setCommand(state, command) {
         state.command = command;
     },
+    setIsListening(state, listen) {
+        state.isListening = listen;
+    },
     setResponse(state, response) {
+        state.prevResponse = state.response;
         state.response = response;
     },
     setIsLoading(state, isLoading) {

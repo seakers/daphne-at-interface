@@ -17,7 +17,10 @@
                 <div class="field has-addons is-fullwidth">
                         <div class="control is-expanded">
                             <a class="button is-info" v-on:click.prevent="switchVoice">
-                                <span class="icon is-small">
+                                <span v-if="this.isListening" class="icon is-small" style="background-color:red;">
+                                    <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
+                                </span>
+                                <span v-else class="icon is-small">
                                     <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
                                 </span>
                             </a>
@@ -79,6 +82,9 @@
             ...mapGetters([
                 'getResponse'
             ]),
+            ...mapGetters({
+                isListening: 'getIsListening',
+            }),
             command: {
                 get() {
                     return this.$store.state.daphne.command;
