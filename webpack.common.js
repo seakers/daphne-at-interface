@@ -15,6 +15,11 @@ module.exports = {
         'question_cheatsheet': './src/question_cheatsheet.js'
     },
 
+    node: {
+        fs: 'empty',
+        tiff: 'empty'
+    },
+
     output: {
         filename: './assets/js/[name].bundle.js'
     },
