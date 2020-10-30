@@ -123,6 +123,7 @@
     import Multiselect from 'vue-multiselect'
     import { mapGetters, mapMutations } from 'vuex';
     import {updateCheckboxes} from "../scripts/at-display-builders";
+    import Sabatier from '../images/SabatierPanel.png'
 
     let loaderImage = require('../images/loader.svg');
 
@@ -275,7 +276,7 @@
                 }
             },
             openFigure(url) {
-                window.open(url, '_blank')
+                window.open(window.location.href + 'src/images/' + url, '_blank')
             }
         },
         mounted: function() {
