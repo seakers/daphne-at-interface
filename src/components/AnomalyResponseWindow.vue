@@ -88,7 +88,7 @@
                             </p>
                             <div  class="scrollable-container" style="margin-left: 20px">
                                 <div v-for="(stepItem, stepIndex) in procedureDict['procedureSteps']">
-                                    <input type="checkbox"
+                                    <input v-if="!stepItem['isStep']" type="checkbox"
                                            v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
                                            v-on:click="checkIt(procedureDict, stepIndex)"
                                            :checked="stepItem['isDone']">
