@@ -123,7 +123,6 @@
     import Multiselect from 'vue-multiselect'
     import { mapGetters, mapMutations } from 'vuex';
     import {updateCheckboxes} from "../scripts/at-display-builders";
-    import Sabatier from '../images/SabatierPanel.png'
 
     let loaderImage = require('../images/loader.svg');
 
