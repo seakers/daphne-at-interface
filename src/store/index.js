@@ -110,6 +110,25 @@ export default new Vuex.Store({
                     commit('mutateTelemetryType', 'real');
                 }
             }
+            // Get result of trying to start real telemetry
+            else if (received_info['type'] === 'hera_telemetry_response') {
+                let responseDict = received_info['content'];
+                console.log(responseDict['message'] + " Occurred on attempt " + responseDict['attempt']);
+                // Try 5 times if it doesn't work then stop trying
+                let attempt = parseInt(responseDict['attempt']);
+                if (responseDict['status'] === 'error' && attempt < 5) {
+                    attempt += 1;
+                    attempt = attempt.toString();
+                    wsTools.websocket.send(JSON.stringify({
+                        type: 'start_real_telemetry',
+                        attempt: attempt
+                    }));
+                }
+                if (responseDict['status'] === 'success') {
+                    commit('mutateTelemetryIsOngoing', true);
+                    commit('mutateTelemetryType', 'real');
+                }
+            }
             // Active message?
             else if (received_info['type'] === 'active.message') {
                 commit('addDialoguePiece', received_info['message']);

@@ -90,7 +90,8 @@
                 currentStageNum: state => state.experiment.currentStageNum,
             }),
             ...mapGetters({
-                telemetryIsOngoing: 'getTelemetryIsOngoing'
+                telemetryIsOngoing: 'getTelemetryIsOngoing',
+                heraUser: 'getHeraUser',
             }),
             timerExperimentCondition() {
                 if (!this.inExperiment) {
@@ -1460,10 +1461,18 @@
                                 'attempt': '1'
                             }));
                             console.log('Trying to start real telemetry...');
-                            wsTools.websocket.send(JSON.stringify({
-                                'type': 'start_real_telemetry',
-                                'attempt': '1'
-                            }));
+                            if (this.heraUser) {
+                                wsTools.websocket.send(JSON.stringify({
+                                    'type': 'start_hera_telemetry',
+                                    'attempt': '1'
+                                }));
+                            }
+                            else {
+                                wsTools.websocket.send(JSON.stringify({
+                                    'type': 'start_real_telemetry',
+                                    'attempt': '1'
+                                }));
+                            }
                             /* Should get parameters from starting
                             wsTools.websocket.send(JSON.stringify({
                                 msg_type: 'get_real_telemetry_params'
@@ -1484,10 +1493,18 @@
                                 'attempt': '1'
                             }));
                             console.log('Trying to start real telemetry...');
-                            wsTools.websocket.send(JSON.stringify({
-                                'type': 'start_real_telemetry',
-                                'attempt': '1'
-                            }));
+                            if (this.heraUser) {
+                                wsTools.websocket.send(JSON.stringify({
+                                    'type': 'start_hera_telemetry',
+                                    'attempt': '1'
+                                }));
+                            }
+                            else {
+                                wsTools.websocket.send(JSON.stringify({
+                                    'type': 'start_real_telemetry',
+                                    'attempt': '1'
+                                }));
+                            }
                             /* Should get parameters from starting
                             wsTools.websocket.send(JSON.stringify({
                                 msg_type: 'get_real_telemetry_params'
@@ -1506,14 +1523,18 @@
                                 'attempt': '1'
                             }));
                             console.log('Trying to start real telemetry...');
-                            wsTools.websocket.send(JSON.stringify({
-                                'type': 'start_real_telemetry',
-                                'attempt': '1'
-                            }));
-                            /* Should get parameters from starting
-                            wsTools.websocket.send(JSON.stringify({
-                                msg_type: 'get_real_telemetry_params'
-                            }));*/
+                            if (this.heraUser) {
+                                wsTools.websocket.send(JSON.stringify({
+                                    'type': 'start_hera_telemetry',
+                                    'attempt': '1'
+                                }));
+                            }
+                            else {
+                                wsTools.websocket.send(JSON.stringify({
+                                    'type': 'start_real_telemetry',
+                                    'attempt': '1'
+                                }));
+                            }
                             this.$store.dispatch('loadAllAnomalies');
                             this.clearTutorialSequence();
                         });
