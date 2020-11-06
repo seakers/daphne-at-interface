@@ -275,7 +275,7 @@
                 }
             },
             openFigure(url) {
-                window.open(url, '_blank')
+                window.open(window.location.href + 'src/images/' + url, '_blank')
             }
         },
         mounted: function() {
