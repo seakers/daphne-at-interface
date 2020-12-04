@@ -156,6 +156,8 @@ const actions = {
                     'procedureCurrentStep': 0,
                     'procedureObjective': info['procedureObjective'],
                     'procedureEquipment': info['procedureEquipment'],
+                    'procedureReferences': info['procedureReferences'],
+                    'procedureReferenceLinks': info['procedureReferenceLinks'],
                     'procedureFigures': info['procedureFigures'],
                     'procedureIsOpen': false,
                 };
@@ -294,6 +296,8 @@ const actions = {
         let procedureCurrentStep = newProcedureDict['procedureCurrentStep'];
         let procedureObjective = newProcedureDict['procedureObjective'];
         let procedureEquipment = newProcedureDict['procedureEquipment'];
+        let procedureReferences = newProcedureDict['procedureReferences'];
+        let procedureReferenceLinks = newProcedureDict['procedureReferenceLinks'];
         let procedureFigures = newProcedureDict['procedureFigures'];
         let procedureIsOpen = newProcedureDict['procedureIsOpen'];
 
@@ -303,6 +307,8 @@ const actions = {
             'procedureCurrentStep': procedureCurrentStep,
             'procedureObjective': procedureObjective,
             'procedureEquipment': procedureEquipment,
+            'procedureReferences': procedureReferences,
+            'procedureReferenceLinks': procedureReferenceLinks,
             'procedureFigures': procedureFigures,
             'procedureIsOpen': procedureIsOpen,
         };

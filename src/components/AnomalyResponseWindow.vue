@@ -71,6 +71,14 @@
                                     {{item}}
                                 </li>
                             </ul>
+                            <p v-if="procedureDict['procedureReferences'].length > 0" style="margin-top: 10px">
+                                <span style="color: #0AFEFF">References</span>
+                            </p>
+                            <ul v-if="procedureDict['procedureReferences'].length > 0" v-for="(item, itemIndex) in procedureDict['procedureReferences']">
+                                <li v-on:click="openReference(procedureDict['procedureReferenceLinks'][itemIndex])" style="margin-left: 20px">
+                                    {{item}}
+                                </li>
+                            </ul>
                             <p v-if="procedureDict['procedureFigures'].length > 0" style="margin-top: 10px">
                                 <span style="color: #0AFEFF">Figures </span>
                             </p>
@@ -170,6 +178,8 @@
                         let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['procedureCurrentStep'];
                         let procedureObjective = this.selectedProceduresInfo[procedureName]['procedureObjective'];
                         let procedureEquipment = this.selectedProceduresInfo[procedureName]['procedureEquipment'];
+                        let procedureReferences = this.selectedProceduresInfo[procedureName]['procedureReferences'];
+                        let procedureReferenceLinks = this.selectedProceduresInfo[procedureName]['procedureReferenceLinks'];
                         let procedureFigures = this.selectedProceduresInfo[procedureName]['procedureFigures'];
                         let procedureIsOpen = this.selectedProceduresInfo[procedureName]['procedureIsOpen'];
                         procedureDict['procedureName'] = procedureName;
@@ -177,6 +187,8 @@
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;
+                        procedureDict['procedureReferences'] = procedureReferences;
+                        procedureDict['procedureReferenceLinks'] = procedureReferenceLinks;
                         procedureDict['procedureFigures'] = procedureFigures;
                         procedureDict['procedureIsOpen'] = procedureIsOpen;
                         procedureList.push(procedureDict);
@@ -275,7 +287,10 @@
                 }
             },
             openFigure(url) {
-                window.open(window.location.href + 'src/images/' + url, '_blank')
+                window.open(window.location.href + "api/at/recommendation/figure?filename=%2Fhome%2Fubuntu%2Fdaphne-at-interface%2Fsrc%2Fimages%2F" + url, '_blank')
+            },
+            openReference(url) {
+                window.open(window.location.href + "api/at/recommendation/procedure?filename=%2Fhome%2Fubuntu%2Fdaphne_brain%2FAT%2Fdatabases%2Fprocedures%2F" + url, '_blank')
             }
         },
         mounted: function() {
