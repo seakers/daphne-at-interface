@@ -290,7 +290,9 @@
                 window.open(window.location.href + "api/at/recommendation/figure?filename=%2Fhome%2Fubuntu%2Fdaphne-at-interface%2Fsrc%2Fimages%2F" + url, '_blank')
             },
             openReference(url) {
-                window.open(window.location.href + "api/at/recommendation/procedure?filename=%2Fhome%2Fubuntu%2Fdaphne_brain%2FAT%2Fdatabases%2Fprocedures%2F" + url, '_blank')
+                if (url !== "None") {
+                    window.open(window.location.href + "api/at/recommendation/procedure?filename=%2Fhome%2Fubuntu%2Fdaphne_brain%2FAT%2Fdatabases%2Fprocedures%2F" + url, '_blank')
+                }
             }
         },
         mounted: function() {
