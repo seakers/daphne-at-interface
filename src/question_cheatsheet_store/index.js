@@ -42,7 +42,7 @@ export default new Vuex.Store({
                 'question': 'What are the procedures for anomaly X?',
                 'parameters': 'An anomaly (e. g.: "N2 Tank Burst").',
                 'answer': 'A list with the names of the procedures related to anomaly X is provided.'
-            }, //
+            },
             {
                 'question': 'Provide procedure X.',
                 'parameters': 'A procedure (e. g.: "N2 Ballast Tank Replacement").',
@@ -63,6 +63,11 @@ export default new Vuex.Store({
                 'parameters': 'A procedure (e. g.: "N2 Ballast Tank Replacement").',
                 'answer': 'The estimated time to complete procedure X is provided.'
             },
+            {
+                'question': 'Show the image of component X.',
+                'parameters': 'A component (e. g.: "Emergency O2 Generation System").',
+                'answer': 'The image for component X has been provided.'
+            }
         ],
         selectedQuestionsList: [],
     },

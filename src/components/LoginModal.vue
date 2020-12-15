@@ -58,9 +58,12 @@
                     // Start the Websocket
                     console.log('Submit LOGIN');
                 });
-                let heraUsers = ["kyleyork2023"];
-                if (heraUsers.includes(formData.get("username"))) {
-                    this.$store.commit('mutateHeraUser', true);
+                let sECLSSUsers = ["kyleyork2023"];
+                if (sECLSSUsers.includes(formData.get("username"))) {
+                    this.$store.commit('mutateHeraUser', false);
+                }
+                else {
+                  this.$store.commit('mutateHeraUser', true);
                 }
             },
             openRegisterForm() {
