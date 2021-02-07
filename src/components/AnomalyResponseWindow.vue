@@ -91,7 +91,7 @@
                                 <span style="color: #0AFEFF">Steps to follow</span>
                                 ({{procedureDict['procedureCurrentStep']}}
                                 out of
-                                {{procedureDict['procedureSteps'].length}}
+                                {{procedureDict['checkableSteps']}}
                                 steps performed)
                             </p>
                             <div  class="scrollable-container" style="margin-left: 20px">
@@ -175,6 +175,7 @@
                         let procedureDict = {};
                         let procedureName = this.selectedAnomaliesInfo[anomalyName]['anomalyProcedures'][procedureIndex];
                         let procedureSteps = this.selectedProceduresInfo[procedureName]['procedureStepsList'];
+                        let procedureCheckableSteps = this.selectedProceduresInfo[procedureName]['checkableSteps'];
                         let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['procedureCurrentStep'];
                         let procedureObjective = this.selectedProceduresInfo[procedureName]['procedureObjective'];
                         let procedureEquipment = this.selectedProceduresInfo[procedureName]['procedureEquipment'];
@@ -184,6 +185,7 @@
                         let procedureIsOpen = this.selectedProceduresInfo[procedureName]['procedureIsOpen'];
                         procedureDict['procedureName'] = procedureName;
                         procedureDict['procedureSteps'] = procedureSteps;
+                        procedureDict['checkableSteps'] = procedureCheckableSteps;
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;
@@ -251,13 +253,13 @@
                 // Compute the current step (as the number of checked boxes)
                 let numberOfCheckedBoxes = 0;
                 for (let i = 0; i < newProcedureDict['procedureSteps'].length; i++) {
-                    if (newProcedureDict['procedureSteps'][i]['isDone']) {
-                        numberOfCheckedBoxes += 1;
+                    if (newProcedureDict['procedureSteps'][i]['depth'] > 0) {
+                        if (newProcedureDict['procedureSteps'][i]['isDone']) {
+                            numberOfCheckedBoxes += 1;
+                        }
                     }
                 }
                 newProcedureDict['procedureCurrentStep'] = numberOfCheckedBoxes;
-
-                // Perform the update
                 this.$store.dispatch('updateProcedureDict', newProcedureDict);
             },
             toggleAccordion(procedureDict) {

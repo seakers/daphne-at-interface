@@ -122,6 +122,7 @@ const actions = {
         let response = await fetchPost('/api/at/retrieveInfoFromProcedure', reqData);
         if (response.ok) {
             let info = await response.json();
+            console.log(info['checkableSteps']);
             return info;
         } else {
             console.log('Error retrieving the procedure objective.');
@@ -154,6 +155,7 @@ const actions = {
                 let procedureInfo = {
                     'procedureStepsList': info['procedureStepsList'],
                     'procedureCurrentStep': 0,
+                    'checkableSteps': info['checkableSteps'],
                     'procedureObjective': info['procedureObjective'],
                     'procedureEquipment': info['procedureEquipment'],
                     'procedureReferences': info['procedureReferences'],
@@ -294,6 +296,7 @@ const actions = {
         let procedureName = newProcedureDict['procedureName'];
         let procedureStepsList = newProcedureDict['procedureSteps'];
         let procedureCurrentStep = newProcedureDict['procedureCurrentStep'];
+        let checkableSteps = newProcedureDict['checkableSteps'];
         let procedureObjective = newProcedureDict['procedureObjective'];
         let procedureEquipment = newProcedureDict['procedureEquipment'];
         let procedureReferences = newProcedureDict['procedureReferences'];
@@ -305,6 +308,7 @@ const actions = {
         newSelectedProceduresInfo[procedureName] = {
             'procedureStepsList': procedureStepsList,
             'procedureCurrentStep': procedureCurrentStep,
+            'checkableSteps': checkableSteps,
             'procedureObjective': procedureObjective,
             'procedureEquipment': procedureEquipment,
             'procedureReferences': procedureReferences,
@@ -325,7 +329,7 @@ const actions = {
         commit('mutateLastSelectedSymptomsList', lastSelectedSymptomsList);
 
         // Clean the selected symptoms list
-        commit('mutateSelectedSymptomsList', []);
+        //commit('mutateSelectedSymptomsList', []);
 
         // Make a local copy of the couple of state variables to be used
         let info = JSON.parse(JSON.stringify(state.telemetryInfo));
