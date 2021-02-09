@@ -49,7 +49,7 @@
                             'is-dark': !anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen']
                         }">
                     <div class="procedure-header" @click="toggleAccordion(procedureDict)">
-                        {{procedureIndex + 1}})   {{procedureDict['procedureName']}}
+                        {{procedureDict['procedureName']}}
                         <span v-if="isComplete(procedureDict)" style="color: greenyellow; float:right">
                             COMPLETED
                         </span>
