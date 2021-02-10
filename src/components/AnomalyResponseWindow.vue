@@ -241,7 +241,7 @@
             },
             isComplete(procedureDict) {
                 let currentStep = procedureDict['procedureCurrentStep'];
-                let totalSteps = procedureDict['procedureSteps'].length;
+                let totalSteps = procedureDict['checkableSteps'];
                 return currentStep === totalSteps;
             },
             checkIt(procedureDict, stepIndex) {
