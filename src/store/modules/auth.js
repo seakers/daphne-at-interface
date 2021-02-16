@@ -1,6 +1,7 @@
 // initial state
 import * as _ from 'lodash-es';
 import {fetchPost} from '../../scripts/fetch-helpers';
+import {wsTools} from "../../scripts/websocket-tools";
 
 const state = {
     isLoggedIn: false,
@@ -28,7 +29,6 @@ const actions = {
             reqData.append("password", password);
             reqData.append("daphneVersion", daphneVersion);
             let dataResponse = await fetchPost(API_URL + 'auth/login', reqData);
-
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
                 console.log(data);
@@ -42,6 +42,7 @@ const actions = {
             else {
                 console.error('Error logging in.');
             }
+            commit('addUser', username);
         }
         catch(e) {
             console.error('Networking error:', e);
@@ -49,6 +50,11 @@ const actions = {
     },
     async logoutUser({ state, commit, rootState }) {
         try {
+            let userName = rootState.daphneat.userName;
+            wsTools.websocket.send(JSON.stringify({
+                'type': 'remove_User',
+                'userName': userName,
+            }));
             let reqData = new FormData();
             let dataResponse = await fetchPost(API_URL + 'auth/logout', reqData);
 
