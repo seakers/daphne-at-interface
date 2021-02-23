@@ -1,6 +1,6 @@
 // initial state
 import * as _ from "lodash-es";
-import {fetchGet} from "../../scripts/fetch-helpers";
+import {fetchGet, fetchPost} from "../../scripts/fetch-helpers";
 import {wsTools} from "../../scripts/websocket-tools";
 import Shepherd from "shepherd.js";
 
@@ -99,7 +99,7 @@ const actions = {
         }
     },
 
-    async finishExperiment({ state, commit }) {
+    async finishExperiment({ state, commit, dispatch }) {
         // Call server to finish experiment
         try {
             let response = await fetchGet(API_URL + 'experiment-at/finish-experiment');
@@ -135,8 +135,9 @@ const actions = {
             // show the closing pop up
             surveyLink.show();
             // once the button is clicked, the tour is over and redirect to survey
+            dispatch('logoutUser');
             surveyLink.on("complete", () => {
-                window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7");
+                setTimeout(() => { window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7"); }, 2000);
             });
         }
         catch(e) {

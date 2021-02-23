@@ -126,8 +126,10 @@
             async finishExperiment() {
                 console.log('FINISH EXPERIMENT');
                 let reqData = new FormData();
-                reqData.append('user_id', this.userId);
+                reqData.append('user_name', this.userName);
+                console.log('got username');
                 await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
+                this.$root.$emit('removeShownSubject', this.userName)
             },
             async switchAlarms() {
                 console.log("Alarm was on " + this.playAlarms);
@@ -140,7 +142,7 @@
             writeCurrentStep(procedureDict, procedureName) {
                 let stepsList = procedureDict['procedureStepsList'];
                 let currentStepIndex = procedureDict['procedureCurrentStep'];
-                let totalSteps = stepsList.length;
+                let totalSteps = procedureDict['checkableSteps'];
                 if (currentStepIndex === totalSteps) {
                     let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
                     return message
