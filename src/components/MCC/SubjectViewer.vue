@@ -143,14 +143,16 @@
                 let stepsList = procedureDict['checkableStepsList'];
                 let currentStepIndex = procedureDict['procedureCurrentStep'];
                 let totalSteps = procedureDict['checkableSteps'];
+                console.log(stepsList)
               if (currentStepIndex === totalSteps) {
                     let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
                     return message
                 }
                 else {
                     try {
-                        let action = stepsList[currentStepIndex]['action'];
-                        let message = action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
+                      let action = stepsList[currentStepIndex]['action'];
+                      let stepNumber = stepsList[currentStepIndex]['label'];
+                      let message = stepNumber + " - " + action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
                         return message
                     }
                     catch(err) {
