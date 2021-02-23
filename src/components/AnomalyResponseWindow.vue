@@ -176,6 +176,7 @@
                         let procedureName = this.selectedAnomaliesInfo[anomalyName]['anomalyProcedures'][procedureIndex];
                         let procedureSteps = this.selectedProceduresInfo[procedureName]['procedureStepsList'];
                         let procedureCheckableSteps = this.selectedProceduresInfo[procedureName]['checkableSteps'];
+                        let procedureCheckableStepsList = this.selectedProceduresInfo[procedureName]['checkableStepsList'];
                         let procedureCurrentStep = this.selectedProceduresInfo[procedureName]['procedureCurrentStep'];
                         let procedureObjective = this.selectedProceduresInfo[procedureName]['procedureObjective'];
                         let procedureEquipment = this.selectedProceduresInfo[procedureName]['procedureEquipment'];
@@ -186,6 +187,7 @@
                         procedureDict['procedureName'] = procedureName;
                         procedureDict['procedureSteps'] = procedureSteps;
                         procedureDict['checkableSteps'] = procedureCheckableSteps;
+                        procedureDict['checkableStepsList'] = procedureCheckableStepsList;
                         procedureDict['procedureCurrentStep'] = procedureCurrentStep;
                         procedureDict['procedureObjective'] = procedureObjective;
                         procedureDict['procedureEquipment'] = procedureEquipment;

@@ -140,10 +140,10 @@
                 await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
             },
             writeCurrentStep(procedureDict, procedureName) {
-                let stepsList = procedureDict['procedureStepsList'];
+                let stepsList = procedureDict['checkableStepsList'];
                 let currentStepIndex = procedureDict['procedureCurrentStep'];
                 let totalSteps = procedureDict['checkableSteps'];
-                if (currentStepIndex === totalSteps) {
+              if (currentStepIndex === totalSteps) {
                     let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
                     return message
                 }

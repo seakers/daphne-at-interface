@@ -158,6 +158,7 @@ const actions = {
                     'procedureStepsList': info['procedureStepsList'],
                     'procedureCurrentStep': 0,
                     'checkableSteps': info['checkableSteps'],
+                    'checkableStepsList': info['checkableStepsList'],
                     'procedureObjective': info['procedureObjective'],
                     'procedureEquipment': info['procedureEquipment'],
                     'procedureReferences': info['procedureReferences'],
@@ -299,6 +300,7 @@ const actions = {
         let procedureStepsList = newProcedureDict['procedureSteps'];
         let procedureCurrentStep = newProcedureDict['procedureCurrentStep'];
         let checkableSteps = newProcedureDict['checkableSteps'];
+        let checkableStepsList = newProcedureDict['checkableStepsList'];
         let procedureObjective = newProcedureDict['procedureObjective'];
         let procedureEquipment = newProcedureDict['procedureEquipment'];
         let procedureReferences = newProcedureDict['procedureReferences'];
@@ -311,6 +313,7 @@ const actions = {
             'procedureStepsList': procedureStepsList,
             'procedureCurrentStep': procedureCurrentStep,
             'checkableSteps': checkableSteps,
+            'checkableStepsList': checkableStepsList,
             'procedureObjective': procedureObjective,
             'procedureEquipment': procedureEquipment,
             'procedureReferences': procedureReferences,
