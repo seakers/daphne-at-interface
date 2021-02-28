@@ -6,17 +6,17 @@ export function detectionColorStyle(symptomsList) {
     else {
         let topThresholdTag = '';
         for (let index in symptomsList) {
-            if (topThresholdTag !== 'criticLevel') {
+            if (topThresholdTag !== 'warningLevel') {
                 let thresholdTag = symptomsList[index]['threshold_tag'];
-                if (thresholdTag === 'LCL' || thresholdTag === 'UCL') {
-                    topThresholdTag = 'criticLevel'
+                if (thresholdTag === 'LowerWarningLimit' || thresholdTag === 'UpperWarningLimit') {
+                    topThresholdTag = 'warningLevel'
                 }
                 else {
-                    topThresholdTag = 'warningLevel'
+                    topThresholdTag = 'cautionLevel'
                 }
             }
         }
-        if (topThresholdTag === 'criticLevel') {
+        if (topThresholdTag === 'warningLevel') {
             let theColors = {'background': '#3A0000', 'font': '#FF0000'};
             return theColors
         }
@@ -94,8 +94,8 @@ function buildRange(plotData, variable, variableName, telemetryInfo) {
     let yaxis = plotData[variableIndex]['y'];
     let lastValue = yaxis[yaxis.length - 1];
 
-    let upperLimit = telemetryInfo[variableName]['high_critic_threshold'];
-    let lowerLimit = telemetryInfo[variableName]['low_critic_threshold'];
+    let upperLimit = telemetryInfo[variableName]['high_warning_threshold'];
+    let lowerLimit = telemetryInfo[variableName]['low_warning_threshold'];
 
     let upperRange = Math.max(lastValue, upperLimit);
     let lowerRange = Math.min(lastValue, lowerLimit);
@@ -181,15 +181,15 @@ export function processedPlotData(telemetryDict, selectedVariables) {
         processedData.push(trace);
 
         // Build threshold and nominal traces
-        trace = buildThresholdTrace(xaxis, info[variable]['low_critic_threshold'], red, 'dot', 'Critical Limits', true);
+        trace = buildThresholdTrace(xaxis, info[variable]['low_warning_threshold'], red, 'dot', 'Warning Limits', true);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['low_warning_threshold'], orange, 'dot', 'Warning Limits', true);
+        trace = buildThresholdTrace(xaxis, info[variable]['low_caution_threshold'], orange, 'dot', 'Caution Limits', true);
         processedData.push(trace);
         // trace = buildThresholdTrace(xaxis, info[variable]['nominal'], blue, 'dot', 'Nominal value', true);
         // processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['high_warning_threshold'], orange, 'dot', 'Warning Limits', false);
+        trace = buildThresholdTrace(xaxis, info[variable]['high_caution_threshold'], orange, 'dot', 'Caution Limits', false);
         processedData.push(trace);
-        trace = buildThresholdTrace(xaxis, info[variable]['high_critic_threshold'], red, 'dot', 'Critical Limits', false);
+        trace = buildThresholdTrace(xaxis, info[variable]['high_warning_threshold'], red, 'dot', 'Warning Limits', false);
         processedData.push(trace);
     }
     /*else if (selectedVariables.length === 2) {

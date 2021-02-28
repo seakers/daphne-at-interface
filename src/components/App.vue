@@ -333,7 +333,7 @@
                         text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
                     of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red lines) stand for the warning and critical limits of the selected measurement.`
+                    orange and red lines) stand for the caution and warning limits of the selected measurement.`
                     },
                     {
                         attachTo: {
@@ -371,8 +371,8 @@
                     of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
                     the color of this window to bring your attention, as well as to inform you about which limits are
                     being exceeded by the measurements. I will use orange when any detected measurement exceeds its
-                    warning limit, but not its critical limit, and I will use red when any detected measurement exceeds
-                    its critical limit.`
+                    caution limit, but not its warning limit, and I will use red when any detected measurement exceeds
+                    its warning limit.`
                     },
                     {
                         attachTo: {
@@ -431,7 +431,7 @@
                         text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement, it
                     will appear in the upper slot. In fact, if you select more than one, I will display a list of all
                     your selections. Right now, if you followed my instructions, you should be seeing ‘ppN2(L1):
-                    is above Upper Critical Limit’ and ‘Level Cabin Pressure (L1): is above Upper Critic Limit’.`
+                    is above Upper Warning Limit’ and ‘Level Cabin Pressure (L1): is above Upper Warning Limit’.`
                     },
                     {
                         attachTo: {
@@ -439,7 +439,7 @@
                             on: 'bottom'
                         },
                         text: `You can also deselect any item from this list by clicking on it. Try this by clicking on
-                        ‘Level Cabin Pressure (L1): is above Upper Critical Limit’ and see that it disappears. You can
+                        ‘Level Cabin Pressure (L1): is above Upper Warning Limit’ and see that it disappears. You can
                          also click the 'Clear All' button to deselect all the items from this list. Click ‘Next’ when
                          you are ready.`
                     },
@@ -791,7 +791,7 @@
                     text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
                     of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red lines) stand for the warning and critical limits of the selected measurement.`,
+                    orange and red lines) stand for the caution and warning limits of the selected measurement.`,
                     buttons: [
                         {
                             text: 'Next',
@@ -883,8 +883,8 @@
                     of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
                     the color of this window to bring your attention, as well as to inform you about which limits are
                     being exceeded by the measurements. I will use orange when any detected measurement exceeds its
-                    warning limit, but not its critical limit, and I will use red when any detected measurement exceeds
-                    its critical limit.`
+                    caution limit, but not its warning limit, and I will use red when any detected measurement exceeds
+                    its warning limit.`
                     },
                     {
                         attachTo: {

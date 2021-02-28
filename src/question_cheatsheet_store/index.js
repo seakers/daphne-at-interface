@@ -16,7 +16,7 @@ export default new Vuex.Store({
             {
                 'question': 'What are the thresholds for measurement X?',
                 'parameters': 'A measurement, as a name (e. g.: "Pressure") and a parameter group (e. g.: "L1").',
-                'answer': 'The warning and critical thresholds of measurement X are provided.'
+                'answer': 'The caution and warning thresholds of measurement X are provided.'
             },
             {
                 'question': 'Check the status of X measurement.',
