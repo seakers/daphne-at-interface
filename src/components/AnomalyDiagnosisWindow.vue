@@ -121,5 +121,7 @@
 </script>
 
 <style scoped>
-
+li:hover{
+  font-weight: bold;
+}
 </style>
