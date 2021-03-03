@@ -18,14 +18,14 @@
             <div class="columns">
                 <div class="column is-6">
                     <ul>
-                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn" style=".h2:hover{cursor: pointer; background-color: red; font-weight: bold;}">
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn" style=".link:hover{cursor: pointer; color: red; font-weight: bold;}">
                             {{symptom['detection_text']}}
                         </li>
                     </ul>
                 </div>
                 <div class="column is-6">
                     <ul>
-                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn" style=".h2:hover{cursor: pointer; background-color: red; font-weight: bold;}">
+                        <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn" style=".link:hover{cursor: pointer; color: red; font-weight: bold;}">
                             {{symptom['detection_text']}}
                         </li>
                     </ul>
