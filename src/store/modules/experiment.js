@@ -152,7 +152,7 @@ const actions = {
             let response = await fetchGet(API_URL + 'experiment-at/reload-experiment');
             if (response.ok) {
                 let experimentInformation = await response.json();
-                if (experimentInformation.is_running) {
+                if (experimentInformation['is_running']) {
                     // If experiment was already running restore the last known state
                     try {
                         commit('setIsRecovering', true);

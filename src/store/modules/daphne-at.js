@@ -356,6 +356,17 @@ const actions = {
         let response = await fetchPost('/api/at/requestDiagnosis', reqData);
         if (response.ok) {
             let diagnosis_report = await response.json();
+            for (var anomaly in diagnosis_report['diagnosis_list']) {
+                if (diagnosis_report['diagnosis_list'].hasOwnProperty(anomaly)) {
+                    if (anomaly['score'] < 0.33) {
+                        anomaly['score_text'] = 'unlikely';
+                    } else if (anomaly['score'] < 0.67) {
+                        anomaly['score_text'] = 'somewhat likely';
+                    } else {
+                        anomaly['score_text'] = 'very likely';
+                    }
+                }
+            }
             commit('mutateDiagnosisReport', diagnosis_report);
         } else {
             console.log('Error requesting a diagnosis report.')
