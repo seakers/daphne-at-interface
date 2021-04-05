@@ -359,7 +359,7 @@ const actions = {
             for (var anomaly in diagnosis_report['diagnosis_list']) {
                 if (diagnosis_report['diagnosis_list'].hasOwnProperty(anomaly)) {
                     if (anomaly['score'] < 0.33) {
-                        anomaly['score_text'] = 'unlikely';
+                        anomaly['score_text'] = 'least likely';
                     } else if (anomaly['score'] < 0.67) {
                         anomaly['score_text'] = 'somewhat likely';
                     } else {

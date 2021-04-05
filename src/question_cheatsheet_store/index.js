@@ -45,7 +45,7 @@ export default new Vuex.Store({
             },
             {
                 'question': 'Provide procedure X.',
-                'parameters': 'A procedure (e. g.: "N2 Ballast Tank Replacement").',
+                'parameters': 'A procedure name or number (e. g.: "N2 Ballast Tank Replacement" or "3.117").',
                 'answer': 'A link is provided so that the procedure PDF can be opened in a new tab.'
             },
             {
@@ -67,7 +67,32 @@ export default new Vuex.Store({
                 'question': 'Show the image of component X.',
                 'parameters': 'A component (e. g.: "Emergency O2 Generation System").',
                 'answer': 'The image for component X has been provided.'
-            }
+            },
+            {
+                'question': 'Read steps of procedure X.',
+                'parameters': 'A procedure name or number (e. g.: "N2 Ballast Tank Replacement" or "3.117").',
+                'answer': 'Reads the steps of the procedure starting from the beginning.'
+            },
+            {
+                'question': 'Next',
+                'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
+                'answer': 'Reads the next step of the procedure.'
+            },
+            {
+                'question': 'Previous',
+                'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
+                'answer': 'Reads the previous step of the procedure.'
+            },
+            {
+                'question': 'Repeat',
+                'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
+                'answer': 'Reads the previous step of the procedure.'
+            },
+            {
+                'question': 'Previous',
+                'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
+                'answer': 'Reads the previous step of the procedure.'
+            },
         ],
         selectedQuestionsList: [],
     },

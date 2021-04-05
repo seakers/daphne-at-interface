@@ -64,6 +64,13 @@
     import startAnomalySound from '../sounds/woopwoop.mp3';
     import endAnomalySound from '../sounds/endgame.mp3';
 
+    window.addEventListener("beforeunload", function (e) {
+      var confirmationMessage = "Are you sure you want to leave?";
+
+      (e || window.event).returnValue = confirmationMessage;
+      return confirmationMessage;
+    });
+
     export default {
         name: 'app',
         data: function () {

@@ -36,7 +36,6 @@ let updatesContextList = [
     'mutateTelemetryPlotSelectedVariables',
 ];
 
-
 store.subscribe(async (mutation, state) => {
     // Only update if inside experiment
     if (state.experiment.inExperiment) {
