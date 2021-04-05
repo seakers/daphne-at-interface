@@ -52,7 +52,7 @@
                         <u style="margin-bottom:200px">Could be caused by:</u>
                         <ul>
                             <li  v-on:click="selectAnomaly(anomaly['name'])" v-for="anomaly in diagnosisReport['diagnosis_list']" style="cursor: pointer">
-                                {{anomaly['name']}} (with a score of {{anomaly['score_text']}})
+                                {{anomaly['name']}} ({{anomaly['text_score']}})
                             </li>
                         </ul>
                     </div>

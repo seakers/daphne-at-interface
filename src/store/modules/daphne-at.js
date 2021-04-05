@@ -54,7 +54,8 @@ const getters = {
     getSelectedProceduresList(state) {return state.selectedProceduresList},
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
-    getPlayAlarms(state) {return state.playAlarms},
+    getAlarmStatus(state) {return state.playAlarms},
+    getAlarmInSounded(state) {return state.alarmInSounded;}
 };
 
 const actions = {
@@ -104,7 +105,7 @@ const actions = {
         commit('mutateSelectedSymptomsList', []);
     },
     async clearDiagnosisReport({state, commit}) {
-        commit('mutateDiagnosisReport', []);;
+        commit('mutateDiagnosisReport', []);
     },
     async retrieveProceduresFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
@@ -356,17 +357,6 @@ const actions = {
         let response = await fetchPost('/api/at/requestDiagnosis', reqData);
         if (response.ok) {
             let diagnosis_report = await response.json();
-            for (var anomaly in diagnosis_report['diagnosis_list']) {
-                if (diagnosis_report['diagnosis_list'].hasOwnProperty(anomaly)) {
-                    if (anomaly['score'] < 0.33) {
-                        anomaly['score_text'] = 'least likely';
-                    } else if (anomaly['score'] < 0.67) {
-                        anomaly['score_text'] = 'somewhat likely';
-                    } else {
-                        anomaly['score_text'] = 'very likely';
-                    }
-                }
-            }
             commit('mutateDiagnosisReport', diagnosis_report);
         } else {
             console.log('Error requesting a diagnosis report.')
@@ -419,7 +409,8 @@ const mutations = {
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
-    mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
+    mutatePlayAlarms(state, newVal) {state.playAlarms = newVal; },
+    mutateAlarmInSounded(state) {state.alarmInSounded = !state.alarmInSounded;},
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {

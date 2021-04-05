@@ -193,7 +193,7 @@ export default new Vuex.Store({
                 });
             }
             else if (received_info['type'] === 'turn_off_alarms') {
-                commit('mutatePlayAlarms');
+                commit('mutatePlayAlarms', received_info['value']);
             }
         },
     },

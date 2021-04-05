@@ -89,6 +89,7 @@
         methods: {
             async refreshUserInformation() {
                 try {
+                    this.alarmState();
                     let reqData = new FormData();
                     reqData.append('user_id', this.userId);
 
@@ -132,18 +133,15 @@
                 this.$root.$emit('removeShownSubject', this.userName)
             },
             async switchAlarms() {
-                console.log("Alarm was on " + this.playAlarms);
-                this.playAlarms = !this.playAlarms;
-                console.log("Alarm is now on " + this.playAlarms)
                 let reqData = new FormData();
                 reqData.append('user_id', this.userId);
-                await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
+                let dataResponse = await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
+                this.playAlarms = dataResponse['alarm_state'];
             },
             writeCurrentStep(procedureDict, procedureName) {
                 let stepsList = procedureDict['checkableStepsList'];
                 let currentStepIndex = procedureDict['procedureCurrentStep'];
                 let totalSteps = procedureDict['checkableSteps'];
-                console.log(stepsList)
               if (currentStepIndex === totalSteps) {
                     let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
                     return message
@@ -160,11 +158,21 @@
                         return 'ERROR retrieving the procedure current step information.'
                     }
                 }
-            }
+            },
+            async alarmState() {
+                let reqData = new FormData();
+                reqData.append('user_id', this.userId);
+                let dataResponse = await fetchPost(API_URL + 'experiment-at/alarm-status', reqData);
+                if (dataResponse.ok) {
+                    let data = await dataResponse.json();
+                    this.playAlarms = data['alarm_state'];
+                }
+            },
         },
-        mounted() {
-            this.refreshUserInformation();
-            setInterval(this.refreshUserInformation, 5000);
+        async mounted() {
+                this.refreshUserInformation();
+                setInterval(this.refreshUserInformation, 5000);
+
         }
     }
 </script>
