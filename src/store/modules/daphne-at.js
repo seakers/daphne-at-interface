@@ -54,7 +54,8 @@ const getters = {
     getSelectedProceduresList(state) {return state.selectedProceduresList},
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
-    getPlayAlarms(state) {return state.playAlarms},
+    getAlarmStatus(state) {return state.playAlarms},
+    getAlarmInSounded(state) {return state.alarmInSounded;}
 };
 
 const actions = {
@@ -104,7 +105,7 @@ const actions = {
         commit('mutateSelectedSymptomsList', []);
     },
     async clearDiagnosisReport({state, commit}) {
-        commit('mutateDiagnosisReport', []);;
+        commit('mutateDiagnosisReport', []);
     },
     async retrieveProceduresFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
@@ -408,7 +409,8 @@ const mutations = {
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
-    mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
+    mutatePlayAlarms(state, newVal) {state.playAlarms = newVal; },
+    mutateAlarmInSounded(state) {state.alarmInSounded = !state.alarmInSounded;},
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {
