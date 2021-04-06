@@ -87,12 +87,7 @@ export default new Vuex.Store({
                 'question': 'Repeat',
                 'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
                 'answer': 'Reads the previous step of the procedure.'
-            },
-            {
-                'question': 'Previous',
-                'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
-                'answer': 'Reads the previous step of the procedure.'
-            },
+            }
         ],
         selectedQuestionsList: [],
     },
