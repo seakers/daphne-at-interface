@@ -159,8 +159,21 @@
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
-                    // Set the tutorial
-                    this.$store.commit('setExperimentStage', 'tutorial');
+                    // Set the tutorial if haven't seen
+                    let seen_tutorial = false;
+                    let reqData = new FormData();
+                    reqData.append('user_id', this.userId);
+                    let dataResponse = await fetchPost(API_URL + 'at/tutorialStatus', reqData);
+                    if (dataResponse.ok) {
+                        let data = await dataResponse.json();
+                        seen_tutorial = data['seen_tutorial'];
+                    }
+                    if (!seen_tutorial) {
+                        this.$store.commit('setExperimentStage', 'tutorial');
+                    }
+                    else {
+                        this.$store.commit('setExperimentStage', 'with_daphne');
+                    }
                     this.$store.commit('setInExperiment', true);
                 });
             },
@@ -1524,6 +1537,7 @@
                             }));*/
                             this.$store.dispatch('loadAllAnomalies');
                             this.clearTutorialSequence();
+                            this.$store.dispatch('completeTutorial');
                         });
                         this.introTutorial.on("cancel", () => {
                             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {

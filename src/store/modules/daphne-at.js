@@ -372,6 +372,10 @@ const actions = {
             console.log('Error loading the anomalies list.');
         }
     },
+    async completeTutorial(state) {
+        let reqData = new FormData();
+        await fetchPost(API_URL + 'at/completeTutorial', reqData);
+    },
     async recoverSymptomsList({state, commit}) {
         let lastSymptomsList = state.lastSelectedSymptomsList;
         commit('mutateSelectedSymptomsList', lastSymptomsList);
