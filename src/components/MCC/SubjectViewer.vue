@@ -89,7 +89,6 @@
         methods: {
             async refreshUserInformation() {
                 try {
-                    this.alarmState();
                     let reqData = new FormData();
                     reqData.append('user_id', this.userId);
 
@@ -133,10 +132,12 @@
                 this.$root.$emit('removeShownSubject', this.userName)
             },
             async switchAlarms() {
+                console.log("Alarm was on " + this.playAlarms);
+                this.playAlarms = !this.playAlarms;
+                console.log("Alarm is now on " + this.playAlarms)
                 let reqData = new FormData();
                 reqData.append('user_id', this.userId);
-                let dataResponse = await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
-                this.playAlarms = dataResponse['alarm_state'];
+                await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
             },
             writeCurrentStep(procedureDict, procedureName) {
                 let stepsList = procedureDict['checkableStepsList'];
@@ -159,21 +160,12 @@
                     }
                 }
             },
-            async alarmState() {
-                let reqData = new FormData();
-                reqData.append('user_id', this.userId);
-                let dataResponse = await fetchPost(API_URL + 'experiment-at/alarm-status', reqData);
-                if (dataResponse.ok) {
-                    let data = await dataResponse.json();
-                    this.playAlarms = data['alarm_state'];
-                }
-            },
-        },
         async mounted() {
                 this.refreshUserInformation();
                 setInterval(this.refreshUserInformation, 5000);
 
         }
+    }
     }
 </script>
 

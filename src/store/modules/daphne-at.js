@@ -54,8 +54,7 @@ const getters = {
     getSelectedProceduresList(state) {return state.selectedProceduresList},
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
-    getAlarmStatus(state) {return state.playAlarms},
-    getAlarmInSounded(state) {return state.alarmInSounded;}
+    getPlayAlarms(state) {return state.playAlarms},
 };
 
 const actions = {
@@ -413,8 +412,7 @@ const mutations = {
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
-    mutatePlayAlarms(state, newVal) {state.playAlarms = newVal; },
-    mutateAlarmInSounded(state) {state.alarmInSounded = !state.alarmInSounded;},
+    mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {
