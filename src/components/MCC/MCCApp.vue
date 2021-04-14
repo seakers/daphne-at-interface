@@ -86,24 +86,11 @@
                     }
                     this.shownSubjects.splice(indexToDelete, 1);
                 }
-            },
-            removeShownSubject(username) {
-                let indexToDelete = -1;
-                for (let index in this.shownSubjects) {
-                    if (this.shownSubjects[index]['userName'] === username) {
-                        indexToDelete = index;
-                    }
-                    this.shownSubjects.splice(indexToDelete)
-                }
-            },
+            }
         },
         mounted() {
             this.updateSubjectList();
             setInterval(this.updateSubjectList, 5000);
-
-            this.$root.$on('removeShownSubject', (username) => {
-                this.removeShownSubject(username);
-            });
         }
     }
 </script>

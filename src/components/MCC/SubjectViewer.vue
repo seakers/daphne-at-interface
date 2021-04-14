@@ -68,112 +68,98 @@
     import {mapGetters} from "vuex";
 
     export default {
-        name: "SubjectViewer",
-        props: ["userName", "userId"],
-        data() {
-            return {
-                currentStage: [],
-                dialogueHistory: [],
-                selectedSymptomsList: [],
-                selectedAnomaliesList: [],
-                selectedProceduresList: [],
-                selectedProceduresInfo: {},
-                lastProvidedDiagnosis: [],
-                playAlarms: false,
+      name: "SubjectViewer",
+      props: ["userName", "userId"],
+      data() {
+        return {
+          currentStage: [],
+          dialogueHistory: [],
+          selectedSymptomsList: [],
+          selectedAnomaliesList: [],
+          selectedProceduresList: [],
+          selectedProceduresInfo: {},
+          lastProvidedDiagnosis: [],
+          playAlarms: false,
+        }
+      },
+      components: {
+        ChatArea,
+        App
+      },
+      methods: {
+        async refreshUserInformation() {
+          try {
+            let reqData = new FormData();
+            reqData.append('user_id', this.userId);
+
+            let dataResponse = await fetchPost(API_URL + 'experiment-at/get-state', reqData);
+
+            if (dataResponse.ok) {
+              // Add the new functionality
+              let state = await dataResponse.json();
+              if (state !== 'None') {
+                this.currentStage = state["experiment"]["experimentStage"];
+                this.dialogueHistory = state["daphne"]["dialogueHistory"];
+                this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
+                this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
+                this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
+                this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
+                this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
+              } else {
+                this.currentStage = 'UNKNOWN';
+                this.dialogueHistory = [];
+                this.selectedSymptomsList = [];
+                this.selectedAnomaliesList = [];
+                this.selectedProceduresList = [];
+                this.selectedProceduresInfo = [];
+              }
+            } else {
+              console.error('Error retrieving user state.');
             }
+          } catch (e) {
+            console.error('Networking error:', e);
+          }
         },
-        components: {
-            ChatArea,
-            App
+        async finishExperiment() {
+          console.log('FINISH EXPERIMENT');
+          let reqData = new FormData();
+          reqData.append('user_id', this.userId);
+          await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
         },
-        methods: {
-            async refreshUserInformation() {
-                try {
-                    this.alarmState();
-                    let reqData = new FormData();
-                    reqData.append('user_id', this.userId);
+        async switchAlarms() {
+          console.log("Alarm was on " + this.playAlarms);
+          this.playAlarms = !this.playAlarms;
+          console.log("Alarm is now on " + this.playAlarms)
+          let reqData = new FormData();
+          reqData.append('user_id', this.userId);
+          await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
+        },
+        writeCurrentStep(procedureDict, procedureName) {
+          let stepsList = procedureDict['checkableStepsList'];
+          let currentStepIndex = procedureDict['procedureCurrentStep'];
+          let totalSteps = procedureDict['checkableSteps'];
 
-                    let dataResponse = await fetchPost(API_URL + 'experiment-at/get-state', reqData);
-
-                    if (dataResponse.ok) {
-                        // Add the new functionality
-                        let state = await dataResponse.json();
-                        if (state !== 'None') {
-                            this.currentStage = state["experiment"]["experimentStage"];
-                            this.dialogueHistory = state["daphne"]["dialogueHistory"];
-                            this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
-                            this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
-                            this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
-                            this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
-                            this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
-                        }
-                        else {
-                            this.currentStage = 'UNKNOWN';
-                            this.dialogueHistory = [];
-                            this.selectedSymptomsList = [];
-                            this.selectedAnomaliesList = [];
-                            this.selectedProceduresList = [];
-                            this.selectedProceduresInfo = [];
-                        }
-                    }
-                    else {
-                        console.error('Error retrieving user state.');
-                    }
-                }
-                catch(e) {
-                    console.error('Networking error:', e);
-                }
-            },
-            async finishExperiment() {
-                console.log('FINISH EXPERIMENT');
-                let reqData = new FormData();
-                reqData.append('user_name', this.userName);
-                console.log('got username');
-                await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
-                this.$root.$emit('removeShownSubject', this.userName)
-            },
-            async switchAlarms() {
-                let reqData = new FormData();
-                reqData.append('user_id', this.userId);
-                let dataResponse = await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
-                this.playAlarms = dataResponse['alarm_state'];
-            },
-            writeCurrentStep(procedureDict, procedureName) {
-                let stepsList = procedureDict['checkableStepsList'];
-                let currentStepIndex = procedureDict['procedureCurrentStep'];
-                let totalSteps = procedureDict['checkableSteps'];
-              if (currentStepIndex === totalSteps) {
-                    let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
-                    return message
-                }
-                else {
-                    try {
-                      let action = stepsList[currentStepIndex]['action'];
-                      let stepNumber = stepsList[currentStepIndex]['label'];
-                      let message = stepNumber + " - " + action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
-                        return message
-                    }
-                    catch(err) {
-                        console.log('ERROR retrieving the procedure current step action.');
-                        return 'ERROR retrieving the procedure current step information.'
-                    }
-                }
-            },
-            async alarmState() {
-                let reqData = new FormData();
-                reqData.append('user_id', this.userId);
-                let dataResponse = await fetchPost(API_URL + 'experiment-at/alarm-status', reqData);
-                if (dataResponse.ok) {
-                    let data = await dataResponse.json();
-                    this.playAlarms = data['alarm_state'];
-                }
-            },
+          if (currentStepIndex === totalSteps) {
+            let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
+            return message
+          } else {
+            try {
+              let action = stepsList[currentStepIndex]['action'];
+              let stepNumber = stepsList[currentStepIndex]['label'];
+              let message = stepNumber + " - " + action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
+              return message
+            } catch (err) {
+              console.log('ERROR retrieving the procedure current step action.');
+              return 'ERROR retrieving the procedure current step information.'
+            }
+          }
         },
         async mounted() {
-                this.refreshUserInformation();
-                setInterval(this.refreshUserInformation, 5000);
+          this.refreshUserInformation();
+          setInterval(this.refreshUserInformation, 5000);
 
         }
+      }
     }
 </script>
 

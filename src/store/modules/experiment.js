@@ -99,7 +99,7 @@ const actions = {
         }
     },
 
-    async finishExperiment({ state, commit, dispatch }) {
+    async finishExperiment({ state, commit }) {
         // Call server to finish experiment
         try {
             let response = await fetchGet(API_URL + 'experiment-at/finish-experiment');
@@ -135,7 +135,6 @@ const actions = {
             // show the closing pop up
             surveyLink.show();
             // once the button is clicked, the tour is over and redirect to survey
-            dispatch('logoutUser');
             surveyLink.on("complete", () => {
                 setTimeout(() => { window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7"); }, 2000);
             });

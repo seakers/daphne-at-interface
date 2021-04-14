@@ -42,7 +42,6 @@ const actions = {
             else {
                 console.error('Error logging in.');
             }
-            commit('addUser', username);
         }
         catch(e) {
             console.error('Networking error:', e);
@@ -50,11 +49,6 @@ const actions = {
     },
     async logoutUser({ state, commit, rootState }) {
         try {
-            let userName = rootState.daphneat.userName;
-            wsTools.websocket.send(JSON.stringify({
-                'type': 'remove_User',
-                'userName': userName,
-            }));
             let reqData = new FormData();
             let dataResponse = await fetchPost(API_URL + 'auth/logout', reqData);
 

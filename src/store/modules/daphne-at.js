@@ -7,7 +7,6 @@ import endAnomalySound from '../../sounds/endgame.mp3';
 const state = {
     // Telemetry group
     heraUser: true,
-    userName: "",
     // Telemetry related variables
     telemetryInputVariables: [], // A list of all the telemetry variables. Used for the telemetry plot dropdown menu.
     telemetryPlotSelectedVariables: [], // A list of the telemetry variables selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
@@ -37,7 +36,6 @@ const state = {
 const getters = {
     // A getter for each state variable
     getHeraUser(state) {return state.heraUser},
-    getUsername(state) {return state.userName},
     getPlotData(state) {return state.telemetryPlotData},
     getSelectedVariables(state) {return state.telemetryPlotSelectedVariables},
     getInputVariables(state) {return state.telemetryInputVariables},
@@ -54,8 +52,7 @@ const getters = {
     getSelectedProceduresList(state) {return state.selectedProceduresList},
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
-    getAlarmStatus(state) {return state.playAlarms},
-    getAlarmInSounded(state) {return state.alarmInSounded;}
+    getPlayAlarms(state) {return state.playAlarms},
 };
 
 const actions = {
@@ -389,7 +386,6 @@ const actions = {
 };
 
 const mutations = {
-    addUser(state, username) {state.userName = username;},
     mutateHeraUser(state, newVal) {state.heraUser = newVal; },
     mutateTelemetryIsOngoing(state, telemetryIsOngoing) {state.telemetryIsOngoing = telemetryIsOngoing; },
     mutateTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
@@ -409,8 +405,7 @@ const mutations = {
     mutateSelectedProceduresInfo(state, newVal) {state.selectedProceduresInfo = newVal; },
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
-    mutatePlayAlarms(state, newVal) {state.playAlarms = newVal; },
-    mutateAlarmInSounded(state) {state.alarmInSounded = !state.alarmInSounded;},
+    mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {

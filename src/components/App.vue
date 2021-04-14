@@ -151,11 +151,6 @@
                         type: 'start_hub_thread',
                         attempt: 1
                     }));
-                    console.log(this.userName);
-                    wsTools.websocket.send(JSON.stringify({
-                        'type': 'add_User',
-                        'userName': this.userName,
-                    }));
 
                     // Establish the experiment websocket connection
                     await wsTools.experimentWsConnect();
