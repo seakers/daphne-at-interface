@@ -77,6 +77,7 @@ const actions = {
 
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
+                console.log(data);
                 if (data['status'] === 'registered') {
                     commit('activateModal', 'LoginModal');
                 }

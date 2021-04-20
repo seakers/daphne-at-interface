@@ -105,8 +105,7 @@
                             this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
                             this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
                             this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
-                        }
-                        else {
+                        } else {
                             this.currentStage = 'UNKNOWN';
                             this.dialogueHistory = [];
                             this.selectedSymptomsList = [];
@@ -114,12 +113,10 @@
                             this.selectedProceduresList = [];
                             this.selectedProceduresInfo = [];
                         }
-                    }
-                    else {
+                    } else {
                         console.error('Error retrieving user state.');
                     }
-                }
-                catch(e) {
+                } catch (e) {
                     console.error('Networking error:', e);
                 }
             },
@@ -134,7 +131,7 @@
             async switchAlarms() {
                 console.log("Alarm was on " + this.playAlarms);
                 this.playAlarms = !this.playAlarms;
-                console.log("Alarm is now on " + this.playAlarms)
+                console.log("Alarm is now on " + this.playAlarms);
                 let reqData = new FormData();
                 reqData.append('user_id', this.userId);
                 await fetchPost(API_URL + 'experiment-at/turn-off-alarms', reqData);
@@ -143,29 +140,27 @@
                 let stepsList = procedureDict['checkableStepsList'];
                 let currentStepIndex = procedureDict['procedureCurrentStep'];
                 let totalSteps = procedureDict['checkableSteps'];
-              if (currentStepIndex === totalSteps) {
+                if (currentStepIndex === totalSteps) {
                     let message = 'COMPLETED (' + currentStepIndex + ' out of ' + totalSteps + ')';
                     return message
-                }
-                else {
+                } else {
                     try {
-                      let action = stepsList[currentStepIndex]['action'];
-                      let stepNumber = stepsList[currentStepIndex]['label'];
-                      let message = stepNumber + " - " + action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
+                        let action = stepsList[currentStepIndex]['action'];
+                        let stepNumber = stepsList[currentStepIndex]['label'];
+                        let message = stepNumber + " - " + action + ' (' + currentStepIndex + ' out of ' + totalSteps + ')';
                         return message
-                    }
-                    catch(err) {
+                    } catch (err) {
                         console.log('ERROR retrieving the procedure current step action.');
                         return 'ERROR retrieving the procedure current step information.'
                     }
                 }
             },
-        async mounted() {
+        },
+        mounted () {
                 this.refreshUserInformation();
                 setInterval(this.refreshUserInformation, 5000);
 
         }
-    }
     }
 </script>
 
