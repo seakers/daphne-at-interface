@@ -10,37 +10,37 @@ export default new Vuex.Store({
         questionList: [
             {
                 'question': 'Show the current value of X measurement.',
-                'parameters': 'A measurement, as a name (e. g.: "Pressure") and a parameter group (e. g.: "L1").',
+                'parameters': 'A measurement, as a name (e. g.: "Pressure").',
                 'answer': 'The last numerical value of measurement X is provided.'
             },
             {
-                'question': 'What are the thresholds for measurement X?',
-                'parameters': 'A measurement, as a name (e. g.: "Pressure") and a parameter group (e. g.: "L1").',
-                'answer': 'The caution and warning thresholds of measurement X are provided.'
+                'question': 'Provide the thresholds of measurement X.',
+                'parameters': 'A measurement, as a name (e. g.: "Pressure").',
+                'answer': 'The caution and warning thresholds/limits of measurement X are provided.'
             },
             {
-                'question': 'Check the status of X measurement.',
-                'parameters': 'A measurement, as a name (e. g.: "Pressure") and a parameter group (e. g.: "L1").',
+                'question': 'Check measurement X status.',
+                'parameters': 'A measurement, as a name (e. g.: "Pressure").',
                 'answer': 'The X measurement status zone (i. e.: Nominal, UWL, LWL, etc.) is provided.'
             },
             {
-                'question': 'What are the potential risks of X anomaly?',
-                'parameters': 'An anomaly (e. g.: "N2 Tank Burst").',
+                'question': 'What are the potential risks of anomaly X?',
+                'parameters': 'An anomaly scenario name (e. g.: "N2 Tank Burst, CDRA failure").',
                 'answer': 'A list with the potential risks of anomaly X is provided.'
             },
             {
-                'question': 'What are the signatures of anomaly X?',
-                'parameters': 'An anomaly (e. g.: "N2 Tank Burst").',
+                'question': 'What is the signature of anomaly X?',
+                'parameters': 'An anomaly scenario name (e. g.: "N2 Tank Burst, CDRA failure").',
                 'answer': 'A list with the names of the measurements affected by anomaly X is provided.'
             },
             {
                 'question': 'What subsystems does anomaly X affect?',
-                'parameters': 'An anomaly (e. g.: "N2 Tank Burst").',
+                'parameters': 'An anomaly scenario name (e. g.: "N2 Tank Burst, CDRA failure")',
                 'answer': 'A list with the names of the subsystems affected by anomaly X is provided.'
             },
             {
                 'question': 'What are the procedures for anomaly X?',
-                'parameters': 'An anomaly (e. g.: "N2 Tank Burst").',
+                'parameters': 'An anomaly scenario name (e. g.: "N2 Tank Burst").',
                 'answer': 'A list with the names of the procedures related to anomaly X is provided.'
             },
             {
@@ -49,23 +49,23 @@ export default new Vuex.Store({
                 'answer': 'A link is provided so that the procedure PDF can be opened in a new tab.'
             },
             {
-                'question': 'What components does procedure X impact?',
-                'parameters': 'A procedure (e. g.: "N2 Ballast Tank Replacement").',
+                'question': 'Which components will procedure X impact?',
+                'parameters': 'A procedure name or number (e. g.: "N2 Ballast Tank Replacement" or "3.117").',
                 'answer': 'A list with the names of the components affected by procedure X is provided.'
             },
             {
-                'question': 'How long will it take to correct anomaly X?',
-                'parameters': 'An anomaly (e. g.: "N2 Tank Burst").',
+                'question': 'How long will it take to solve anomaly X?',
+                'parameters': 'An anomaly scenario name (e. g.: "N2 Tank Burst, CDRA failure").',
                 'answer': 'A list with the estimated times to complete each procedure related to anomaly X is provided.'
             },
             {
-                'question': 'How long does it take to complete X procedure?',
-                'parameters': 'A procedure (e. g.: "N2 Ballast Tank Replacement").',
+                'question': 'How long is procedure X?',
+                'parameters': 'A procedure name or number (e. g.: "N2 Ballast Tank Replacement, 3.117").',
                 'answer': 'The estimated time to complete procedure X is provided.'
             },
             {
                 'question': 'Show the image of component X.',
-                'parameters': 'A component (e. g.: "Emergency O2 Generation System").',
+                'parameters': 'A component name (e. g.: "Emergency O2 Generation System, Sabatier Panel").',
                 'answer': 'The image for component X has been provided.'
             },
             {
@@ -92,6 +92,11 @@ export default new Vuex.Store({
                 'question': 'Previous',
                 'parameters': 'Does not require any parameters. It is, however, required that the command "Read" is provided before using this command.',
                 'answer': 'Reads the previous step of the procedure.'
+            },
+            {
+                'question': 'What is step X of procedure Y?',
+                'parameters': 'A valid step number (e. g.: 1.3, 6.2) of a procedure name or number (e. g.: "N2 Ballast Tank Replacement" or "3.117") ',
+                'answer': 'Reads a step of the procedure.'
             },
         ],
         selectedQuestionsList: [],

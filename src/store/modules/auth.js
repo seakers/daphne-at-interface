@@ -31,7 +31,6 @@ const actions = {
             let dataResponse = await fetchPost(API_URL + 'auth/login', reqData);
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
-                console.log(data);
                 if (data['status'] === 'logged_in') {
                     commit('logUserIn', data);
                 }

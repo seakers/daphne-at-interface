@@ -154,13 +154,13 @@
             }
           }
         },
-        async mounted() {
+      },
+        mounted() {
           this.refreshUserInformation();
           setInterval(this.refreshUserInformation, 5000);
 
         }
       }
-    }
 </script>
 
 <style scoped>
