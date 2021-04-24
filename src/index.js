@@ -145,11 +145,11 @@ if (annyang) {
             app.$store.commit('setIsListening', true);
             setTimeout(
                 function () {
+                    app.$store.commit('setIsListening', false);
                     annyang.removeCallback();
                     annyang.removeCommands(wakeWord);
                     annyang.addCommands(commands);
                     console.log('Commands1 removed');
-                    app.$store.commit('setIsListening', false);
                 }, 10000);
         }
     }
