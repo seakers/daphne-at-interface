@@ -141,6 +141,7 @@ if (annyang) {
             annyang.addCallback('result', phrases => {
                 app.$store.commit('setCommand', phrases[0]);
                 app.$store.dispatch('executeCommand');
+                app.$store.commit('setIsListening', false);
             });
             app.$store.commit('setIsListening', true);
             setTimeout(
@@ -150,7 +151,7 @@ if (annyang) {
                     annyang.removeCommands(wakeWord);
                     annyang.addCommands(commands);
                     console.log('Commands1 removed');
-                }, 10000);
+                }, 20000);
         }
     }
 
