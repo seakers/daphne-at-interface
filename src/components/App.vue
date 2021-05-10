@@ -33,6 +33,12 @@
             </div>
             <div class="vertical-divider"></div>
             <div class="column is-3 is-vertical-filler">
+                <div class="is-sticky">
+                    <div>
+                        <a class="button is-info" id="clear_history" v-on:click.prevent="logout">Logout</a>
+                    </div>
+                    <div class="horizontal-divider"></div>
+                </div>
                 <chat-window class="column"></chat-window>
             </div>
         </div>
@@ -64,11 +70,19 @@
     import startAnomalySound from '../sounds/woopwoop.mp3';
     import endAnomalySound from '../sounds/endgame.mp3';
 
-    window.addEventListener("beforeunload", function (e) {
-      var confirmationMessage = "Are you sure you want to leave?";
+    let forceReload = false;
 
-      (e || window.event).returnValue = confirmationMessage;
-      return confirmationMessage;
+    window.addEventListener("beforeunload", function (e) {
+        console.log(forceReload);
+        if (forceReload) {
+            forceReload = false;
+        }
+        else {
+            var confirmationMessage = "Are you sure you want to leave?";
+
+            (e || window.event).returnValue = confirmationMessage;
+            return confirmationMessage;
+        }
     });
 
     export default {
@@ -82,7 +96,8 @@
                 diagnosisTutorial: {},
                 responseTutorial: {},
                 chatTutorial: {},
-                conclusionTutorial: {}
+                conclusionTutorial: {},
+                forceReload: false,
             }
         },
         props: ["isViewer", "viewUserId"],
@@ -272,6 +287,11 @@
                 this.chatTutorial.on("complete", () => {
                     this.clearTutorialSequence();
                 });
+            },
+            logout() {
+                forceReload = true;
+                this.$store.dispatch('logoutUser');
+                window.location.reload();
             }
         },
         components: {
