@@ -142,10 +142,15 @@ if (annyang) {
                 app.$store.commit('setIsListening', true));
             annyang.addCallback('result', phrases => {
                 app.$store.commit('setCommand', phrases[0]);
-                app.$store.dispatch('executeCommand');
+                app.$store.dispatch('executeCommand').then(r => annyang.addCallback('end', function () {
+                    app.$store.commit('setIsListening', false);
+                    annyang.removeCallback('result');
+                    annyang.removeCommands(wakeWord);
+                    annyang.start();
+                }));
                 annyang.abort();
             });
-            annyang.addCallback('end', function () {
+            annyang.addCallback('end', function end () {
                 app.$store.commit('setIsListening', false);
                 annyang.removeCallback('result');
                 annyang.removeCommands(wakeWord);
