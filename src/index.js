@@ -148,7 +148,6 @@ if (annyang) {
                 app.$store.commit('setIsListening', false);
                 annyang.removeCallback('result');
                 annyang.removeCommands(wakeWord);
-                annyang.start();
             }),3000);
 
         }
