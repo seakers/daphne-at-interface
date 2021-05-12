@@ -142,20 +142,15 @@ if (annyang) {
                 app.$store.commit('setIsListening', true));
             annyang.addCallback('result', phrases => {
                 app.$store.commit('setCommand', phrases[0]);
-                app.$store.dispatch('executeCommand').then(r => annyang.addCallback('end', function () {
-                    app.$store.commit('setIsListening', false);
-                    annyang.removeCallback('result');
-                    annyang.removeCommands(wakeWord);
-                    annyang.start();
-                }));
-                annyang.abort();
+                app.$store.dispatch('executeCommand').then(annyang.abort())
             });
-            annyang.addCallback('end', function end () {
+            setTimeout(annyang.addCallback('end', function () {
                 app.$store.commit('setIsListening', false);
                 annyang.removeCallback('result');
                 annyang.removeCommands(wakeWord);
                 annyang.start();
-            });
+            }),3000);
+
         }
     }
 
