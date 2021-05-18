@@ -9,7 +9,6 @@ import {wsTools} from "./scripts/websocket-tools";
 // Non ES-modularized libraries
 let annyang = require('annyang');
 let SpeechKITT = window.SpeechKITT;
-let responsiveVoice = window.responsiveVoice;
 
 // Styles
 import 'shepherd.js/dist/css/shepherd.css';
@@ -135,19 +134,18 @@ let app = new Vue({
 
 // Voice recognition
 if (annyang) {
-
+    const onFulfilled = () => {
+        annyang.addCallback(app.$store.commit('setIsSpeaking', false));
+        annyang.removeCallback();
+    };
     var wakeWord = {
         'Hey Daphne': function() {
-            annyang.addCallback(
-                app.$store.commit('setIsListening', true));
-
+            annyang.addCallback(app.$store.commit('setIsSpeaking', true));
             annyang.addCallback('result', phrases => {
                 app.$store.commit('setCommand', phrases[0]);
-                app.$store.dispatch('executeCommand').then(annyang.removeCallback());
+                app.$store.dispatch('executeCommand').then(onFulfilled());
             });
-
-            setTimeout(annyang.addCallback(app.$store.commit('setIsListening', false)), 3000);
-            setTimeout(annyang.addCommands(wakeWord), 1000);
+            setTimeout(annyang.addCommands(wakeWord), 500);
 
         }
     }

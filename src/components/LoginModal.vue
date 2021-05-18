@@ -49,7 +49,7 @@
         methods: {
             login() {
                 let formData = new FormData(document.getElementById('login-form'));
-
+                this.username = formData.get('username')
                 this.$store.dispatch('loginUser', {
                     username: formData.get("username"),
                     password: formData.get("password"),

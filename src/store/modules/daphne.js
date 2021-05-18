@@ -13,7 +13,8 @@ const state = {
     response: {},
     prevResponse: {},
     isLoading: false,
-    isListening: false
+    isListening: false,
+    isSpeaking: false
 };
 
 const initialState = _.cloneDeep(state);
@@ -31,6 +32,9 @@ const getters = {
     },
     getIsListening(state) {
         return state.isListening;
+    },
+    getIsSpeaking(state) {
+        return state.isSpeaking;
     }
 };
 
@@ -110,6 +114,9 @@ const mutations = {
     },
     setIsListening(state, listen) {
         state.isListening = listen;
+    },
+    setIsSpeaking(state, speak) {
+        state.isSpeaking = speak;
     },
     setResponse(state, response) {
         state.prevResponse = state.response;

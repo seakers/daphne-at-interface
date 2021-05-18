@@ -7,6 +7,7 @@ import endAnomalySound from '../../sounds/endgame.mp3';
 const state = {
     // Telemetry group
     heraUser: true,
+    username: '',
     // Telemetry related variables
     telemetryInputVariables: [], // A list of all the telemetry variables. Used for the telemetry plot dropdown menu.
     telemetryPlotSelectedVariables: [], // A list of the telemetry variables selected by the user to be displayed. RELEVANT FOR THE CONTEXT.

@@ -52,7 +52,8 @@ const actions = {
             let dataResponse = await fetchPost(API_URL + 'auth/logout', reqData);
 
             if (dataResponse.ok) {
-                await dataResponse.json();
+                let data = await dataResponse.json();
+                console.log(data['message']);
                 commit('logUserOut');
             }
             else {
