@@ -1,6 +1,6 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div class="is-seclss-background-black is-vertical-filler">
-    <div class="box is-header is-main" style="color: gray; margin-bottom: 5px;">
+    <div class="box is-header is-main" style="color: gray; margin-bottom: 5px; width: 100%">
       <div v-if="username" style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, {{ username }}</p></div>
       <div v-else style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, guest</p></div>
       <div style="width: 20%; float: right">

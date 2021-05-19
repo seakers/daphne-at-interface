@@ -16,8 +16,7 @@
 
     <div>
       <div class="sticky-textbox" style="position: absolute" width="24%">
-        <div id="siri-container" style="height: 30px;">
-        </div>
+        <div id="siri-container" style="height: 30px;"></div>
 
         <div class="field has-addons is-fullwidth">
           <div class="control is-expanded">
@@ -25,7 +24,8 @@
                    name="command" placeholder="Ask me something" v-model="command" v-on:keyup.enter="sendCommand">
           </div>
         </div>
-        <div>
+
+        <div style="width: 100%">
           <button class="button" style="width: 15%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
                   v-on:click.prevent="switchVoice">
             <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
