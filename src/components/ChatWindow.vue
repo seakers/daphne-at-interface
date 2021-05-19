@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <div style="width: 100%">
+        <div style="width: 100%; text-align: center">
           <button class="button" style="width: 15%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
                   v-on:click.prevent="switchVoice">
             <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
@@ -33,10 +33,10 @@
           <button class="button" style="width: 15%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
                   v-on:click.prevent="chatTutorial">?
           </button>
-          <button class="button" style="width: 33%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+          <button class="button" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
                   id="clear_history" v-on:click.prevent="clearHistory">Clear
           </button>
-          <button class="button" style="width: 33%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+          <button class="button" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
                   id="send_command" v-on:click.prevent="sendCommand">Send
           </button>
         </div>
