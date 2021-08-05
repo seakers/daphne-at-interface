@@ -171,8 +171,22 @@ export default {
 
         // Establish the experiment websocket connection
         await wsTools.experimentWsConnect();
-        // Set the tutorial
-        this.$store.commit('setExperimentStage', 'tutorial');
+
+        // Set the tutorial if haven't seen
+        let seen_tutorial = false;
+        let reqData = new FormData();
+        reqData.append('user_id', this.userId);
+        let dataResponse = await fetchPost(API_URL + 'at/tutorialStatus', reqData);
+        if (dataResponse.ok) {
+          let data = await dataResponse.json();
+          seen_tutorial = data['seen_tutorial'];
+        }
+        if (!seen_tutorial) {
+          this.$store.commit('setExperimentStage', 'tutorial');
+        }
+        else {
+          this.$store.commit('setExperimentStage', 'with_daphne');
+        }
         this.$store.commit('setInExperiment', true);
       });
     },
@@ -1449,7 +1463,7 @@ export default {
   },
   watch: {
 
-    experimentStage: function (val, oldVal) {
+    experimentStage: async function (val, oldVal) {
 
       if (this.inExperiment && !this.isRecovering) {
         // TODO: Initialize Daphne for the new stage
@@ -1457,8 +1471,6 @@ export default {
         // Make sure nothing is lingering from last stage, etc etc
 
         // Set problem for this stage and load the corresponding dataset
-        console.log(this.currentStageNum);
-
         // Stage specific behaviour
         switch (this.experimentStage) {
         case 'tutorial': {
@@ -1539,6 +1551,7 @@ export default {
             }));*/
             this.$store.dispatch('loadAllAnomalies');
             this.clearTutorialSequence();
+            this.$store.dispatch('completeTutorial');
           });
           this.introTutorial.on("cancel", () => {
             this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
@@ -1570,7 +1583,30 @@ export default {
           break;
         }
         case 'with_daphne': {
-          break;
+          // Generate the session
+          await fetchPost(API_URL + 'auth/generate-session', new FormData());
+          this.$store.dispatch('startStage', this.stageInformation.tutorial.nextStage).then(() => {
+            this.$store.commit('setExperimentStage', this.stageInformation.tutorial.nextStage);
+          });
+          // Stop the fake telemetry for the tutorial and start receiving from the real ECLSS
+          console.log('Trying to stop telemetry...');
+          wsTools.websocket.send(JSON.stringify({
+            'type': 'stop_telemetry',
+            'attempt': '1'
+          }));
+          console.log('Trying to start real telemetry...');
+          if (this.heraUser) {
+            wsTools.websocket.send(JSON.stringify({
+              'type': 'start_hera_telemetry',
+              'attempt': '1'
+            }));
+          } else {
+            wsTools.websocket.send(JSON.stringify({
+              'type': 'start_real_telemetry',
+              'attempt': '1'
+            }));
+          }
+          await this.$store.dispatch('loadAllAnomalies');
         }
         default: {
           break;

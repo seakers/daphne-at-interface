@@ -28,7 +28,7 @@ export default new Vuex.Store({
             // Get result of trying to start the hub thread
             if (received_info['type'] === 'hub_thread_response') {
                 let responseDict = received_info['content'];
-                console.log(responseDict['message'] + " Occured on attempt " + responseDict['attempt']);
+                console.log(responseDict['message'] + " Occurred on attempt " + responseDict['attempt']);
                 // Try 5 times if it doesn't work then stop trying
                 let attempt = parseInt(responseDict['attempt']);
                 if (responseDict['status'] === 'error' && attempt < 5) {

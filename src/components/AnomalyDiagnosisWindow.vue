@@ -20,12 +20,12 @@
                         </ul>
                     </div>
                     <div class="column is-2" style="margin: 0px; padding: 0px">
-                        <a class="button is-small-button" v-on:click.prevent="requestDiagnosis">
-                            Diagnose
-                        </a>
-                        <a class="button is-small-button" v-on:click.prevent="clearSymptoms">
-                            Clear All
-                        </a>
+                      <button class="button" style="width: 52%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+                              id="request_diagnosis" v-on:click.prevent="requestDiagnosis">Diagnose
+                      </button>
+                      <button class="button" style="width: 38%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+                              id="clear_symptoms" v-on:click.prevent="clearSymptoms">Clear
+                      </button>
                     </div>
                 </div>
             </div>

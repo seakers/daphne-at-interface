@@ -12,8 +12,6 @@ class WebsocketTools {
             let pingIntervalId = null;
 
             websocket.onopen = () => {
-                console.log('Web Socket Connection Made');
-
                 // Start ping routine
                 pingIntervalId = setInterval(() => {
                     console.log("Ping sent to the backend!");
@@ -36,7 +34,6 @@ class WebsocketTools {
         return new Promise((resolve, reject) => {
             let experimentWebsocket = new ReconnectingWebSocket(WS_URL + 'at/experiment');
             experimentWebsocket.onopen = () => {
-                console.log('Experiment Web Socket Connection Made');
                 this.experimentWebsocket = experimentWebsocket;
                 resolve();
             };
