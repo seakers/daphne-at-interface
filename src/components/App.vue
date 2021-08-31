@@ -347,8 +347,8 @@ export default {
       // add first step
       this.introTutorial.addStep({
         id: 'firstStep',
-        text: `Hello astronaut! My name is Daphne-AT. I have been assigned as your personal assistant on this mission. I will
-                    monitor the Environmental Control and Life Support System (ECLSS), and I will assist you with any
+        text: `Hello astronaut! My name is Daphne. I have been assigned as your personal assistant on this mission. I will
+                    monitor the Habitat Simulation Systems (HSS), and I will assist you with any
                     anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`,
         buttons: [
           {
@@ -369,7 +369,7 @@ export default {
             on: 'bottom'
           },
           text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
-                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
+                    of the measurements provided by the sensors of the HSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
                     orange and red lines) stand for the caution and warning limits of the selected measurement.`
         },
@@ -639,7 +639,7 @@ export default {
           },
           text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
                     with me, you can use the dropdown menu at the top of this window to explore the procedures of other
-                    anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
+                    anomalies of the HSS system. Try selecting a new one, and then deselect it by clicking on the tiny
                     cross next 'x' to it. Click 'Next' when you are ready.`
         },
         {

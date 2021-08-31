@@ -249,7 +249,7 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
         autosize: true,
         margin: {l: 35, r: 10, b: 25, t: 20, pad: 0},
         showlegend: true,
-        legend: {orientation: 'h'},
+        legend: {orientation: 'h', font: {family: 'sans-serif', size: 12, color: '#ffffff'}},
         plot_bgcolor: '#111111',
         paper_bgcolor: '#111111',
         xaxis: {
