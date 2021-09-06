@@ -348,7 +348,7 @@ export default {
       this.introTutorial.addStep({
         id: 'firstStep',
         text: `Hello astronaut! My name is Daphne. I have been assigned as your personal assistant on this mission. I will
-                    monitor the Habitat Simulation Systems (HSS), and I will assist you with any
+                    monitor the Habitat Systems Simulator (HSS), and I will assist you with any
                     anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`,
         buttons: [
           {
@@ -428,7 +428,7 @@ export default {
             },
           ],
           text: `Additionally, as you probably have already realized, I will trigger an alarm every time this
-                    window changes. That is, if an anomalous measurement either appears, disappears or exceeds a new
+                    window changes. That is, if an anomalous measurement either appears, disappears, or exceeds a new
                     limit, I will make this sound. Try clicking the 'Alarm IN' button to hear this alarm and become
                     familiar with it. Click 'Next' when you are ready.`
         },
@@ -458,7 +458,7 @@ export default {
             on: 'bottom'
           },
           text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear<b>Anomaly Diagnosis</b> window. Try selecting the ppN2 (L1)
+                        measurement will then appear <b>Anomaly Diagnosis</b> window. Try selecting the ppN2 (L1)
                         and Level Cabin Pressure (L1) anomalous measurements, then click ‘Next’.`
         },
         {
@@ -536,7 +536,7 @@ export default {
             on: 'bottom'
           },
           text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
-                    I provided a list of them, and each item has an associated confidence level between 0 and 1. This score stands
+                    I provided a list of them, and each item has an associated confidence level between 'Least Likely' and 'Most Likely'. This score stands
                     for how confident I am for each cause to be the one that is actually happening. The higher the score,
                     the more confident I am in my suggestion.`
         },
@@ -940,7 +940,7 @@ export default {
             },
           ],
           text: `Additionally, I will trigger an alarm every time this window changes. That is, if an
-                        anomalous measurement either appears, disappears or exceeds a new limit, I will make this sound.
+                        anomalous measurement either appears, disappears, or exceeds a new limit, I will make this sound.
                         Try clicking the 'Alarm IN' button to hear this alarm and become familiar with it. Click 'Next'
                         when you are ready.`
         },
@@ -970,7 +970,7 @@ export default {
             on: 'bottom'
           },
           text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear<b>Anomaly Diagnosis</b> window. When you are ready click ‘Next’.`
+                        measurement will then appear <b>Anomaly Diagnosis</b> window. When you are ready click ‘Next’.`
         }
       ];
       detectionSteps.forEach(step => {
@@ -1029,8 +1029,7 @@ export default {
             on: 'bottom'
           },
           text: `You can also deselect any item from this list by clicking on it. You can also click the
-                        'Clear All' button to deselect all the items from this list. The 'Clear All' button will appear
-                        on the right side of the lower slot when anomalous measurements are selected. Click ‘Next’
+                        'Clear All' button to deselect all the items from this list. The 'Clear All' button will appear on the right side of the lower slot when anomalous measurements are selected. Click ‘Next’
                         when you are ready.`
         },
         {
@@ -1079,7 +1078,7 @@ export default {
             on: 'bottom'
           },
           text: `We will focus now on how to deal with my suggested explanations. I will provide a list of
-                        them, and each item has an associated confidence level between 0 and 1. The higher the score,
+                        them, and each item has an associated confidence level between 'Least Likely' and 'Most Likely'. The higher the score,
                     the more confident I am in my suggestion.`
         },
         {
