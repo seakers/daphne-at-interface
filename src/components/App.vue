@@ -650,128 +650,128 @@ export default {
           text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
                     treatment process.`
         },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
-                    the current value of such measurement. Try writing or copying the above question into the text box,
-                    area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
-                    then click 'Next'.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `There are other questions that I can answer too, apart from the one you tried. If you want to
-                    know about them, click on the link just below this question bar. A new tab will be opened with a
-                    list of the questions that I am able to answer. This is a good moment for you to get familiar with
-                    this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `As you can see, there are three buttons attached to this question bar. Two of them are very
-                    straightforward: the 'Send' button does the same as hitting the enter key when you type a
-                    question, and the 'Clear' button clears all the messages from our chat. We will talk about the third
-                    button soon.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `Now, the final feature: I have the ability to speak with you!`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `First, you can ask me questions out loud and I will recognize and process your speech.
-                    Second, I can read my own answers out loud. Both features are independent: you can activate either
-                    of them, both or none. It is up to you! I will now explain you how to do so.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted,
-                    I will read all the answers to your questions out loud!`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `Try clicking on the Speaker button to unmute me now, then click Next.`
-        },
-        {
-          attachTo: {
-            element: '#skitt-ui',
-          },
-          tetherOptions: {
-            target: '#skitt-toggle-button',
-            attachment: 'top left',
-            targetAttachment: 'top right',
-            offset: '200px -30px'
-          },
-          text: `The purpose of this small add-on at the bottom left part of the screen (with a microphone on
-                    it) is to activate or deactivate the voice recognition feature. When activated, I'll listen to what
-                    you are saying all the time.`
-        },
-        {
-          attachTo: {
-            element: '#skitt-ui',
-          },
-          tetherOptions: {
-            target: '#skitt-toggle-button',
-            attachment: 'top left',
-            targetAttachment: 'top right',
-            offset: '200px -30px'
-          },
-          text: `Try clicking on the microphone, then say "Hello there" loud and clear, and wait for a
-                    bit. Then click 'Next'.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `You can see that a message with what I understood from your speech has appeared in the chat.
-                    Also, if you followed my instructions, you should have heard me reading my answer.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `As you can see, I do not always understand your questions. This is my way of telling you so.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `Now click again on the 'Speaker' button to mute me, then click 'Next'.`
-        },
-        {
-          attachTo: {
-            element: '#skitt-ui',
-          },
-          tetherOptions: {
-            target: '#skitt-toggle-button',
-            attachment: 'top left',
-            targetAttachment: 'top right',
-            offset: '200px -30px'
-          },
-          text: `Finally, click again on the microphone to deactivate the speech recognition. Then click 'Next'.`
-        },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
+        //             the current value of such measurement. Try writing or copying the above question into the text box,
+        //             area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
+        //             then click 'Next'.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `There are other questions that I can answer too, apart from the one you tried. If you want to
+        //             know about them, click on the link just below this question bar. A new tab will be opened with a
+        //             list of the questions that I am able to answer. This is a good moment for you to get familiar with
+        //             this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `As you can see, there are three buttons attached to this question bar. Two of them are very
+        //             straightforward: the 'Send' button does the same as hitting the enter key when you type a
+        //             question, and the 'Clear' button clears all the messages from our chat. We will talk about the third
+        //             button soon.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `Now, the final feature: I have the ability to speak with you!`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `First, you can ask me questions out loud and I will recognize and process your speech.
+        //             Second, I can read my own answers out loud. Both features are independent: you can activate either
+        //             of them, both or none. It is up to you! I will now explain you how to do so.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted,
+        //             I will read all the answers to your questions out loud!`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `Try clicking on the Speaker button to unmute me now, then click Next.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#skitt-ui',
+        //   },
+        //   tetherOptions: {
+        //     target: '#skitt-toggle-button',
+        //     attachment: 'top left',
+        //     targetAttachment: 'top right',
+        //     offset: '200px -30px'
+        //   },
+        //   text: `The purpose of this small add-on at the bottom left part of the screen (with a microphone on
+        //             it) is to activate or deactivate the voice recognition feature. When activated, I'll listen to what
+        //             you are saying all the time.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#skitt-ui',
+        //   },
+        //   tetherOptions: {
+        //     target: '#skitt-toggle-button',
+        //     attachment: 'top left',
+        //     targetAttachment: 'top right',
+        //     offset: '200px -30px'
+        //   },
+        //   text: `Try clicking on the microphone, then say "Hello there" loud and clear, and wait for a
+        //             bit. Then click 'Next'.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `You can see that a message with what I understood from your speech has appeared in the chat.
+        //             Also, if you followed my instructions, you should have heard me reading my answer.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `As you can see, I do not always understand your questions. This is my way of telling you so.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `Now click again on the 'Speaker' button to mute me, then click 'Next'.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#skitt-ui',
+        //   },
+        //   tetherOptions: {
+        //     target: '#skitt-toggle-button',
+        //     attachment: 'top left',
+        //     targetAttachment: 'top right',
+        //     offset: '200px -30px'
+        //   },
+        //   text: `Finally, click again on the microphone to deactivate the speech recognition. Then click 'Next'.`
+        // },
         {
           text: `Now you know all the tools available to you to solve anomalies during this mission.
                     It is going to be a long, arduous journey, so good luck!`
