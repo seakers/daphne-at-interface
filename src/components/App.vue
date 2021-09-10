@@ -408,50 +408,50 @@ export default {
           text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
                     of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
                     the color of this window to bring your attention, as well as to inform you about which limits are
-                    being exceeded by the measurements. I will use orange when any detected measurement exceeds its
-                    caution limit, but not its warning limit, and I will use red when any detected measurement exceeds
+                    being exceeded by the measurements. I will use yellow color when any detected measurement exceeds its
+                    caution limit, but not its warning limit, and I will use red color when any detected measurement exceeds
                     its warning limit.`
         },
-        {
-          attachTo: {
-            element: '#anomaly-detection',
-            on: 'bottom'
-          },
-          buttons: [
-            {
-              text: 'Alarm IN',
-              action: async function () {
-                let audio = new Audio(startAnomalySound);
-                await audio.play();
-              },
-              secondary: true,
-            },
-          ],
-          text: `Additionally, as you probably have already realized, I will trigger an alarm every time this
-                    window changes. That is, if an anomalous measurement either appears, disappears, or exceeds a new
-                    limit, I will make this sound. Try clicking the 'Alarm IN' button to hear this alarm and become
-                    familiar with it. Click 'Next' when you are ready.`
-        },
-        {
-          attachTo: {
-            element: '#anomaly-detection',
-            on: 'bottom'
-          },
-          buttons: [
-            {
-              text: 'Alarm OUT',
-              action: async function () {
-                let audio = new Audio(endAnomalySound);
-                await audio.play();
-              },
-              secondary: true,
-            },
-          ],
-          text: `Similarly, I will trigger a different alarm every time I think that an anomaly has
-                        been resolved and the situation is back to normal. This is a new sound that you have not heard
-                        yet. Try clicking ‘Alarm OUT’ button to listen to this alarm and become familiar with it.
-                        Click ‘Next’ when you are ready.`
-        },
+        // {
+        //   attachTo: {
+        //     element: '#anomaly-detection',
+        //     on: 'bottom'
+        //   },
+        //   buttons: [
+        //     {
+        //       text: 'Alarm IN',
+        //       action: async function () {
+        //         let audio = new Audio(startAnomalySound);
+        //         await audio.play();
+        //       },
+        //       secondary: true,
+        //     },
+        //   ],
+        //   text: `Additionally, as you probably have already realized, I will trigger an alarm every time this
+        //             window changes. That is, if an anomalous measurement either appears, disappears, or exceeds a new
+        //             limit, I will make this sound. Try clicking the 'Alarm IN' button to hear this alarm and become
+        //             familiar with it. Click 'Next' when you are ready.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#anomaly-detection',
+        //     on: 'bottom'
+        //   },
+        //   buttons: [
+        //     {
+        //       text: 'Alarm OUT',
+        //       action: async function () {
+        //         let audio = new Audio(endAnomalySound);
+        //         await audio.play();
+        //       },
+        //       secondary: true,
+        //     },
+        //   ],
+        //   text: `Similarly, I will trigger a different alarm every time I think that an anomaly has
+        //                 been resolved and the situation is back to normal. This is a new sound that you have not heard
+        //                 yet. Try clicking ‘Alarm OUT’ button to listen to this alarm and become familiar with it.
+        //                 Click ‘Next’ when you are ready.`
+        // },
         {
           attachTo: {
             element: '#anomaly-detection',
@@ -586,7 +586,7 @@ export default {
             on: 'top'
           },
           text: `For each procedure, I will show you three important pieces of information: its objective, the
-                    required material to perform it and the steps that you should follow to complete it.`
+                    required equipment to perform it and the steps that you should follow to complete it.`
         },
         {
           attachTo: {
@@ -780,13 +780,19 @@ export default {
           text: `IMPORTANT: It should not be a problem but try to avoid refreshing the browser page during the
                     experiment.`
         },
+        // {
+        //   text: `Now the experiment is about to start. Before you click 'Next', tell the person that is
+        //             monitoring you that you are ready. DO NOT click 'Next' until he/she has given you explicit permission.`
+        // },
+        // {
+        //   text: `You should be seeing this only if you have been granted permission. Click on 'Next' to start
+        //             the experiment.`
+        // },
         {
-          text: `Now the experiment is about to start. Before you click 'Next', tell the person that is
-                    monitoring you that you are ready. DO NOT click 'Next' until he/she has given you explicit permission.`
+          text: `The experiment is about to start now.`
         },
         {
-          text: `You should be seeing this only if you have been granted permission. Click on 'Next' to start
-                    the experiment.`
+          text: `Click on 'Next' to start the experiment.`
         },
       ];
       // add rest of steps
@@ -970,7 +976,7 @@ export default {
             on: 'bottom'
           },
           text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear <b>Anomaly Diagnosis</b> window. When you are ready click ‘Next’.`
+                        measurement will then appear in the <b>Anomaly Diagnosis</b> window. When you are ready click ‘Next’.`
         }
       ];
       detectionSteps.forEach(step => {
@@ -1170,7 +1176,7 @@ export default {
             on: 'top'
           },
           text: `For each procedure, I will show you three important pieces of information: its objective, the
-                    required material to perform it and the steps that you should follow to complete it.`
+                    required equipment to perform it, and the steps that you should follow to complete it.`
         },
         {
           attachTo: {
