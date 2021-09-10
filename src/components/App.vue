@@ -368,8 +368,7 @@ export default {
             element: '#telemetry-feed',
             on: 'bottom'
           },
-          text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
-                    of the measurements provided by the sensors of the HSS. As you can see, I am now showing the
+          text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time measurements provided by the sensors of the HSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
                     yellow and red lines) stand for the caution and warning limits of the selected measurement.`
         },
@@ -458,7 +457,7 @@ export default {
             on: 'bottom'
           },
           text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear <b>Anomaly Diagnosis</b> window. Try selecting the ppN2 (L1)
+                        measurement will then appear in the <b>Anomaly Diagnosis</b> window. Try selecting the ppN2 (L1)
                         and Level Cabin Pressure (L1) anomalous measurements, then click ‘Next’.`
         },
         {
@@ -478,7 +477,7 @@ export default {
           },
           text: `You can also deselect any item from this list by clicking on it. Try this by clicking on
                         ‘Level Cabin Pressure (L1): is above Upper Warning Limit’ and see that it disappears. You can
-                         also click the 'Clear All' button to deselect all the items from this list. Click ‘Next’ when
+                         also click the 'Clear' button to deselect all the items from this list. Click ‘Next’ when
                          you are ready.`
         },
         {
@@ -488,7 +487,7 @@ export default {
           },
           text: `As you might have noticed, a ‘Diagnose’ button appears on the right side of the upper
                         slot. This button will only be available when you have some anomalous measurements selected. Do not
-                        click it yet!`
+                        click on it yet!`
         },
         {
           attachTo: {
@@ -513,8 +512,8 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `Also, some new information appeared on the lower slot. This is how I
-                        provide you with my possible explanations of what might be causing an anomaly along. On the
+          text: `Also, some new information appeared in the lower slot. This is how I
+                        provide you with my possible explanations of what might be causing an anomaly. On the
                         left, you can see the list of the anomalous measurements that were selected when you
                         clicked on ‘Diagnose’. On the right, you can see a lit of some possible causes for such
                         anomalous measurements. If at any point you would like to clear this report, you can click the
@@ -536,7 +535,7 @@ export default {
             on: 'bottom'
           },
           text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
-                    I provided a list of them, and each item has an associated confidence level between 'Least Likely' and 'Most Likely'. This score stands
+                    I provided a list of them, and each item has an associated confidence level (score) between 'Least Likely' and 'Most Likely'. This score stands
                     for how confident I am for each cause to be the one that is actually happening. The higher the score,
                     the more confident I am in my suggestion.`
         },
@@ -648,7 +647,7 @@ export default {
             on: 'top'
           },
           text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
-                    treatment process.`
+                    treatment process. If you want help regarding what questions you can ask me, click on the 'Help' button below the textbox.`
         },
         // {
         //   attachTo: {
@@ -832,8 +831,7 @@ export default {
           element: '#telemetry-feed',
           on: 'bottom'
         },
-        text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
-                    of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
+        text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
                     yellow and red lines) stand for the caution and warning limits of the selected measurement.`,
         buttons: [
@@ -1035,7 +1033,7 @@ export default {
             on: 'bottom'
           },
           text: `You can also deselect any item from this list by clicking on it. You can also click the
-                        'Clear All' button to deselect all the items from this list. The 'Clear All' button will appear on the right side of the lower slot when anomalous measurements are selected. Click ‘Next’
+                        'Clear' button to deselect all the items from this list. The 'Clear' button will appear on the right side of the lower slot when anomalous measurements are selected. Click ‘Next’
                         when you are ready.`
         },
         {
