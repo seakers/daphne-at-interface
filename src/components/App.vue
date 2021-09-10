@@ -515,7 +515,7 @@ export default {
           text: `Also, some new information appeared in the lower slot. This is how I
                         provide you with my possible explanations of what might be causing an anomaly. On the
                         left, you can see the list of the anomalous measurements that were selected when you
-                        clicked on ‘Diagnose’. On the right, you can see a lit of some possible causes for such
+                        clicked on ‘Diagnose’. On the right, you can see a list of some possible causes for such
                         anomalous measurements. If at any point you would like to clear this report, you can click the
                         'x' in the top right corner of the lower slot.`
         },
