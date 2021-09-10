@@ -371,7 +371,7 @@ export default {
           text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
                     of the measurements provided by the sensors of the HSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red lines) stand for the caution and warning limits of the selected measurement.`
+                    yellow and red lines) stand for the caution and warning limits of the selected measurement.`
         },
         {
           attachTo: {
@@ -835,7 +835,7 @@ export default {
         text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time
                     of the measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
-                    orange and red lines) stand for the caution and warning limits of the selected measurement.`,
+                    yellow and red lines) stand for the caution and warning limits of the selected measurement.`,
         buttons: [
           {
             text: 'Next',
@@ -926,7 +926,7 @@ export default {
           text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
                     of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
                     the color of this window to bring your attention, as well as to inform you about which limits are
-                    being exceeded by the measurements. I will use orange when any detected measurement exceeds its
+                    being exceeded by the measurements. I will use yellow when any detected measurement exceeds its
                     caution limit, but not its warning limit, and I will use red when any detected measurement exceeds
                     its warning limit.`
         },
