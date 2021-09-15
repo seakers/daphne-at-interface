@@ -348,7 +348,7 @@ export default {
       this.introTutorial.addStep({
         id: 'firstStep',
         text: `Hello astronaut! My name is Daphne. I have been assigned as your personal assistant on this mission. I will
-                    monitor the Habitat Systems Simulator (HSS), and I will assist you with any
+                    monitor the Habitat Simulation Systems (HSS), and I will assist you with any
                     anomalies that may occur within its subsystems. Together, we will ensure the success of this mission.`,
         buttons: [
           {
@@ -396,17 +396,18 @@ export default {
             element: '#anomaly-detection',
             on: 'bottom'
           },
-          text: `This is the  <b>Anomaly Detection</b> window. As you can see right now, I will use this area
-                    to provide you with a list of measurements that exceed any of their limits.`
+          text: `This is the  <b>Anomaly Detection</b> window. I will use this area
+                    to provide you with a list of measurements that exceed any of their limits.
+                    Each of these measurements is a symptom and a set of these symptoms is a signature of the anomaly.`
         },
         {
           attachTo: {
             element: '#anomaly-detection',
             on: 'bottom'
           },
-          text: `To make sure that you do not miss any of my notifications, this window is anchored to the top
+          text: `To ensure that you do not miss any of my notifications, this window is anchored to the top
                     of the screen, so you will always be able to see it. Scroll down and check that! Also, I will change
-                    the color of this window to bring your attention, as well as to inform you about which limits are
+                    the color of this window to catch your attention, as well as to inform you about which limits are
                     being exceeded by the measurements. I will use yellow color when any detected measurement exceeds its
                     caution limit, but not its warning limit, and I will use red color when any detected measurement exceeds
                     its warning limit.`
@@ -457,18 +458,18 @@ export default {
             on: 'bottom'
           },
           text: `Once an anomalous measurement is detected, you can click on it to select it. The
-                        measurement will then appear in the <b>Anomaly Diagnosis</b> window. Try selecting the ppN2 (L1)
-                        and Level Cabin Pressure (L1) anomalous measurements, then click ‘Next’.`
+                        measurement will then appear in the <b>Anomaly Diagnosis</b> window. Try selecting the ppN2
+                        and Pressure anomalous measurements, then click ‘Next’.`
         },
         {
           attachTo: {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement, it
-                    will appear in the upper slot. In fact, if you select more than one, I will display a list of all
+          text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement (symptom), it
+                    will appear in the upper half of this window. If you select more than one, I will display a list of all
                     your selections. Right now, if you followed my instructions, you should be seeing ‘ppN2(L1):
-                    is above Upper Warning Limit’ and ‘Level Cabin Pressure (L1): is above Upper Warning Limit’.`
+                    is above Upper Warning Limit’, ‘ppN2(L2): is above Upper Warning Limit’, ‘Pressure (L1): is above Upper Warning Limit’, and ‘Pressure (L2): is above Upper Warning Limit’.`
         },
         {
           attachTo: {
@@ -476,7 +477,7 @@ export default {
             on: 'bottom'
           },
           text: `You can also deselect any item from this list by clicking on it. Try this by clicking on
-                        ‘Level Cabin Pressure (L1): is above Upper Warning Limit’ and see that it disappears. You can
+                        ‘Pressure (L1): is above Upper Warning Limit’ and see that it disappears. You can
                          also click the 'Clear' button to deselect all the items from this list. Click ‘Next’ when
                          you are ready.`
         },
@@ -486,7 +487,7 @@ export default {
             on: 'bottom'
           },
           text: `As you might have noticed, a ‘Diagnose’ button appears on the right side of the upper
-                        slot. This button will only be available when you have some anomalous measurements selected. Do not
+                        half of this window. This button will only be available when you have some anomalous measurements selected. Do not
                         click on it yet!`
         },
         {
@@ -494,9 +495,8 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `Whenever you click on this button, I will try to provide you with possible causes for
-                        the selected anomalous measurements. It takes me a while to think sometimes, especially if you
-                        select a lot of measurements, so be patient! Try to click the ‘Diagnose’ button now, then
+          text: `Whenever you click on this button, I will attempt to provide you with possible causes for
+                        the selected anomalous measurements. Click the ‘Diagnose’ button now, then
                         click ‘Next’.`
         },
         {
@@ -504,20 +504,12 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `As you can see, several things happened here. First, I cleaned all your selected measurements
-                    from the upper slot. Do not worry about that, I will soon tell you how to recover them.`
-        },
-        {
-          attachTo: {
-            element: '#anomaly_diagnosis',
-            on: 'bottom'
-          },
-          text: `Also, some new information appeared in the lower slot. This is how I
+          text: `Also, some new information appeared in the lower half of this window. This is how I
                         provide you with my possible explanations of what might be causing an anomaly. On the
                         left, you can see the list of the anomalous measurements that were selected when you
                         clicked on ‘Diagnose’. On the right, you can see a list of some possible causes for such
-                        anomalous measurements. If at any point you would like to clear this report, you can click the
-                        'x' in the top right corner of the lower slot.`
+                        set of symptoms. If at any point you would like to clear this report, you can click the
+                        'x' in the top right corner of the lower half of the window.`
         },
         {
           attachTo: {
@@ -534,8 +526,7 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `We will focus now on how to deal with my suggested explanations. As you might have realized,
-                    I provided a list of them, and each item has an associated confidence level (score) between 'Least Likely' and 'Most Likely'. This score stands
+          text: `We will focus now on how to respond to my suggested explanations. I provided a list of them, and each item has an associated confidence level between 'Least Likely' and 'Most Likely'. This score stands
                     for how confident I am for each cause to be the one that is actually happening. The higher the score,
                     the more confident I am in my suggestion.`
         },
@@ -569,14 +560,14 @@ export default {
             on: 'top'
           },
           text: `As you can see right now, the 'N2 Tank Burst' has only one related procedure, the 'N2 Ballast
-                    Tank Replacement'. Other anomaly causes might have more than one associated procedure though.`
+                    Tank Replacement'. Other anomaly causes might have more than one associated procedure.`
         },
         {
           attachTo: {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `You can click on the slot for the 'N2 Ballast Tank Replacement' procedure to see detailed
+          text: `You can click on 'N2 Ballast Tank Replacement' procedure to see detailed
                     information about it. Try clicking on it now, then click 'Next'.`
         },
         {
@@ -585,7 +576,7 @@ export default {
             on: 'top'
           },
           text: `For each procedure, I will show you three important pieces of information: its objective, the
-                    required equipment to perform it and the steps that you should follow to complete it.`
+                    required equipment to perform it, and the steps that you should follow to complete it.`
         },
         {
           attachTo: {
@@ -608,8 +599,8 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `At the top right side of the procedure slot, I will display the status of such procedure. I
-                    will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
+          text: `At the top right side of the procedure slot, I will display the status of the current procedure as either PENDING or COMPLETED. I
+                    will only mark it as COMPLETED when you have checked all its steps. Try
                     selecting all the steps of this procedure now to see the difference (you only need to check the last
                     step). You will also see that once a procedure is complete that a new button appears. This button
                     'Clear Completed Procedures' will remove all the procedures that you have completed. Click 'Next'
@@ -620,7 +611,7 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `Try clicking on the 'N2 Ballast Tank Replacement' procedure slot again now. This will hide
+          text: `Click on the 'N2 Ballast Tank Replacement' procedure. This will hide
                     all its details, to ease navigation through the screen. Click 'Next' when you are ready.`
         },
         {
@@ -636,8 +627,7 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
-                    with me, you can use the dropdown menu at the top of this window to explore the procedures of other
+          text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. At any point, you can use the dropdown menu at the top of this window to explore the procedures of other
                     anomalies of the HSS system. Try selecting a new one, and then deselect it by clicking on the tiny
                     cross next 'x' to it. Click 'Next' when you are ready.`
         },
@@ -649,36 +639,34 @@ export default {
           text: `This is the <b>Chat</b> window. You can use it to ask me questions related to the anomaly
                     treatment process. If you want help regarding what questions you can ask me, click on the 'Help' button below the textbox.`
         },
-        // {
-        //   attachTo: {
-        //     element: '.sticky-textbox',
-        //     on: 'top'
-        //   },
-        //   text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
-        //             the current value of such measurement. Try writing or copying the above question into the text box,
-        //             area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
-        //             then click 'Next'.`
-        // },
-        // {
-        //   attachTo: {
-        //     element: '.sticky-textbox',
-        //     on: 'top'
-        //   },
-        //   text: `There are other questions that I can answer too, apart from the one you tried. If you want to
-        //             know about them, click on the link just below this question bar. A new tab will be opened with a
-        //             list of the questions that I am able to answer. This is a good moment for you to get familiar with
-        //             this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
-        // },
-        // {
-        //   attachTo: {
-        //     element: '.sticky-textbox',
-        //     on: 'top'
-        //   },
-        //   text: `As you can see, there are three buttons attached to this question bar. Two of them are very
-        //             straightforward: the 'Send' button does the same as hitting the enter key when you type a
-        //             question, and the 'Clear' button clears all the messages from our chat. We will talk about the third
-        //             button soon.`
-        // },
+        {
+          attachTo: {
+            element: '.sticky-textbox',
+            on: 'top'
+          },
+          text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
+                    the current value of such measurement. Try writing or copying the above question into the text box,
+                    area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
+                    then click 'Next'.`
+        },
+        {
+          attachTo: {
+            element: '.sticky-textbox',
+            on: 'top'
+          },
+          text: `There are other questions that I can answer too, apart from the one you tried. If you want to
+                    know about them, click on the link just below this question bar. A new tab will be opened with a
+                    list of the questions that I am able to answer. This is a good moment for you to get familiar with
+                    this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
+        },
+        {
+          attachTo: {
+            element: '.sticky-textbox',
+            on: 'top'
+          },
+          text: `As you can see, there are three buttons attached to this question bar. The 'Send' button does the same as hitting the enter key when you type a
+                    question and the 'Clear' button clears all the messages from our chat. The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud.`
+        },
         // {
         //   attachTo: {
         //     element: '.sticky-textbox',
@@ -775,10 +763,10 @@ export default {
           text: `Now you know all the tools available to you to solve anomalies during this mission.
                     It is going to be a long, arduous journey, so good luck!`
         },
-        {
-          text: `IMPORTANT: It should not be a problem but try to avoid refreshing the browser page during the
-                    experiment.`
-        },
+        // {
+        //   text: `IMPORTANT: It should not be a problem but try to avoid refreshing the browser page during the
+        //             experiment.`
+        // },
         // {
         //   text: `Now the experiment is about to start. Before you click 'Next', tell the person that is
         //             monitoring you that you are ready. DO NOT click 'Next' until he/she has given you explicit permission.`
@@ -787,11 +775,11 @@ export default {
         //   text: `You should be seeing this only if you have been granted permission. Click on 'Next' to start
         //             the experiment.`
         // },
+        // {
+        //   text: `The experiment is about to start now.`
+        // },
         {
-          text: `The experiment is about to start now.`
-        },
-        {
-          text: `Click on 'Next' to start the experiment.`
+          text: `Click on 'Next' to finish the tutorial.`
         },
       ];
       // add rest of steps
@@ -831,7 +819,7 @@ export default {
           element: '#telemetry-feed',
           on: 'bottom'
         },
-        text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time measurements provided by the sensors of the ECLSS. As you can see, I am now showing the
+        text: `This is the <b>Sensor Data</b> window. The purpose of this area is to display the real-time measurements provided by the sensors of the HSS. As you can see, I am now showing the
                     sensor readings for the ppN2 (L1) measurement as a blue solid line. The other lines (the dashed
                     yellow and red lines) stand for the caution and warning limits of the selected measurement.`,
         buttons: [
@@ -903,7 +891,8 @@ export default {
           on: 'bottom'
         },
         text: `This is the  <b>Anomaly Detection</b> window. I will use this area
-                    to provide you with a list of measurements that exceed any of their limits.`,
+                    to provide you with a list of measurements that exceed any of their limits.
+                    Each of these measurements is a symptom and a set of these symptoms is a signature of the anomaly.`,
         buttons: [
           {
             text: 'Next',
@@ -928,46 +917,46 @@ export default {
                     caution limit, but not its warning limit, and I will use red when any detected measurement exceeds
                     its warning limit.`
         },
-        {
-          attachTo: {
-            element: '#anomaly-detection',
-            on: 'bottom'
-          },
-          buttons: [
-            {
-              text: 'Alarm IN',
-              action: async function () {
-                let audio = new Audio(startAnomalySound);
-                await audio.play();
-              },
-              secondary: true,
-            },
-          ],
-          text: `Additionally, I will trigger an alarm every time this window changes. That is, if an
-                        anomalous measurement either appears, disappears, or exceeds a new limit, I will make this sound.
-                        Try clicking the 'Alarm IN' button to hear this alarm and become familiar with it. Click 'Next'
-                        when you are ready.`
-        },
-        {
-          attachTo: {
-            element: '#anomaly-detection',
-            on: 'bottom'
-          },
-          buttons: [
-            {
-              text: 'Alarm OUT',
-              action: async function () {
-                let audio = new Audio(endAnomalySound);
-                await audio.play();
-              },
-              secondary: true,
-            },
-          ],
-          text: `Similarly, I will trigger a different alarm every time I think that an anomaly has
-                        been resolved and the situation is back to normal. This is a new sound that you have not heard
-                        yet. Try clicking ‘Alarm OUT’ button to listen to this alarm and become familiar with it.
-                        Click ‘Next’ when you are ready.`
-        },
+        // {
+        //   attachTo: {
+        //     element: '#anomaly-detection',
+        //     on: 'bottom'
+        //   },
+        //   buttons: [
+        //     {
+        //       text: 'Alarm IN',
+        //       action: async function () {
+        //         let audio = new Audio(startAnomalySound);
+        //         await audio.play();
+        //       },
+        //       secondary: true,
+        //     },
+        //   ],
+        //   text: `Additionally, I will trigger an alarm every time this window changes. That is, if an
+        //                 anomalous measurement either appears, disappears, or exceeds a new limit, I will make this sound.
+        //                 Try clicking the 'Alarm IN' button to hear this alarm and become familiar with it. Click 'Next'
+        //                 when you are ready.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#anomaly-detection',
+        //     on: 'bottom'
+        //   },
+        //   buttons: [
+        //     {
+        //       text: 'Alarm OUT',
+        //       action: async function () {
+        //         let audio = new Audio(endAnomalySound);
+        //         await audio.play();
+        //       },
+        //       secondary: true,
+        //     },
+        //   ],
+        //   text: `Similarly, I will trigger a different alarm every time I think that an anomaly has
+        //                 been resolved and the situation is back to normal. This is a new sound that you have not heard
+        //                 yet. Try clicking ‘Alarm OUT’ button to listen to this alarm and become familiar with it.
+        //                 Click ‘Next’ when you are ready.`
+        // },
         {
           attachTo: {
             element: '#anomaly-detection',
@@ -1012,8 +1001,8 @@ export default {
           element: '#anomaly_diagnosis',
           on: 'bottom'
         },
-        text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement, it
-                    will appear in the upper slot. In fact, if you select more than one, I will display a list of all
+        text: `This is the <b>Anomaly Diagnosis</b> window. When you select an anomalous measurement (symptom), it
+                    will appear in the upper half of this window. If you select more than one, I will display a list of all
                     your selections.`,
         buttons: [
           {
@@ -1049,9 +1038,9 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `Whenever you click on this button, I will try to provide you with possible causes for
-                        the selected anomalous measurements. It takes me a while to think sometimes, especially if you
-                        select a lot of measurements, so be patient! Click 'Next' when you are ready.`
+          text: `Whenever you click on this button, I will attempt to provide you with possible causes for
+                        the selected anomalous measurements. Click the ‘Diagnose’ button now, then
+                        click ‘Next’.`
         },
         {
           attachTo: {
@@ -1081,8 +1070,8 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `We will focus now on how to deal with my suggested explanations. I will provide a list of
-                        them, and each item has an associated confidence level between 'Least Likely' and 'Most Likely'. The higher the score,
+          text: `We will focus now on how to respond to my suggested explanations. I provided a list of them, and each item has an associated confidence level between 'Least Likely' and 'Most Likely'. This score stands
+                    for how confident I am for each cause to be the one that is actually happening. The higher the score,
                     the more confident I am in my suggestion.`
         },
         {
@@ -1138,7 +1127,7 @@ export default {
           on: 'bottom'
         },
         text: `This is the <b>Anomaly Response</b> window. In this area, I will display all the procedures
-                    to treat each of the anomaly causes that you select.`,
+                    associated with the anomaly cause that you select. You may select any anomaly scenario that you'd like to view the procedures for.`,
         buttons: [
           {
             text: 'Next',
@@ -1156,16 +1145,16 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `Try selecting the 'N2 Tank Burst' from the dropdown menu. You can see 'N2 Tank Burst'
-                        has only one related procedure, the 'N2 Ballast Tank Replacement'. Other anomaly causes might
-                        have more than one associated procedure though.`
+          text: `Try selecting 'N2 Tank Burst' anomaly from the dropdown menu. The 'N2 Tank Burst'
+                        has only one related procedure, 'N2 Ballast Tank Replacement' procedure. Other anomaly causes might
+                        have more than one associated procedure.`
         },
         {
           attachTo: {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `You can click on the slot for the 'N2 Ballast Tank Replacement' procedure to see detailed
+          text: `You can click on 'N2 Ballast Tank Replacement' procedure to see detailed
                     information about it. Try clicking on it now, then click 'Next'.`
         },
         {
@@ -1197,8 +1186,8 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `At the top right side of the procedure slot, I will display the status of such procedure. I
-                    will only mark it as complete whenever you check all its steps, and as pending otherwise. Try
+          text: `At the top right side of the procedure slot, I will display the status of the current procedure as either PENDING or COMPLETED. I
+                    will only mark it as COMPLETED when you have checked all its steps. Try
                     selecting all the steps of this procedure now to see the difference (you only need to check the last
                     step). You will also see that once a procedure is complete that a new button appears. This button
                     'Clear Completed Procedures' will remove all the procedures that you have completed. Click 'Next'
@@ -1209,7 +1198,7 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `Try clicking on the 'N2 Ballast Tank Replacement' procedure slot again now. This will hide
+          text: `Click on the 'N2 Ballast Tank Replacement' procedure. This will hide
                     all its details, to ease navigation through the screen. Click 'Next' when you are ready.`
         },
         {
@@ -1225,9 +1214,8 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. In case you disagree
-                    with me, you can use the dropdown menu at the top of this window to explore the procedures of other
-                    anomalies of the ECLSS system. Try selecting a new one, and then deselect it by clicking on the tiny
+          text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. At any point, you can use the dropdown menu at the top of this window to explore the procedures of other
+                    anomalies of the HSS system. Try selecting a new one, and then deselect it by clicking on the tiny
                     cross next 'x' to it. Click 'Next' when you are ready.`
         }
       ];
@@ -1305,103 +1293,101 @@ export default {
             element: '.sticky-textbox',
             on: 'top'
           },
-          text: `As you can see, there are three buttons attached to this question bar. Two of them are very
-                    straightforward: the 'Send' button does the same as hitting the enter key when you type a
-                    question, and the 'Clear' button clears all the messages from our chat. We will talk about the third
-                    button soon.`
+          text: `As you can see, there are three buttons attached to this question bar. The 'Send' button does the same as hitting the enter key when you type a
+                    question and the 'Clear' button clears all the messages from our chat. The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud.`
         },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `Now, the final feature: I have the ability to speak with you!`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `First, you can ask me questions out loud and I will recognize and process your speech.
-                    Second, I can read my own answers out loud. Both features are independent: you can activate either
-                    of them, both or none. It is up to you! I will now explain you how to do so.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted,
-                    I will read all the answers to your questions out loud!`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `Try clicking on the Speaker button to unmute me now, then click Next.`
-        },
-        {
-          attachTo: {
-            element: '#skitt-ui',
-          },
-          tetherOptions: {
-            target: '#skitt-toggle-button',
-            attachment: 'top left',
-            targetAttachment: 'top right',
-            offset: '200px -30px'
-          },
-          text: `The purpose of the small add-on at the bottom left part of the screen (with a microphone on
-                    it) is to activate or deactivate the voice recognition feature. When activated, I'll listen to what
-                    you are saying all the time.`
-        },
-        {
-          attachTo: {
-            element: '#skitt-ui',
-          },
-          tetherOptions: {
-            target: '#skitt-toggle-button',
-            attachment: 'top left',
-            targetAttachment: 'top right',
-            offset: '200px -30px'
-          },
-          text: `Try clicking on the microphone, then say "Hello there" loud and clear, and wait for a
-                    bit. Then click 'Next'.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `You can see that a message with what I understood from your speech has appeared in the chat.
-                    Also, if you followed my instructions, you should have heard me reading my answer.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `As you can see, I do not always understand your questions. This is my way of telling you so.`
-        },
-        {
-          attachTo: {
-            element: '.sticky-textbox',
-            on: 'top'
-          },
-          text: `Now click again on the 'Speaker' button to mute me, then click 'Next'.`
-        },
-        {
-          attachTo: {
-            element: '#skitt-ui',
-          },
-          tetherOptions: {
-            target: '#skitt-toggle-button',
-            attachment: 'top left',
-            targetAttachment: 'top right',
-            offset: '200px -30px'
-          },
-          text: `Finally, click again on the microphone to deactivate the speech recognition. Then click 'Next'.`
-        }
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `Now, the final feature: I have the ability to speak with you!`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `First, you can ask me questions out loud and I will recognize and process your speech.
+        //             Second, I can read my own answers out loud. Both features are independent: you can activate either
+        //             of them, both or none. It is up to you! I will now explain you how to do so.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted,
+        //             I will read all the answers to your questions out loud!`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `Try clicking on the Speaker button to unmute me now, then click Next.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#skitt-ui',
+        //   },
+        //   tetherOptions: {
+        //     target: '#skitt-toggle-button',
+        //     attachment: 'top left',
+        //     targetAttachment: 'top right',
+        //     offset: '200px -30px'
+        //   },
+        //   text: `The purpose of the small add-on at the bottom left part of the screen (with a microphone on
+        //             it) is to activate or deactivate the voice recognition feature. When activated, I'll listen to what
+        //             you are saying all the time.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#skitt-ui',
+        //   },
+        //   tetherOptions: {
+        //     target: '#skitt-toggle-button',
+        //     attachment: 'top left',
+        //     targetAttachment: 'top right',
+        //     offset: '200px -30px'
+        //   },
+        //   text: `Try clicking on the microphone, then say "Hello there" loud and clear, and wait for a
+        //             bit. Then click 'Next'.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `You can see that a message with what I understood from your speech has appeared in the chat.
+        //             Also, if you followed my instructions, you should have heard me reading my answer.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `As you can see, I do not always understand your questions. This is my way of telling you so.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '.sticky-textbox',
+        //     on: 'top'
+        //   },
+        //   text: `Now click again on the 'Speaker' button to mute me, then click 'Next'.`
+        // },
+        // {
+        //   attachTo: {
+        //     element: '#skitt-ui',
+        //   },
+        //   tetherOptions: {
+        //     target: '#skitt-toggle-button',
+        //     attachment: 'top left',
+        //     targetAttachment: 'top right',
+        //     offset: '200px -30px'
+        //   },
+        //   text: `Finally, click again on the microphone to deactivate the speech recognition. Then click 'Next'.`
+        // }
       ];
       chatSteps.forEach(step => {
         this.chatTutorial.addStep(_.mergeWith({
