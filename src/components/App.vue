@@ -477,8 +477,7 @@ export default {
             on: 'bottom'
           },
           text: `You can also deselect any item from this list by clicking on it. Try this by clicking on
-                        ‘Pressure (L1): is above Upper Warning Limit’ and see that it disappears. You can
-                         also click the 'Clear' button to deselect all the items from this list. Click ‘Next’ when
+                        ‘Pressure (L1): is above Upper Warning Limit’ and see that it disappears. Click ‘Next’ when
                          you are ready.`
         },
         {
@@ -516,8 +515,8 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `You might want to recover the exact same list of anomalous measurements that you
-                    had selected before clicking the diagnose button, and then modify it. To do so, click on the list on
+          text: `Now, click on the 'Clear' button to deselect all the items from this list. You might want to recover the exact same list of anomalous measurements that you
+                    had selected before clicking the diagnose button and then modify it. To do so, click on the list on
                     the left part of the lower slot, and it will appear in the upper slot again. Try doing it now, and
                     then click 'Next'.`
         },
@@ -628,7 +627,7 @@ export default {
             on: 'top'
           },
           text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. At any point, you can use the dropdown menu at the top of this window to explore the procedures of other
-                    anomalies of the HSS system. Try selecting a new one, and then deselect it by clicking on the tiny
+                    anomalies of HSS. Select a new HSS anomaly, and then deselect it by clicking on the tiny
                     cross next 'x' to it. Click 'Next' when you are ready.`
         },
         {
@@ -644,7 +643,7 @@ export default {
             element: '.sticky-textbox',
             on: 'top'
           },
-          text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
+          text: `For example, you can ask me "What is the current value of the ppN2?", and I will give you
                     the current value of such measurement. Try writing or copying the above question into the text box,
                     area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
                     then click 'Next'.`
@@ -655,17 +654,17 @@ export default {
             on: 'top'
           },
           text: `There are other questions that I can answer too, apart from the one you tried. If you want to
-                    know about them, click on the link just below this question bar. A new tab will be opened with a
+                    know about them, click on 'Help' at the bottom. A new tab will be opened with a
                     list of the questions that I am able to answer. This is a good moment for you to get familiar with
-                    this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
+                    this list, so try clicking on 'Help'. Whenever you are done, click on 'Next'.`
         },
         {
           attachTo: {
             element: '.sticky-textbox',
             on: 'top'
           },
-          text: `As you can see, there are three buttons attached to this question bar. The 'Send' button does the same as hitting the enter key when you type a
-                    question and the 'Clear' button clears all the messages from our chat. The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud.`
+          text: `As you can see, there are more buttons below this question bar. The 'Send' button does the same as hitting the enter key when you type a
+                    question. The 'Clear' button clears all the messages from our chat. The 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud. If at any point you want to go through the tutorial again, click on the '?' button.`
         },
         // {
         //   attachTo: {
@@ -1022,7 +1021,7 @@ export default {
             on: 'bottom'
           },
           text: `You can also deselect any item from this list by clicking on it. You can also click the
-                        'Clear' button to deselect all the items from this list. The 'Clear' button will appear on the right side of the lower slot when anomalous measurements are selected. Click ‘Next’
+                        'Clear' button to deselect all the items from this list. The 'Clear' button will appear on the right side of the lower half when anomalous measurements are selected. Click ‘Next’
                         when you are ready.`
         },
         {
@@ -1030,7 +1029,7 @@ export default {
             element: '#anomaly_diagnosis',
             on: 'bottom'
           },
-          text: `A ‘Diagnose’ button will appear on the right side of the upper slot. This button will
+          text: `A ‘Diagnose’ button will appear on the right side of the upper half. This button will
                          only be available when you have some anomalous measurements selected.`
         },
         {
@@ -1215,7 +1214,7 @@ export default {
             on: 'top'
           },
           text: `Remember: I am not almighty, so I could be providing you with wrong suggestions. At any point, you can use the dropdown menu at the top of this window to explore the procedures of other
-                    anomalies of the HSS system. Try selecting a new one, and then deselect it by clicking on the tiny
+                    anomalies of HSS. Select a new HSS anomaly, and then deselect it by clicking on the tiny
                     cross next 'x' to it. Click 'Next' when you are ready.`
         }
       ];
@@ -1273,7 +1272,7 @@ export default {
             element: '.sticky-textbox',
             on: 'top'
           },
-          text: `For example, you can ask me "What is the current value of the ppN2 L1?", and I will give you
+          text: `For example, you can ask me "What is the current value of the ppN2?", and I will give you
                     the current value of such measurement. Try writing or copying the above question into the text box,
                     area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
                     then click 'Next'.`
@@ -1284,17 +1283,17 @@ export default {
             on: 'top'
           },
           text: `There are other questions that I can answer too, apart from the one you tried. If you want to
-                    know about them, click on the link just below this question bar. A new tab will be opened with a
+                    know about them, click on 'Help' at the bottom. A new tab will be opened with a
                     list of the questions that I am able to answer. This is a good moment for you to get familiar with
-                    this list, so try on clicking the link. Whenever you are done, click on 'Next'.`
+                    this list, so try clicking on 'Help'. Whenever you are done, click on 'Next'.`
         },
         {
           attachTo: {
             element: '.sticky-textbox',
             on: 'top'
           },
-          text: `As you can see, there are three buttons attached to this question bar. The 'Send' button does the same as hitting the enter key when you type a
-                    question and the 'Clear' button clears all the messages from our chat. The purpose of the third button, the 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud.`
+          text: `As you can see, there are more buttons below this question bar. The 'Send' button does the same as hitting the enter key when you type a
+                    question. The 'Clear' button clears all the messages from our chat. The 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud. If at any point you want to go through the tutorial again, click on the '?' button.`
         },
         // {
         //   attachTo: {
