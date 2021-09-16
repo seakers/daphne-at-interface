@@ -566,8 +566,7 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `You can click on 'N2 Ballast Tank Replacement' procedure to see detailed
-                    information about it. Try clicking on it now, then click 'Next'.`
+          text: `Click on ‘N2 Ballast Tank Replacement’ procedure to see detailed information about it. Then click ‘Next’.`
         },
         {
           attachTo: {
@@ -618,8 +617,7 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `You can also explore multiple causes of an anomaly simultaneously. This might be useful
-                        in case I provided more than one suggestion, or if more than one anomaly is happening at the same time.`
+          text: `You can also explore multiple causes of an anomaly simultaneously. This might be useful in case I provided more than one suggestion, or if more than one anomaly is happening at the same time. Additionally, you can click on the drop down menu of the Anomaly Response window to add and explore additional possible anomalies.`
         },
         {
           attachTo: {
@@ -644,7 +642,7 @@ export default {
             on: 'top'
           },
           text: `For example, you can ask me "What is the current value of the ppN2?", and I will give you
-                    the current value of such measurement. Try writing or copying the above question into the text box,
+                    the current value of such measurement. Copy the above question into the text box,
                     area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
                     then click 'Next'.`
         },
@@ -664,7 +662,7 @@ export default {
             on: 'top'
           },
           text: `As you can see, there are more buttons below this question bar. The 'Send' button does the same as hitting the enter key when you type a
-                    question. The 'Clear' button clears all the messages from our chat. The 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud. If at any point you want to go through the tutorial again, click on the '?' button.`
+                    question. The 'Clear' button clears all the messages from our chat. The 'Speaker' button is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud. If at any point you want to go through the tutorial again, click on the '?' button.`
         },
         // {
         //   attachTo: {
@@ -1153,8 +1151,7 @@ export default {
             element: '#anomaly_response',
             on: 'top'
           },
-          text: `You can click on 'N2 Ballast Tank Replacement' procedure to see detailed
-                    information about it. Try clicking on it now, then click 'Next'.`
+          text: `Click on ‘N2 Ballast Tank Replacement’ procedure to see detailed information about it. Then click ‘Next’`
         },
         {
           attachTo: {
@@ -1273,7 +1270,7 @@ export default {
             on: 'top'
           },
           text: `For example, you can ask me "What is the current value of the ppN2?", and I will give you
-                    the current value of such measurement. Try writing or copying the above question into the text box,
+                    the current value of such measurement. Copy the above question into the text box,
                     area, and then click the enter key on your keyboard. Wait until my answer appears on the chat,
                     then click 'Next'.`
         },
@@ -1293,7 +1290,7 @@ export default {
             on: 'top'
           },
           text: `As you can see, there are more buttons below this question bar. The 'Send' button does the same as hitting the enter key when you type a
-                    question. The 'Clear' button clears all the messages from our chat. The 'Speaker' button, is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud. If at any point you want to go through the tutorial again, click on the '?' button.`
+                    question. The 'Clear' button clears all the messages from our chat. The 'Speaker' button is to mute or unmute me. When unmuted, I will read all the answers to your questions out loud. If at any point you want to go through the tutorial again, click on the '?' button.`
         },
         // {
         //   attachTo: {
