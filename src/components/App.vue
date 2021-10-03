@@ -288,10 +288,10 @@ export default {
     },
     logout() {
       forceReload = true;
-      this.$store.dispatch('logoutUser');
-      this.sleep(200);
       this.$store.commit('mutateLoginStatus', false);
-      this.sleep(200);
+      this.sleep(700);
+      this.$store.dispatch('logoutUser');
+      this.sleep(700);
       window.location.reload();
     },
     sleep(delay) {
