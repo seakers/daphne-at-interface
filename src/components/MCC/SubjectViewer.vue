@@ -100,7 +100,7 @@
               let state = await dataResponse.json();
               try {
                 eval(state["daphneat"]["isLoggedIn"]);
-                if (state !== 'None') {
+                if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
                   this.currentStage = state["experiment"]["experimentStage"];
                   this.dialogueHistory = state["daphne"]["dialogueHistory"];
                   this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
