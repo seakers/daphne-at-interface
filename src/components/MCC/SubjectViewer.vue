@@ -80,6 +80,7 @@
           selectedProceduresInfo: {},
           lastProvidedDiagnosis: [],
           playAlarms: false,
+          isLoggedIn: false
         }
       },
       components: {
@@ -97,7 +98,7 @@
             if (dataResponse.ok) {
               // Add the new functionality
               let state = await dataResponse.json();
-              if (state !== 'None') {
+              if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
                 this.currentStage = state["experiment"]["experimentStage"];
                 this.dialogueHistory = state["daphne"]["dialogueHistory"];
                 this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];

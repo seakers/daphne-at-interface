@@ -20,9 +20,9 @@
             </div>
 
             <div class="field">
-                <div class="control">
-                    <button class="button is-link" v-on:click.prevent="login">Submit</button>
-                </div>
+              <button class="button" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+                      id="send_command" v-on:click.prevent="login">Submit
+              </button>
             </div>
         </form>
         <p>If you do not have a username, you can either register by clicking <a v-on:click.prevent="openRegisterForm">here</a> or <a v-on:click.prevent="$emit('close-modal')">continue as a guest</a>.</p>

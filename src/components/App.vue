@@ -66,11 +66,10 @@ import ChatArea from "./ChatArea";
 let forceReload = false;
 
 window.addEventListener("beforeunload", function (e) {
-  console.log(forceReload);
   if (forceReload) {
     forceReload = false;
   } else {
-    var confirmationMessage = "Are you sure you want to leave?";
+    const confirmationMessage = "Are you sure you want to leave?";
     (e || window.event).returnValue = confirmationMessage;
     return confirmationMessage;
   }
@@ -173,6 +172,7 @@ export default {
         await wsTools.experimentWsConnect();
 
         // Set the tutorial if haven't seen
+        await this.$store.commit('mutateLoginStatus', true);
         let seen_tutorial = false;
         let reqData = new FormData();
         reqData.append('user_id', this.userId);
@@ -289,8 +289,15 @@ export default {
     logout() {
       forceReload = true;
       this.$store.dispatch('logoutUser');
+      this.sleep(200);
+      this.$store.commit('mutateLoginStatus', false);
+      this.sleep(200);
       window.location.reload();
-    }
+    },
+    sleep(delay) {
+      const start = new Date().getTime();
+      while (new Date().getTime() < start + delay);
+    },
   },
   components: {
     ChatArea,

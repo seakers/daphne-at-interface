@@ -32,6 +32,7 @@ const state = {
     selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies. RELEVANT FOR THE CONTEXT.
     selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
     loadingNewAnomaly: false,
+    isLoggedIn: false
 };
 
 const getters = {
@@ -391,6 +392,7 @@ const actions = {
 };
 
 const mutations = {
+    mutateLoginStatus(state, newVal) {state.isLoggedIn = newVal},
     mutateHeraUser(state, newVal) {state.heraUser = newVal; },
     mutateTelemetryIsOngoing(state, telemetryIsOngoing) {state.telemetryIsOngoing = telemetryIsOngoing; },
     mutateTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },

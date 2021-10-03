@@ -22,7 +22,7 @@
                                     <button type="submit" class="button is-primary" v-on:click="addShownSubject">Add</button>
                                 </div>
                                 <div class="control">
-                                    <button type="submit" class="button is-primary" v-on:click="quitShownSubject">Quit</button>
+                                    <button type="submit" class="button is-primary" v-on:click="removeShownSubject">Remove</button>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                     this.shownSubjects.push(this.selectedSubject);
                 }
             },
-            quitShownSubject() {
+            removeShownSubject() {
                 if (this.shownSubjects.includes(this.selectedSubject)) {
                     let indexToDelete = -1;
                     for (let index in this.shownSubjects) {

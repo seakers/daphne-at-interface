@@ -160,7 +160,7 @@ if (annyang) {
     SpeechKITT.annyang();
 
     // Define a stylesheet for KITT to use
-    SpeechKITT.setStylesheet('//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/themes/flat.css');
+    SpeechKITT.setStylesheet('//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/themes/flat-turquoise.css.map');
 
     // Render KITT's interface
     SpeechKITT.vroom();
