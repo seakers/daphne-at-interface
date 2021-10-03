@@ -98,18 +98,7 @@
             if (dataResponse.ok) {
               // Add the new functionality
               let state = await dataResponse.json();
-              try {
-                const loginStatus = state["daphneat"]["isLoggedIn"];
-              }
-              catch (e) {
-                this.currentStage = 'UNKNOWN';
-                this.dialogueHistory = [];
-                this.selectedSymptomsList = [];
-                this.selectedAnomaliesList = [];
-                this.selectedProceduresList = [];
-                this.selectedProceduresInfo = [];
-              }
-              if (state !== 'None') {
+              if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
                 this.currentStage = state["experiment"]["experimentStage"];
                 this.dialogueHistory = state["daphne"]["dialogueHistory"];
                 this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
@@ -127,9 +116,21 @@
               }
             } else {
               console.error('Error retrieving user state.');
+              this.currentStage = 'UNKNOWN';
+              this.dialogueHistory = [];
+              this.selectedSymptomsList = [];
+              this.selectedAnomaliesList = [];
+              this.selectedProceduresList = [];
+              this.selectedProceduresInfo = [];
             }
           } catch (e) {
             console.error('Networking error:', e);
+            this.currentStage = 'UNKNOWN';
+            this.dialogueHistory = [];
+            this.selectedSymptomsList = [];
+            this.selectedAnomaliesList = [];
+            this.selectedProceduresList = [];
+            this.selectedProceduresInfo = [];
           }
         },
         async finishExperiment() {
