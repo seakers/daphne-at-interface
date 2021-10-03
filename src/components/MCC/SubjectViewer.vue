@@ -98,15 +98,25 @@
             if (dataResponse.ok) {
               // Add the new functionality
               let state = await dataResponse.json();
-              if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
-                this.currentStage = state["experiment"]["experimentStage"];
-                this.dialogueHistory = state["daphne"]["dialogueHistory"];
-                this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
-                this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
-                this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
-                this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
-                this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
-              } else {
+              try {
+                eval(state["daphneat"]["isLoggedIn"]);
+                if (state !== 'None') {
+                  this.currentStage = state["experiment"]["experimentStage"];
+                  this.dialogueHistory = state["daphne"]["dialogueHistory"];
+                  this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
+                  this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
+                  this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
+                  this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
+                  this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
+                } else {
+                  this.currentStage = 'UNKNOWN';
+                  this.dialogueHistory = [];
+                  this.selectedSymptomsList = [];
+                  this.selectedAnomaliesList = [];
+                  this.selectedProceduresList = [];
+                  this.selectedProceduresInfo = [];
+                }
+              } catch (e) {
                 this.currentStage = 'UNKNOWN';
                 this.dialogueHistory = [];
                 this.selectedSymptomsList = [];
