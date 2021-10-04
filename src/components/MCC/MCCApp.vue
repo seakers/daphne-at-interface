@@ -34,7 +34,8 @@
                            v-for="subject in shownSubjects"
                            :user-name="subject['userName']"
                            :user-id="subject['userId']"
-                           :key="subject['userId']">
+                           :key="subject['userId']"
+                           v-on:remove-shown="onRemoveShown">
             </SubjectViewer>
             <div class="is-seclss-background-black" style="height: 100px"></div>
         </div>
@@ -86,6 +87,15 @@
                     }
                     this.shownSubjects.splice(indexToDelete, 1);
                 }
+            },
+            onRemoveShown(userId) {
+                let indexToDelete = -1;
+                for (let index in this.shownSubjects) {
+                    if (this.shownSubjects[index].id === userId) {
+                        indexToDelete = index;
+                    }
+                }
+                this.shownSubjects.splice(indexToDelete, 1);
             }
         },
         mounted() {
