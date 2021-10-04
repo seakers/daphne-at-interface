@@ -50,7 +50,12 @@
                         </div>
                         <div class="control">
                             <button type="submit" class="button is-primary" v-on:click="finishExperiment" style="background-color: red">
-                                Finish Experiment
+                                Finish Experiment (is user is still there)
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-primary" v-on:click="forceFinishExperiment" style="background-color: red">
+                                Force Finish Experiment (if user has already logged out)
                             </button>
                         </div>
                     </div>
@@ -148,6 +153,12 @@
           let reqData = new FormData();
           reqData.append('user_id', this.userId);
           await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
+        },
+        async forceFinishExperiment() {
+          console.log('FORCE FINISH EXPERIMENT');
+          let reqData = new FormData();
+          reqData.append('user_id', this.userId);
+          await fetchPost(API_URL + 'experiment-at/force-finish-experiment-from-mcc', reqData);
         },
         async switchAlarms() {
           console.log("Alarm was on " + this.playAlarms);
