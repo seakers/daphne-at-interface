@@ -250,8 +250,8 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
         margin: {l: 35, r: 10, b: 25, t: 20, pad: 0},
         showlegend: true,
         legend: {orientation: 'h', font: {family: 'sans-serif', size: 12, color: 'var(--color__text)'}},
-        plot_bgcolor: 'var(--color__bg)',
-        paper_bgcolor: 'var(--color__bg)',
+        plot_bgcolor: '#111111',
+        paper_bgcolor: '#111111',
         xaxis: {
             tickcolor: 'var(--color__text)',
             showgrid: false,
