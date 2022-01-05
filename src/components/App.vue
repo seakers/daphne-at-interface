@@ -1,12 +1,16 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div class="is-seclss-background-black is-vertical-filler">
-    <div class="box is-header is-main" style="color: gray; margin-bottom: 5px; width: 100%">
+    <div class="box is-header is-main" style="margin-bottom: 5px; width: 100%">
       <div v-if="username" style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, {{ username }}</p></div>
       <div v-else style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, guest</p></div>
-      <div style="width: 20%; float: right">
+      <div style="width: 25%; float: right">
         <p style="float: left">{{ timestamp }}</p>
-        <a id="clear_history" style="font-weight:bold; float: right; margin-left: 1em; margin-right: 1em; line-height: inherit"
-         v-on:click.prevent="logout">Sign Out</a>
+        <div style="float: right">
+          <a style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"
+             v-on:click.prevent="changeSettings"><i class="fas fa-cogs"></i></a>
+          <a id="clear_history" style="font-weight:bold; float: right; margin-left: 1em; margin-right: 1em; line-height: inherit"
+             v-on:click.prevent="logout">Sign Out</a>
+        </div>
       </div>
     </div>
     <div class="columns is-gapless is-vertical-filler is-mobile">
@@ -50,9 +54,8 @@ import TelemetryButtons from "./TelemetryButtons";
 import {fetchGet, fetchPost} from "../scripts/fetch-helpers";
 import DaphneAnswer from "./DaphneAnswer";
 import TheFooter from "./TheFooter";
-import Timer from './Timer';
 import RegisterModal from './RegisterModal';
-// import QuestionBar from './QuestionBar';
+import SettingsModal from './SettingsModal'
 import Modal from './Modal';
 import ChatWindow from "./ChatWindow";
 import AnomalyResponseWindow from "./AnomalyResponseWindow";
@@ -110,21 +113,11 @@ export default {
       telemetryIsOngoing: 'getTelemetryIsOngoing',
       heraUser: 'getHeraUser',
     }),
-    timerExperimentCondition() {
-      if (!this.inExperiment) {
-        return false;
-      } else {
-        return this.currentStageNum > 0;
-      }
-    },
-    stageDuration() {
-      return this.stageInformation[this.experimentStage].stageDuration;
-    },
-    stageStartTime() {
-      return this.stageInformation[this.experimentStage].startTime;
-    }
   },
   methods: {
+    changeSettings(){
+      this.$store.commit('activateModal', 'SettingsModal');
+    },
     getNow: function() {
       const today = new Date();
       const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -311,7 +304,7 @@ export default {
     TheFooter,
     TelemetryButtons,
     Modal,
-    Timer
+    SettingsModal
   },
   async mounted() {
     if (!this.isViewer) {
@@ -1454,7 +1447,6 @@ export default {
     }
   },
   watch: {
-
     experimentStage: async function (val, oldVal) {
 
       if (this.inExperiment && !this.isRecovering) {

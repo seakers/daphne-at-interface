@@ -27,7 +27,7 @@
                             @input="newSelection">
                     </multiselect>
             </div>
-            <div class="box is-stretched is-centered space-marker" style="background: #111111; overflow: hidden; resize: vertical">
+            <div class="box is-stretched is-centered space-marker" style="background: var(--color__bg); overflow: hidden; resize: vertical">
                 <vue-plotly style="width: 95%; height: 95%;"
                         :data="plotData"
                         :layout="plotLayout"

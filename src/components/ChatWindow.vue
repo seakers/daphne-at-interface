@@ -20,7 +20,7 @@
 
         <div class="field has-addons is-fullwidth">
           <div class="control is-expanded">
-            <input class="input" style="background-color: black; border-color: #0AFEFF; color: white; " type="text"
+            <input class="input" style="background-color: var(--color__bg); border-color: var(--color__shadow); color: var(--color__text); " type="text"
                    name="command" placeholder="Ask me something" v-model="command" v-on:keyup.enter="sendCommand">
           </div>
         </div>
@@ -137,6 +137,7 @@ export default {
           if (lastMessage['writer'] === "daphne") {
             let voiceAnswer = lastMessage['voice_message'];
             responsiveVoice.speak(voiceAnswer);
+            //responsiveVoice.speak(voiceAnswer, "UK English Male" , {rate: 1.2}, {volume: 1}, {pitch: 2});
           }
         }
       }
