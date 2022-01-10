@@ -60,11 +60,11 @@
                     <div class="procedure-body">
                         <div class="procedure-content">
                             <p >
-                                <span style="color: #0AFEFF">Objective </span>
+                                <span style="color: #0AFEFF; background: #002E2E">Objective </span>
                                 {{procedureDict['procedureObjective']}}
                             </p>
                             <p style="margin-top: 10px">
-                                <span style="color: #0AFEFF">Equipment</span>
+                                <span style="color: #0AFEFF; background: #002E2E">Equipment</span>
                             </p>
                             <ul v-for="item in procedureDict['procedureEquipment']">
                                 <li style="margin-left: 20px">
@@ -72,7 +72,7 @@
                                 </li>
                             </ul>
                             <p v-if="procedureDict['procedureReferences'].length > 0" style="margin-top: 10px">
-                                <span style="color: #0AFEFF">References</span>
+                                <span style="color: #0AFEFF; background: #002E2E">References</span>
                             </p>
                             <ul v-if="procedureDict['procedureReferences'].length > 0" v-for="(item, itemIndex) in procedureDict['procedureReferences']">
                                 <li v-on:click="openReference(procedureDict['procedureReferenceLinks'][itemIndex])" style="margin-left: 20px">
@@ -80,7 +80,7 @@
                                 </li>
                             </ul>
                             <p v-if="procedureDict['procedureFigures'].length > 0" style="margin-top: 10px">
-                                <span style="color: #0AFEFF">Figures </span>
+                                <span style="color: #0AFEFF; background: #002E2E">Figures </span>
                             </p>
                             <ul v-for="(item, itemIndex) in procedureDict['procedureFigures']">
                                 <li v-on:click="openFigure(item)" style="margin-left: 20px; cursor: pointer">
@@ -88,7 +88,7 @@
                                 </li>
                             </ul>
                             <p style="margin-top: 10px">
-                                <span style="color: #0AFEFF">Steps to follow</span>
+                                <span style="color: #0AFEFF; background: #002E2E">Steps to follow</span>
                                 ({{procedureDict['procedureCurrentStep']}}
                                 out of
                                 {{procedureDict['checkableSteps']}}

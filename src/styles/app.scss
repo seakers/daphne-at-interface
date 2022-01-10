@@ -2,6 +2,13 @@
 
 :root {
     @media screen {
+        --primary-color: #002E2E;
+        --secondary-color: #0AFEFF;
+        --theme-primary: white;
+        --theme-secondary: black;
+        --color__bg: black;
+        --color__text: white;
+        --color__shadow: #0AFEFF;
         &[data-theme="dark"] {
             --primary-color: #002E2E;
             --secondary-color: #0AFEFF;
@@ -26,6 +33,8 @@
 $color__bg: var(--color__bg);
 $color__text: var(--color__text);
 $color__shadow: var(--color__shadow);
+$primary__color: var(--primary-color);
+$secondary__color: var(--secondary-color);
 
 
 @keyframes glowing {
@@ -252,7 +261,8 @@ html,body
 }
 
 .is-mini-title {
-    color: #0AFEFF;
+    color: $secondary__color;
+    background: $primary__color;
     font-weight: bold;
     font-size: 18px;
 }
@@ -329,9 +339,9 @@ html,body
 
 .procedure-header {
     cursor: pointer;
-    background: $color__text;
+    color: $secondary__color;
+    background: $primary__color;
     font-size: 18px;
-    color: $color__text;
     padding: 3px 3px 3px 3px;
     margin: 0px 0px 0px 0px;
     border-width: 0px 0px 1px 0px !important;
