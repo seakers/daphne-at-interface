@@ -6,7 +6,7 @@
                 <component v-bind:is="modalContent" v-on:close-modal="onCloseModal"></component>
             </article>
         </div>
-        <button class="modal-close is-large" aria-label="close"  v-on:click.prevent="$emit('close-modal')"></button>
+        <button id="modalCloseButton" class="modal-close is-large" aria-label="close"  v-on:click.prevent="$emit('close-modal')"></button>
     </div>
 </template>
 

@@ -6,9 +6,12 @@ import {wsTools} from "../../scripts/websocket-tools";
 const state = {
     isLoggedIn: false,
     username: '',
+    password:'',
     permissions: [],
     hasLoginError: false,
+    isSecondUser: false,
     loginError: '',
+    loginAlert: '',
     hasRegistrationError: false,
     registrationError: '',
     resetPasswordSent: false
@@ -18,21 +21,30 @@ const initialState = _.cloneDeep(state);
 
 // getters
 const getters = {
+    getUsername(state) {return state.username},
 };
 
 // actions
 const actions = {
-    async loginUser({ state, commit, rootState }, { username, password, daphneVersion }) {
+    async loginUser({ state, commit, rootState }, { username, password, daphneVersion, isSecondUser }) {
         try {
             let reqData = new FormData();
             reqData.append("username", username);
             reqData.append("password", password);
             reqData.append("daphneVersion", daphneVersion);
+            reqData.append('isSecondUser', isSecondUser)
+
+            let userInfo = {'username': username, 'password': password};
+            commit('setFormData', userInfo);
+
             let dataResponse = await fetchPost(API_URL + 'auth/login', reqData);
             if (dataResponse.ok) {
                 let data = await dataResponse.json();
                 if (data['status'] === 'logged_in') {
                     commit('logUserIn', data);
+                }
+                else if (data['status'] === 'login_alert') {
+                    commit('setLoginPopup', data);
                 }
                 else {
                     commit('setLoginError', data);
@@ -112,9 +124,19 @@ const actions = {
 
 // mutations
 const mutations = {
+    mutateUsername(state, newVal) {state.username = newVal},
+
+    setFormData(state, userInfo) {
+        state.isLoggedIn = false;
+        state.hasLoginError = false;
+        state.isSecondUser = false;
+        state.username = userInfo['username'];
+        state.password = userInfo['password'];
+    },
     logUserIn(state, userInfo) {
         state.isLoggedIn = true;
         state.hasLoginError = false;
+        state.isSecondUser = false;
         state.username = userInfo['username'];
         state.permissions = userInfo['permissions'];
     },
@@ -128,6 +150,12 @@ const mutations = {
         state.isLoggedIn = false;
         state.hasLoginError = true;
         state.loginError = loginInfo['login_error'];
+    },
+    setLoginPopup(state, loginInfo) {
+        state.isLoggedIn = false;
+        state.hasLoginError = false;
+        state.isSecondUser = true;
+        state.loginAlert = loginInfo['login_error'];
     },
     setRegistrationError(state, registrationInfo) {
         state.isLoggedIn = false;

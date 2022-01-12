@@ -1,5 +1,5 @@
 <template>
-  <div class="container-settings">
+  <div id="settings" class="container-settings">
     <div class="header">
       <div class="header-logo">
         Themes

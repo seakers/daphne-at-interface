@@ -6,7 +6,7 @@
       <div style="width: 25%; float: right">
         <p style="float: left">{{ timestamp }}</p>
         <div style="float: right">
-          <a style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"
+          <a id="theme" style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"
              v-on:click.prevent="changeSettings"><i class="fas fa-cogs"></i></a>
           <a id="clear_history" style="font-weight:bold; float: right; margin-left: 1em; margin-right: 1em; line-height: inherit"
              v-on:click.prevent="logout">Sign Out</a>
@@ -360,6 +360,56 @@ export default {
             action: this.introTutorial.next
           }
         ]
+      });
+      this.introTutorial.addStep(
+          {
+            attachTo: {
+              element: '#theme',
+              on: 'bottom'
+            },
+            useModalOverlay: true,
+            text: `This is the Settings button. It helps you change the appearance of the display. Click to open the Settings overlay and then click Next.`,
+            advanceOn: {selector: '#theme', event: 'click'},
+            buttons: [
+              {
+                text: 'Skip',
+                action: this.introTutorial.cancel
+              }
+            ]
+          }
+      );
+      this.introTutorial.addStep({
+        attachTo: {
+          element: '#settings',
+              useModalOverlay: false,
+              on: 'bottom'
+        },
+        text: `This is the Settings overlay. You can select a theme by clicking on one of the buttons on the top right corner and observe how the appearance of the display changes. You have two themes to select from: Light and Dark. When you have selected the theme that you like, click on Next.`,
+        buttons: [
+          {
+            text: 'Skip',
+            action: this.introTutorial.cancel
+          },
+          {
+            text: 'Next',
+            action: this.introTutorial.next
+          }
+        ],
+      });
+      this.introTutorial.addStep({
+        attachTo: {
+          element: '#modalCloseButton',
+          useModalOverlay: false,
+          on: 'bottom'
+        },
+        text: `Click on this X to close the overlay and to proceed to the next step of the tutorial.`,
+        buttons: [
+          {
+            text: 'Skip',
+            action: this.introTutorial.cancel
+          }
+        ],
+        advanceOn: {selector: '#modalCloseButton', event: 'click'},
       });
       // list of steps
       const introSteps = [
