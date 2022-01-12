@@ -50,12 +50,12 @@
                         </div>
                         <div class="control">
                             <button type="submit" class="button is-primary" v-on:click="finishExperiment" style="background-color: red">
-                                Finish Experiment (is user is still there)
+                                Send Survey Link
                             </button>
                         </div>
                         <div class="control">
                             <button type="submit" class="button is-primary" v-on:click="forceFinishExperiment" style="background-color: red">
-                                Force Finish Experiment (if user has already logged out)
+                                Force Logout User
                             </button>
                         </div>
                     </div>
