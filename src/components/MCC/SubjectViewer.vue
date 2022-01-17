@@ -11,21 +11,21 @@
                     <div class="content">
                         <p style="color: #0AFEFF">Selected symptoms:</p>
                         <ul>
-                            <li v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"]}}</li>
+                            <li style="color: white" v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"]}}</li>
                         </ul>
                         <p style="color: #0AFEFF">Last provided diagnosis:</p>
                         <ul>
-                            <li  v-for="anomaly in lastProvidedDiagnosis">
+                            <li style="color: white" v-for="anomaly in lastProvidedDiagnosis">
                                 {{anomaly['name']}} (with a score of {{anomaly['score']}})
                             </li>
                         </ul>
                         <p style="color: #0AFEFF">Selected anomalies:</p>
                         <ul>
-                            <li v-for="anomaly in selectedAnomaliesList">{{ anomaly }}</li>
+                            <li style="color: white" v-for="anomaly in selectedAnomaliesList">{{ anomaly }}</li>
                         </ul>
                         <p style="color: #0AFEFF">Selected procedures:</p>
                         <ul>
-                            <li v-for="(procedureDict, procedureName) in selectedProceduresInfo">
+                            <li style="color: white" v-for="(procedureDict, procedureName) in selectedProceduresInfo">
                                 <p style="margin-bottom:2px">{{procedureName}}</p>
                                 <p style="margin-left:20px">
                                     Current Step -->

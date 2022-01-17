@@ -368,7 +368,7 @@ export default {
               on: 'bottom'
             },
             useModalOverlay: true,
-            text: `This is the Settings button. It helps you change the appearance of the display. Click to open the Settings overlay and then click Next.`,
+            text: `This is the Settings button. It helps you change the appearance of the display. Click to open the Settings overlay.`,
             advanceOn: {selector: '#theme', event: 'click'},
             buttons: [
               {
