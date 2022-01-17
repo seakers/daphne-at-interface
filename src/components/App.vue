@@ -365,10 +365,10 @@ export default {
           {
             attachTo: {
               element: '#theme',
-              on: 'bottom'
+              on: 'left-end'
             },
             useModalOverlay: true,
-            text: `This is the Settings button. It helps you change the appearance of the display. Click to open the Settings overlay.`,
+            text: `This is the Settings button. It helps you change the appearance of the display. Click on the button to open the Settings overlay.`,
             advanceOn: {selector: '#theme', event: 'click'},
             buttons: [
               {
