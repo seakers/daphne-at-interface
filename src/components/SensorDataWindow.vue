@@ -66,10 +66,12 @@
             options ()  {
                 let variables = this.inputVariables;
                 let aux = [];
+                let sortedAux = []
                 for (let i = 0; i < variables.length; i++) {
                     aux.push({'name': variables[i]});
                 }
-                return aux.sort((a, b) => a.toLowerCase().localeCompare(b));
+                sortedAux = aux.sort((a, b) => a.toLowerCase().localeCompare(b));
+              return sortedAux;
             },
             plotLayout () {
                 try {

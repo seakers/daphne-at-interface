@@ -162,8 +162,10 @@
             },
             options()  {
                 let aux = [];
+                let sortedAux = []
                 for (let i = 0; i < this.allAnomalies.length; i++) {aux.push({'name': this.allAnomalies[i]})}
-                return aux.sort((a, b) => a.toLowerCase().localeCompare(b));
+                sortedAux = aux.sort((a, b) => a.toLowerCase().localeCompare(b));
+                return sortedAux
             },
             anomalyList() {
                 let anomalyList = [];
