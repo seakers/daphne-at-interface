@@ -163,7 +163,7 @@
             options()  {
                 let aux = [];
                 for (let i = 0; i < this.allAnomalies.length; i++) {aux.push({'name': this.allAnomalies[i]})}
-                return aux.sort();
+                return aux.sort((a, b) => a.toLowerCase().localeCompare(b));
             },
             anomalyList() {
                 let anomalyList = [];

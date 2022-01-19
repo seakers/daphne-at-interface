@@ -69,7 +69,7 @@
                 for (let i = 0; i < variables.length; i++) {
                     aux.push({'name': variables[i]});
                 }
-                return aux.sort();
+                return aux.sort((a, b) => a.toLowerCase().localeCompare(b));
             },
             plotLayout () {
                 try {
