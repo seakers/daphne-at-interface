@@ -1,16 +1,6 @@
 <template>
   <div id="anomaly-detection">
-    <div v-if="flash" class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}" style="animation: glowing 1500ms infinite;">
-      Anomaly Detection
-      <span class="tutorialLink">
-            <u v-on:click.prevent="detectionTutorial">?</u>
-            </span>
-      <span class="tutorialLink">&#8287; &#8287;</span>
-      <span class="tutorialLink">
-                <u v-on:click.prevent="clear">Clear</u>
-            </span>
-    </div>
-    <div v-else class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
+    <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
       Anomaly Detection
       <span class="tutorialLink">
             <u v-on:click.prevent="detectionTutorial">?</u>
@@ -103,10 +93,8 @@ export default {
         let theColors = detectionColorStyle(newSymptomsList);
         let backgroundColor = theColors['background'];
         let fontColor = theColors['font'];
-        let flash = theColors['flash'];
         this.backgroundColor = backgroundColor;
         this.fontColor = fontColor;
-        this.flash = flash;
       }
     }
   }

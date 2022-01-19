@@ -162,10 +162,9 @@
             },
             options()  {
                 let aux = [];
-                let sortedAux = []
                 for (let i = 0; i < this.allAnomalies.length; i++) {aux.push({'name': this.allAnomalies[i]})}
-                sortedAux = aux.sort((a, b) => a.toLowerCase().localeCompare(b));
-                return sortedAux
+                aux.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+                return aux
             },
             anomalyList() {
                 let anomalyList = [];

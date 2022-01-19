@@ -9,7 +9,7 @@
         <div class="is-content">
             <div class="is-content">
                 <div v-if="(this.selectedSymptomsList.length === 0)" >
-                    No anomalies selected.
+                    No anomalous symptoms selected.
                 </div>
                 <div v-else class="columns" style="margin: 0px; padding: 0px">
                     <div class="column is-10" style="margin: 0px; padding: 0px">
