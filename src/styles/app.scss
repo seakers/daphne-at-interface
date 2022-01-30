@@ -337,6 +337,11 @@ html,body
     margin-right: 30px;
 }
 
+.anomaly {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
 .procedure-header {
     cursor: pointer;
     color: $secondary__color;
@@ -345,7 +350,20 @@ html,body
     padding: 3px 3px 3px 3px;
     margin: 0px 0px 0px 0px;
     border-width: 0px 0px 1px 0px !important;
-    border-color: $color__shadow !important;
+    border-color: $secondary__color !important;
+    border-style: solid !important;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.anomaly-header {
+    cursor: pointer;
+    color: $secondary__color;
+    background: $primary__color;
+    font-size: 18px;
+    padding: 3px 3px 3px 3px;
+    margin: 0px 0px 0px 0px;
+    border-width: 0px 0px 1px 0px !important;
+    border-color: $secondary__color !important;
     border-style: solid !important;
     border-radius: 5px 5px 0px 0px;
 }
@@ -360,7 +378,21 @@ html,body
     max-height: 0;
 }
 
+.anomaly-body   {
+    padding: 0;
+    overflow: hidden;
+    transition: 0.3s ease all !important;
+}
+
+.is-closed .anomaly-body {
+    max-height: 0;
+}
+
 .procedure-content {
+    padding: 20px;
+}
+
+.anomaly-content {
     padding: 20px;
 }
 
@@ -374,4 +406,55 @@ html,body
     background-color: $color__bg;
     border-color: $color__shadow;
     color: $color__text;
+}
+
+/* ANOMALY CHECKMARK TABLE*/
+.table tr td {
+    font-weight: bold;
+    color: $color__text;
+    background-color: $color__bg;
+    border-color: $color__shadow;
+}
+.table tbody tr:hover td   {
+    background-color: $color__text;
+    color: $color__bg;
+}
+
+/* TOGGLE ACCORDION STYLE */
+.toggle-accordion {
+    position: relative;
+    padding: 0 !important;
+    list-style: none;
+
+    .toggle-body {
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+        z-index: 2;
+        padding: 10px 10px;
+        max-height: 5000px; //large max height for anim
+        transition: all 0.25s ease-in-out;
+    }
+
+    & input[type='checkbox'] {
+        position: absolute;
+        cursor: pointer;
+        width: 100%;
+        //height: 100%;
+        z-index: 1;
+        opacity: 0;
+
+        &:checked {
+            &~.body {
+                max-height: 0;
+                padding: 0px;
+            }
+
+            &~.head {
+                & i {
+                    transform: translate(0, -3px)	rotate(-180deg);
+                }
+            }
+        }
+    }
 }
