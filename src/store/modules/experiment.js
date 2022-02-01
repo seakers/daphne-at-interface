@@ -136,7 +136,7 @@ const actions = {
             surveyLink.show();
             // once the button is clicked, the tour is over and redirect to survey
             surveyLink.on("complete", () => {
-                setTimeout(() => { window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7"); }, 2000);
+                setTimeout(() => { window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_2440oXZpxBU2lxA"); }, 2000);
             });
         }
         catch(e) {
