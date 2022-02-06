@@ -410,14 +410,13 @@ html,body
 
 /* ANOMALY CHECKMARK TABLE*/
 .table tr td {
-    font-weight: bold;
     color: $color__text;
     background-color: $color__bg;
     border-color: $color__shadow;
 }
 .table tbody tr:hover td   {
-    background-color: $color__text;
-    color: $color__bg;
+    background-color: #002E2E;
+    color: #0AFEFF;
 }
 
 /* TOGGLE ACCORDION STYLE */

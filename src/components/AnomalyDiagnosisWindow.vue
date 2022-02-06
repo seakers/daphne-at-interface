@@ -65,25 +65,34 @@
               </a>
             </div>
           </div>
-          <p class="is-mini-title" style="margin-bottom:10px; margin-top: 20px;">Symptom Comparison Table</p>
+          <p class="is-mini-title" style="margin-top: 30px; margin-bottom: 10px">Symptom Comparison Table</p>
+          <p style="color: red; font-weight: bold; margin-bottom: 10px" v-if="symptomsList.length > selectedSymptomsList.length">ALERT! You have selected only {{this.selectedSymptomsList.length}} out of {{this.symptomsList.length}} anomalous symptoms for diagnosis. </p>
           <div class="table-container" style="margin-bottom: 10px;">
             <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
               <thead>
-              <tr style="align-content: center; text-align: center">
-                <td style="color: #0AFEFF; background: #002E2E">Anomaly<p>&darr;</p></td>
-                <td v-bind:colspan="this.diagnosisReport['symptoms_list'].length" style="color: #0AFEFF; background: #002E2E">
-                  Symptoms
-                  <p>&larr;&rarr;</p>
+              <tr style="align-content: center; text-align: center; font-weight: bold;">
+                <td style="color: #0AFEFF; background: #002E2E" rowspan="2">Select
+                  <input type="checkbox" v-model='checkAll' style="width: 70%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
                 </td>
+                <td style="color: #0AFEFF; background: #002E2E" rowspan="2">Anomaly scenario</td>
+                <td style="color: #0AFEFF; background: #002E2E" rowspan="2">Total number of symptoms in anomaly</td>
+                <td v-bind:colspan="this.diagnosisReport['symptoms_list'].length" style="color: #0AFEFF; background: #002E2E">
+                  Symptoms selected for diagnosis
+                </td>
+                <td style="color: #0AFEFF; background: #002E2E" rowspan="2">Likelihood Score</td>
               </tr>
               <tr>
-                <td></td>
                 <td v-for="symptom in diagnosisReport['symptoms_list']">{{ symptom['detection_text'] }}</td>
               </tr>
               </thead>
               <tbody>
               <tr v-for="(anomaly) in diagnosisReport['diagnosis_list']">
+                <td style="text-align: center; vertical-align: middle;">
+                  <input type="checkbox" v-model="checked" :value="anomaly['name']"
+                          style="width: 70%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
+                </td>
                 <td>{{ anomaly['name'] }}</td>
+                <td style="text-align: center; vertical-align: middle">{{ anomaly['signature'].length }}</td>
                 <td v-for="symptom in diagnosisReport['symptoms_list']" style="text-align: center; vertical-align: middle;">
                   <span v-if="tickOrCross(anomaly['containsRequestedSymptoms'], symptom['detection_text']) === 'tick'" class="checkmark">
                         <div class="checkmark_circle"></div>
@@ -96,65 +105,71 @@
                         <div class="crosssign_stem2"></div>
                       </span>
                 </td>
+                <td style="color:black; text-align: center; vertical-align: middle; font-weight: bold" :style="{'background': anomaly['score']<1?(anomaly['score']<0.33 ? 'red' : 'yellow'):'green'}">{{anomaly['score']}}</td>
               </tr>
               </tbody>
             </table>
-            <div style="width: 100%; text-align: center">
-              <button class="button"
+            <div style="text-align: center">
+              <p id="alert" style="display: none">Please select an anomaly to investigate.</p>
+              <button class="button" type="submit" onclick="errorMessage()"
                       style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
-                      v-on:click.prevent="explainMore()">Provide More Explanation
+                      v-on:click.prevent="explainMore()">Investigate
               </button>
             </div>
           </div>
         </div>
       </div>
       <div class="horizontal-divider" style="margin-top: 10px; margin-bottom: 10px"></div>
-      <div id="explanations" class="is-content">
-        <div v-if="this.investigate">
-          <img v-if="this.isLoading"
+      <div class="is-content">
+        <div v-if="this.investigating !== true">
+          <img v-if="isLoading"
                src="assets/img/loader.svg"
                style="display: block; margin: auto;"
                height="40" width="40"
                alt="Loading spinner">
-          <p class="is-mini-title" style="margin-bottom:10px">
+          <p v-else>No explanations requested.</p>
+        </div>
+        <div v-else id="explanations">
+          <div class="is-mini-title" style="margin-bottom:10px">
             Explanations
             <u style="float: right; cursor: pointer" v-on:click.prevent="clearExplanations">Clear</u>
-          </p>
+          </div>
           <div class="anomaly">
             <ul v-for="anomaly in diagnosisReport['diagnosis_list']">
               <li class="toggle-accordion">
                 <input type="checkbox" style="width: 100%; height: 30px" checked>
                 <div class="anomaly-header head">{{ anomaly['name'] }}</div>
                 <div class="anomaly-body body">
-                  <div class="anomaly-content">
-                    <p>
-                      <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Anomaly Score:</span>
-                      {{ anomaly['score'] }}
-                    </p>
-                    <p>
+                  <div class="anomaly-content columns">
+                    <div class="column">
+                      <p>
                     <span
-                        style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Number of symptoms present:</span>
-                      {{ anomaly['cardinality'] }} out of {{ selectedSymptomsList.length }}
-                    </p>
-                    <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Anomaly Signature: </span>
-                    <span v-for="item in anomaly['signature']">
+                        style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Total symptoms in anomaly:</span>
+                        {{ anomaly['signature'].length }}
+                      </p>
+                      <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Anomaly Signature: </span>
+                      <span v-for="item in anomaly['signature']">
                       <p style="margin-left: 20px">
                         {{ item }}
                       </p>
                     </span>
-                    <p>
-                      <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Number of occurrences in the past: </span>
-                      6
-                    </p>
-                    <p>
+                    </div>
+                    <div class="vertical-divider" style="margin-top: 10px; margin-bottom: 10px"></div>
+                    <div class="column">
+                      <p>
+                        <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Number of occurrences in the past: </span>
+                        6
+                      </p>
+                      <p>
                       <span
                           style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Resolution in the past: </span>
-                      Using X procedure</p>
+                        Using X procedure</p>
+                    </div>
                   </div>
                   <div style="width: 100%; text-align: center">
                     <button class="button"
                             style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 10px"
-                            v-on:click.prevent="selectAnomaly( anomaly.name )">Select Anomaly
+                            v-on:click.prevent="selectAnomaly( anomaly.name )">Resolve
                     </button>
                   </div>
                 </div>
@@ -162,7 +177,6 @@
             </ul>
           </div>
         </div>
-        <p v-else>No explanations requested.</p>
       </div>
     </div>
   </div>
@@ -170,7 +184,6 @@
 
 <script>
 import {mapGetters} from 'vuex';
-
 let loaderImage = require('../images/loader.svg');
 
 export default {
@@ -180,20 +193,48 @@ export default {
     return {
       isLoading: false,
       isAnomalySelected: false,
-      investigate: false,
+      anomaliesForExplanations: '',
+      checked: [],
+      investigating: false
     }
   },
 
   computed: {
     ...mapGetters({
+      symptomsList: 'getSymptomsList',
       selectedSymptomsList: 'getSelectedSymptomsList',
       lastSelectedSymptomsList: 'getLastSelectedSymptomsList',
       diagnosisReport: 'getDiagnosisReport',
+      explanationsReport: 'getExplanationsReport',
       selectedAnomalies: 'getSelectedAnomaliesList',
     }),
+    checkAll: {
+      get: function () {
+        return this.diagnosisReport['diagnosis_list'] ? this.checked.length === this.diagnosisReport['diagnosis_list'].length : false;
+      },
+      set: function (value) {
+        let checked = [];
+        if (value) {
+          this.diagnosisReport['diagnosis_list'].forEach(function (anomaly) {
+            checked.push(anomaly['name']);
+          });
+        }
+        this.checked = checked;
+      }
+    }
   },
 
   methods: {
+    errorMessage(){
+      if (isNaN(document.getElementById("number").value))
+      {
+        // Changing content and color of content
+        error.textContent = "Please select anomalies for investigation."
+        error.style.color = "red"
+      } else {
+        error.textContent = ""
+      }
+    },
     deselectSymptom(symptom) {
       this.$store.dispatch('removeSelectedSymptom', symptom);
     },
@@ -222,11 +263,20 @@ export default {
       this.$root.$emit('diagnosisTutorialIndividual');
     },
     explainMore() {
-      this.investigate = true;
-      document.getElementById('explanations').style.display = "block";
+      if (this.checked.length === 0) {
+        document.getElementById('alert').style.display = "block";
+      }
+      else {
+        this.investigating = true;
+        this.isLoading = true;
+        document.getElementById('alert').style.display = "none";
+      }
+      //   document.getElementById('explanations').style.display = "block";
+      //   this.investigating = false;
+      //   this.isLoading = false;
+      // }
     },
     clearExplanations() {
-      this.investigate = false;
       document.getElementById('explanations').style.display = "none";
     },
     tickOrCross(anomaly, symptom) {

@@ -36,7 +36,7 @@
         it.</p>
     </div>
     <div v-if="isSecondUser" style="justify-content: center">
-      <p v-if="isSecondUser">{{ loginAlert }}</p>
+      <p style="text-align: center" v-if="isSecondUser">{{ loginAlert }}</p>
       <div style="display: flex; justify-content: center;">
       <button class="button" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E" v-on:click.prevent="loginAfterPopup">Yes
       </button>
