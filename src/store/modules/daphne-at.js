@@ -108,6 +108,9 @@ const actions = {
     async clearDiagnosisReport({state, commit}) {
         commit('mutateDiagnosisReport', []);
     },
+    async clearExplanationReport({state, commit}) {
+        commit('mutateExplanationsReport', []);
+    },
     async retrieveProceduresFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
         reqData.append('anomaly_name',  JSON.stringify(anomalyName));
