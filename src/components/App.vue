@@ -3,7 +3,7 @@
     <div class="box is-header is-main" style="margin-bottom: 5px; width: 100%">
       <div v-if="username" style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, {{ username }}</p></div>
       <div v-else style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, guest</p></div>
-      <div style="width: 25%; float: right">
+      <div style="width: 30%; float: right">
         <p style="float: left">{{ timestamp }}</p>
         <div style="float: right">
           <a id="theme" style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"
@@ -120,10 +120,9 @@ export default {
     },
     getNow: function() {
       const today = new Date();
-      const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      const dateTime = date +' '+ time;
-      this.timestamp = dateTime;
+      const date = today.toDateString();
+      const time = today.toLocaleTimeString();
+      this.timestamp = date + ' ' + time;
     },
     onCountdownEnd() {
       console.log('Countdown ended!');

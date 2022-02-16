@@ -1,6 +1,6 @@
 <template>
   <div class="chat-container box is-main" style="margin: 5px; width: 24%; height: 92%">
-    <div class="is-title " style="text-align: center">DAPHNE Chatbot</div>
+    <div class="is-title " style="text-align: center">Chatbox</div>
     <div style="height: 85%">
       <section class="chat-area" style="height: 85%" ref="chatArea">
         <div v-for="piece in dialogueHistory" class="chat-message content"

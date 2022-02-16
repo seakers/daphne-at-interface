@@ -24,6 +24,7 @@ const state = {
     selectedSymptomsList: [], // A list of the symptoms selected by the user to be diagnosed.
     lastSelectedSymptomsList: [], // A list of the symptoms that appear in the  last requested diagnosis report
     diagnosisReport: [], // Contains the information related to a requested diagnosis.
+    explanationsReport: [], // Contains the information related to a requested explanation.
 
     // Anomaly treatment related variables
     selectedAnomaliesList: [], // A list of the anomalies selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
@@ -48,6 +49,7 @@ const getters = {
     getSelectedSymptomsList(state) {return state.selectedSymptomsList},
     getLastSelectedSymptomsList(state) {return state.lastSelectedSymptomsList},
     getDiagnosisReport(state) {return state.diagnosisReport},
+    getExplanationsReport(state) {return state.explanationsReport},
     getSelectedAnomaliesList(state) {return state.selectedAnomaliesList},
     getSelectedAnomaliesInfo(state) {return state.selectedAnomaliesInfo},
     getAllAnomaliesList(state) {return state.allAnomaliesList},
@@ -361,6 +363,21 @@ const actions = {
             console.log('Error requesting a diagnosis report.')
         }
     },
+    async requestExplanations({state, commit}, selectedAnomalies)  {
+        // Clean the current explanations report
+        commit('mutateExplanationsReport', []);
+
+        // Make the diagnosis request to the backend
+        let reqData = new FormData();
+        reqData.append('anomaliesList',  JSON.stringify(selectedAnomalies));
+        let response = await fetchPost('/api/at/requestExplanations', reqData);
+        if (response.ok) {
+            let explanation_report = await response.json();
+            commit('mutateExplanationsReport', explanation_report);
+        } else {
+            console.log('Error requesting an explanation.')
+        }
+    },
     async loadAllAnomalies({state, commit}) {
         let reqData = new FormData();
         let response = await fetchPost('/api/at/loadAllAnomalies', reqData);
@@ -405,6 +422,7 @@ const mutations = {
     mutateSelectedSymptomsList(state, newVal) {state.selectedSymptomsList = newVal; },
     mutateLastSelectedSymptomsList(state, newVal) {state.lastSelectedSymptomsList = newVal; },
     mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal; },
+    mutateExplanationsReport(state, newVal) {state.explanationsReport = newVal; },
     mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal; },
     mutateSelectedAnomaliesList(state, newVal) {state.selectedAnomaliesList = newVal; },
     mutateSelectedAnomaliesInfo(state, newVal) {state.selectedAnomaliesInfo = newVal; },
