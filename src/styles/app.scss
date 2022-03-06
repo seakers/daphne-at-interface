@@ -9,6 +9,7 @@
         --color__bg: black;
         --color__text: white;
         --color__shadow: #0AFEFF;
+        --color__hover: mediumseagreen;
         &[data-theme="dark"] {
             --primary-color: #002E2E;
             --secondary-color: #0AFEFF;
@@ -17,6 +18,7 @@
             --color__bg: black;
             --color__text: white;
             --color__shadow: #0AFEFF;
+            --color__hover: mediumseagreen;
         }
         &[data-theme="light"] {
             --primary-color: #002E2E;
@@ -26,16 +28,36 @@
             --color__bg: white;
             --color__text: black;
             --color__shadow: #002E2E;
+            --color__hover: mediumseagreen;
+        }
+        &[data-theme="light_orange"] {
+            --primary-color: #8B4000;
+            --secondary-color: #FFBF00;
+            --theme-primary: black;
+            --theme-secondary: white;
+            --color__bg: white;
+            --color__text: black;
+            --color__shadow: #FFBF00;
+            --color__hover: #ff6700;
+        }
+        &[data-theme="dark_orange"] {
+            --primary-color: #8B4000;
+            --secondary-color: #FFBF00;
+            --theme-primary: white;
+            --theme-secondary: black;
+            --color__bg: black;
+            --color__text: white;
+            --color__shadow: #FFBF00;
+            --color__hover: #ff6700;
         }
     }
 }
-
+$color__hover: var(--color__hover);
 $color__bg: var(--color__bg);
 $color__text: var(--color__text);
 $color__shadow: var(--color__shadow);
 $primary__color: var(--primary-color);
 $secondary__color: var(--secondary-color);
-
 
 @keyframes glowing {
     0% {
@@ -90,7 +112,7 @@ for the settings modal
 
 .header-logo {
     float: left;
-    width: 150px;
+    width: 100%;
     background-color: var(--primary-color);
     height: 50px;
     color: var(--secondary-color);
@@ -100,8 +122,8 @@ for the settings modal
 }
 
 .header-settings {
-    float: right;
-    height: 50px;
+    float: left;
+    width: 100%;
 }
 
 .nav-links {
@@ -124,12 +146,6 @@ for the settings modal
 .content-links--link {
     color: var(--theme-primary);
     background-color: var(--theme-secondary);
-    width: 100%;
-    height: 30px;
-    margin: 0 0 5px 0;
-    padding: 4px 5px;
-    box-sizing: border-box;
-    cursor: pointer;
 }
 
 .nav-links--link.active,
@@ -191,16 +207,26 @@ html,body
 }
 
 .is-title {
-    background: #002E2E;
+    background: var(--primary-color);
     font-size: 18px;
     font-weight: bold;
-    color: #0AFEFF;
+    color: var(--secondary-color);
     padding: 3px 3px 3px 3px;
     margin: 0px 0px 0px 0px;
     border-width: 0px 0px 1px 0px !important;
     border-color: $color__shadow !important;
     border-style: solid !important;
     border-radius: 5px 5px 0px 0px;
+}
+
+.theme-buttons {
+    border-color: $secondary__color !important;;
+    color: $secondary__color !important;;
+    background: $primary__color !important;;
+}
+
+.theme-buttons:hover {
+    background-color: $color__hover !important;
 }
 
 .is-main {
@@ -217,6 +243,7 @@ html,body
 .is-content {
     padding: 10px;
     color: $color__text;
+    background: $color__bg;
 }
 
 .is-stretched {

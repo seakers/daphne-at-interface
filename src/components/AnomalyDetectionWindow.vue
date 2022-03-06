@@ -1,6 +1,6 @@
 <template>
   <div id="anomaly-detection">
-    <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
+    <div class="is-title" v-bind:style="{'background': '--primary-color', 'color': '--secondary__color'}">
       Anomaly Detection
       <span class="tutorialLink">
             <u v-on:click.prevent="detectionTutorial">?</u>

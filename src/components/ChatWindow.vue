@@ -26,17 +26,17 @@
         </div>
 
         <div style="width: 100%; text-align: center">
-          <button class="button" style="width: 10%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
+          <button class="button theme-buttons" style="width: 10%;"
                   v-on:click.prevent="switchVoice">
-            <i class="fas" v-bind:class="[ this.speakOut ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
+            <i class="fas" v-bind:class="[ this.isUnmute ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
           </button>
-          <button class="button" style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+          <button class="button theme-buttons" style="width: 55%;"
                   id="send_command" v-on:click.prevent="sendCommand">Send
           </button>
-          <button class="button" style="width: 20%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+          <button class="button theme-buttons" style="width: 20%;"
                   id="clear_history" v-on:click.prevent="clearHistory">Clear
           </button>
-          <button class="button" style="width: 10%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+          <button class="button theme-buttons" style="width: 10%;"
                   v-on:click.prevent="chatTutorial">?
           </button>
         </div>
@@ -58,7 +58,6 @@ import {mapGetters} from 'vuex';
 import SiriWave from "siriwave";
 import daphne_awake from '../sounds/awake.mp3'
 import daphne_asleep from '../sounds/asleep.mp3'
-
 let loaderImage = require('../images/loader.svg');
 let responsiveVoice = window.responsiveVoice;
 
@@ -78,21 +77,22 @@ export default {
         timeline_plot: 'TimelineResponse',
         active_message: 'ActiveMessage',
       },
-      speakOut: true
     }
   },
   computed: {
     ...mapState({
       dialogueHistory: state => state.daphne.dialogueHistory,
       isLoading: state => state.daphne.isLoading,
-      isSpeaking: state => state.daphne.isSpeaking
+      isSpeaking: state => state.daphne.isSpeaking,
     }),
     ...mapGetters([
       'getResponse'
     ]),
     ...mapGetters({
       isListening: 'getIsListening',
-      isSpeaking: 'getIsSpeaking'
+      isSpeaking: 'getIsSpeaking',
+      isUnmute: 'getIsUnmute',
+      daphneVoice: 'getDaphneVoice',
     }),
     command: {
       get() {
@@ -101,6 +101,22 @@ export default {
       set(newCommand) {
         this.$store.commit('setCommand', newCommand);
       }
+    },
+    isUnmute: {
+      get() {
+        return this.$store.state.daphne.isUnmute;
+      },
+      set(newValue) {
+        this.$store.commit('setIsUnmute', newValue);
+      },
+    },
+    daphneVoice: {
+      get() {
+        return this.$store.state.daphne.daphneVoice;
+      },
+      set(newValue) {
+        this.$store.commit('setDaphneVoice', newValue);
+      },
     }
   },
   methods: {
@@ -119,8 +135,9 @@ export default {
         this.$store.dispatch('executeCommand');
       }
     },
-    switchVoice(event) {
-      this.speakOut = !this.speakOut;
+    switchVoice() {
+      this.isUnmute = !this.isUnmute;
+      this.$store.commit("setIsUnmute", this.isUnmute);
     },
     chatTutorial(event) {
       this.$root.$emit('chatTutorialIndividual');
@@ -131,13 +148,12 @@ export default {
       this.$nextTick(() => {
         this.scrollToBottom();
       });
-      if (this.speakOut) {
+      if (this.isUnmute) {
         if (val.length > 0) {
           let lastMessage = val[val.length - 1];
           if (lastMessage['writer'] === "daphne") {
             let voiceAnswer = lastMessage['voice_message'];
-            responsiveVoice.speak(voiceAnswer);
-            //responsiveVoice.speak(voiceAnswer, "UK English Male" , {rate: 1.2}, {volume: 1}, {pitch: 2});
+            responsiveVoice.speak(voiceAnswer, this.daphneVoice , {rate: 1.05}, {volume: 1});
           }
         }
       }
@@ -225,9 +241,5 @@ export default {
 
 ::placeholder {
   color: gray !important;
-}
-
-.button:hover {
-  background-color: mediumseagreen !important;
 }
 </style>

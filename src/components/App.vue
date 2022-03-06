@@ -13,8 +13,8 @@
         </div>
       </div>
     </div>
-    <div class="columns is-gapless is-vertical-filler is-mobile">
-      <div class="is-seclss-background-black column is-9 is-vertical-filler">
+    <div class="columns is-gapless is-vertical-filler is-mobile" style="z-index: 1; position: relative">
+      <div class="is-seclss-background-black column is-9 is-vertical-filler" style="z-index: 1; position: relative">
         <div class="is-seclss-background-black sticky" style="z-index: 1">
           <div class="box is-main" style="margin-bottom: 5px;">
             <anomaly-detection-window></anomaly-detection-window>
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      <div class="is-seclss-background-black column is-3 is-pulled-right" style="z-index: 1">
+      <div class="is-seclss-background-black column is-3 is-pulled-right" style="z-index: 1; position:relative">
         <chat-window></chat-window>
       </div>
     </div>
