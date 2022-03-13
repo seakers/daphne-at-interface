@@ -13,7 +13,7 @@
         <li class="nav-links--link tablinks" v-on:click.prevent="openTab($event, 'sounds')">
           Sounds
         </li>
-        <li class="nav-links--link active tablinks" v-on:click="openTab($event, 'voice')">
+        <li class="nav-links--link tablinks" v-on:click="openTab($event, 'voice')">
           Voice
         </li>
       </ul>

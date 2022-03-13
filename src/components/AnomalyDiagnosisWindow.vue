@@ -21,10 +21,12 @@
             </ul>
           </div>
           <div class="column is-2" style="margin: 0px; padding: 0px">
-            <button class="button theme-buttons" style="width: 52%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
-                    id="request_diagnosis" v-on:click.prevent="chatKGExplanations">Diagnose
+            <button class="button theme-buttons"
+                    style="width: 52%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+                    id="request_diagnosis" v-on:click.prevent="requestDiagnosis">Diagnose
             </button>
-            <button class="button theme-buttons" style="width: 38%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
+            <button class="button theme-buttons"
+                    style="width: 38%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E"
                     id="clear_symptoms" v-on:click.prevent="clearSymptoms">Clear
             </button>
           </div>
@@ -53,13 +55,13 @@
             </div>
             <div class="column is-6" style="margin: 0px; padding: 0px">
               <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Could be caused by anomalies:</span>
-                     <ul v-for="anomaly in diagnosisReport['diagnosis_list']">
-                       <li>
-                         <input type="checkbox" v-model="checked" :value="anomaly"
-                                style="border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
-                         {{ anomaly['name'] }} ({{ anomaly['text_score'] }})
-                       </li>
-                     </ul>
+              <ul v-for="anomaly in diagnosisReport['diagnosis_list']">
+                <li>
+                  <input type="checkbox" v-model="checked" :value="anomaly"
+                         style="border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
+                  {{ anomaly['name'] }} ({{ anomaly['text_score'] }})
+                </li>
+              </ul>
             </div>
             <div style="margin: 0px; padding: 0px; font-weight: bold">
               <a script="float:right" v-on:click.prevent="clearFullDiagnosisReport">
@@ -71,164 +73,162 @@
             <p id="alert" style="display: none">Please select an anomaly to investigate.</p>
             <button class="button" type="submit" onclick="errorMessage()"
                     style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
-                    v-on:click.prevent="chatKGExplanations()">Provide Explanations
+                    v-on:click.prevent="showExplanations">Provide Explanations
             </button>
           </div>
         </div>
       </div>
       <div class="horizontal-divider" style="margin-top: 10px; margin-bottom: 10px"></div>
       <div class="is-content">
-        <div v-if="explanationsReport.length === 0">
-          <img v-if="this.investigating"
+        <div v-if="this.explaining === false">
+          <img v-if="isLoading"
                src="assets/img/loader.svg"
                style="display: block; margin: auto;"
                height="40" width="40"
                alt="Loading spinner">
           <p v-else>No explanations requested.</p>
         </div>
-        <div v-else id="explanations">
-          <div class="is-mini-title" style="margin-bottom:10px">
+        <div v-else id='explanations'>
+          <div class="is-mini-title" style="margin-bottom:5px; font-size: 22px">
             Explanations
             <u style="float: right; cursor: pointer" v-on:click.prevent="clearExplanations">Clear</u>
           </div>
-          <p class="is-mini-title" style="margin-top: 30px; margin-bottom: 10px">Symptom Comparison Table</p>
-          <p style="color: red; font-weight: bold; margin-bottom: 10px"
-             v-if="symptomsList.length > selectedSymptomsList.length">WARNING! You have selected only
-            {{ this.selectedSymptomsList.length }} out of {{ this.symptomsList.length }} anomalous symptoms for
-            diagnosis. </p>
-          <div class="table-container" style="margin-bottom: 10px;">
-            <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
-              <thead>
-              <tr style="align-content: center; text-align: center; font-weight: bold;">
-                <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
-                    title="Select the anomaly scenarios for further investigation by clicking on their respective checkboxes.">
-                  Select</p>
-                  <input type="checkbox" v-model='checkAll'
-                         style="width: 70%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
-                </td>
-                <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
-                    title="The names of potential anomaly scenarios from the Knowledge Graph.">Anomaly scenario</p></td>
-                <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
-                    title="This column provides the total number of off-nominal measurements, also called symptoms, that usually define the signature of an anomaly scenario.">
-                  Total number of symptoms in anomaly</p></td>
-                <td v-bind:colspan="this.diagnosisReport['symptoms_list'].length"
-                    style="color: #0AFEFF; background: #002E2E">
-                  <p title="These are the symptoms that you have selected above for diagnosis. Note, that these selected symptoms may or may not be present in the signature of an anomaly scenario present in this table.">
-                    Symptoms selected for diagnosis</p>
-                </td>
-                <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
-                    title="These are the number of symptoms that are missing from this table. This can mean either that they are not currently anomalous or that they are anomalous but you have not selected them for diagnosis.">
-                  Symptoms missing</p></td>
-                <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
-                    title="This column provides the likelihood of the respective anomaly being the current anomaly scenario. The closer to 1 the score is, the more likely it is the anomaly scenario.">
-                  Likelihood Score</p></td>
-              </tr>
-              <tr>
-                <td v-for="symptom in diagnosisReport['symptoms_list']">{{ symptom['detection_text'] }}</td>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(anomaly) in diagnosisReport['diagnosis_list']">
-                <td style="text-align: center; vertical-align: middle;">
-                  <input type="checkbox" v-model="checked" :value="anomaly"
-                         style="width: 70%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
-                </td>
-                <td>{{ anomaly['name'] }}</td>
-                <td style="text-align: center; vertical-align: middle"><p class="hover" style="cursor: pointer"
-                                                                          v-bind:title="'The signature of this anomaly is: '+ anomaly['signature']"
-                                                                          v-on:click="showSignature(anomaly)">
-                  {{ anomaly['signature'].length }}</p></td>
-                <td v-for="symptom in diagnosisReport['symptoms_list']"
-                    style="text-align: center; vertical-align: middle;">
+
+          <div class="box is-main" style="margin-top: 20px">
+            <p class="is-mini-title" style="margin-bottom: 10px; text-align: center">Symptom Comparison Table</p>
+            <p style="text-align: center; margin-bottom: 10px;">Knowledge-driven explanation of the anomalies you have
+              selected. Hover over the cells to see their description.</p>
+            <p style="color: red; margin-bottom: 10px; text-align: center"
+               v-if="symptomsList.length > selectedSymptomsList.length">WARNING! You have selected only
+              {{ this.selectedSymptomsList.length }} out of {{ this.symptomsList.length }} anomalous symptoms for
+              diagnosis. </p>
+            <div class="table-container">
+              <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
+                <thead>
+                <tr style="align-content: center; text-align: center; font-weight: bold;">
+                  <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
+                      title="The names of potential anomaly scenarios from the Knowledge Graph.">Anomaly scenario</p>
+                  </td>
+                  <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
+                      title="This column provides the total number of off-nominal measurements, also called symptoms, that usually define the signature of an anomaly scenario.">
+                    Total number of symptoms in anomaly</p></td>
+                  <td v-bind:colspan="this.diagnosisReport['symptoms_list'].length"
+                      style="color: #0AFEFF; background: #002E2E">
+                    <p title="These are the symptoms that you have selected above for diagnosis. Note, that these selected symptoms may or may not be present in the signature of an anomaly scenario present in this table.">
+                      Symptoms selected for diagnosis</p>
+                  </td>
+                  <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
+                      title="These are the number of symptoms that are missing from this table. This can mean either that they are not currently anomalous or that they are anomalous but you have not selected them for diagnosis.">
+                    Symptoms missing</p></td>
+                  <td style="color: #0AFEFF; background: #002E2E" rowspan="2"><p
+                      title="This column provides the likelihood of the respective anomaly being the current anomaly scenario. The closer to 1 the score is, the more likely it is the anomaly scenario.">
+                    Likelihood Score</p></td>
+                </tr>
+                <tr>
+                  <td v-for="symptom in diagnosisReport['symptoms_list']">{{ symptom['detection_text'] }}</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(anomaly) in this.checked">
+                  <td>{{ anomaly['name'] }}</td>
+                  <td style="text-align: center; vertical-align: middle"><p class="hover" style="cursor: pointer"
+                                                                            v-bind:title="'The signature of this anomaly is: '+ anomaly['signature']"
+                                                                            v-on:click="showSignature(anomaly)">
+                    {{ anomaly['signature'].length }}</p></td>
+                  <td v-for="symptom in diagnosisReport['symptoms_list']"
+                      style="text-align: center; vertical-align: middle;">
                   <span v-if="tickOrCross(anomaly['containsRequestedSymptoms'], symptom['detection_text']) === 'tick'"
                         class="checkmark">
                         <div class="checkmark_circle"></div>
                         <div class="checkmark_stem"></div>
                         <div class="checkmark_kick"></div>
                       </span>
-                  <span v-if="tickOrCross(anomaly['containsRequestedSymptoms'], symptom['detection_text']) === 'cross'"
+                    <span
+                        v-if="tickOrCross(anomaly['containsRequestedSymptoms'], symptom['detection_text']) === 'cross'"
                         class="crosssign">
                         <div class="crosssign_circle"></div>
                         <div class="crosssign_stem"></div>
                         <div class="crosssign_stem2"></div>
                       </span>
-                </td>
-                <td style="text-align: center; vertical-align: middle"><p class="hover" style="cursor: pointer"
-                                                                          v-bind:title="'The symptoms of this anomaly that are not present in this table are : '+ anomaly['missing_symptoms']"
-                                                                          v-on:click="showMissingSymptoms(anomaly)">
-                  {{ anomaly['missing_symptoms'].length }}</p></td>
-                <td style="color:black; text-align: center; vertical-align: middle; font-weight: bold"
-                    :style="{'background': 0.66<anomaly['score']<1?(anomaly['score']<0.33 ? 'green' : 'yellow'):'red'}">
-                  {{ anomaly['score'] }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <!--            <div style="text-align: center">-->
-            <!--              <p id="alert" style="display: none">Please select an anomaly to investigate.</p>-->
-            <!--              <button class="button" type="submit" onclick="errorMessage()"-->
-            <!--                      style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"-->
-            <!--                      v-on:click.prevent="chatHistoricalExplanations()">Investigate-->
-            <!--              </button>-->
-            <!--            </div>-->
+                  </td>
+                  <td style="text-align: center; vertical-align: middle"><p class="hover" style="cursor: pointer"
+                                                                            v-bind:title="'The symptoms of this anomaly that are not present in this table are : '+ anomaly['missing_symptoms']"
+                                                                            v-on:click="showMissingSymptoms(anomaly)">
+                    {{ anomaly['missing_symptoms'].length }}</p></td>
+                  <td style="color:black; text-align: center; vertical-align: middle; font-weight: bold"
+                      :style="{'background': 0.66<anomaly['score']<1?(anomaly['score']<0.33 ? 'green' : 'yellow'):'red'}">
+                    {{ anomaly['score'] }}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="anomaly">
-            <ul v-for="explanation in this.explanationsReport['explanations']">
-              <li class="toggle-accordion">
-                <input type="checkbox" style="width: 100%; height: 30px" checked>
-                <div class="anomaly-header head">{{ explanation['name'] }}</div>
-                <div class="anomaly-body body">
-                  <div class="anomaly-content">
-                    <div class="columns">
-                      <div class="column is-7">
-                        <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Anomaly Signature: </span>
-                        <span v-for="item in explanation['signature']">
+
+          <div class="box is-main" style="margin-top: 20px">
+            <p class="is-mini-title" style="margin-bottom: 10px; text-align: center">Anomaly History Table</p>
+            <p style="text-align: center; margin-bottom: 10px;">Historical data-driven explanation of the anomalies you
+              have selected. Click on the anomalies below to expand.</p>
+            <div class="anomaly">
+              <ul v-for="explanation in this.checked">
+                <li class="toggle-accordion">
+                  <input type="checkbox" style="width: 100%; height: 30px" checked>
+                  <div class="anomaly-header head">{{ explanation['name'] }}</div>
+                  <div class="anomaly-body body">
+                    <div class="anomaly-content">
+                      <div class="columns">
+                        <div class="column is-7">
+                          <span
+                              style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Anomaly Signature: </span>
+                          <span v-for="item in explanation['signature']">
                       <p style="margin-left: 20px">
                         {{ item }}
                       </p>
                     </span>
+                        </div>
+                        <div class="vertical-divider"></div>
+                        <div class="column">
+                          <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Number of occurrences in the past:</span>
+                          {{ explanation['num_occurrences'] }}
+                        </div>
                       </div>
-                      <div class="vertical-divider"></div>
-                      <div class="column">
-                        <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Number of occurrences in the past:</span>
-                        {{ explanation['num_occurrences'] }}
+                      <div class="table-container" style="margin-bottom: 10px; margin-top: 10px">
+                        <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
+                          <thead>
+                          <tr style="align-content: center; text-align: center; font-weight: bold;">
+                            <td style="color: #0AFEFF; background: #002E2E">Start Date</td>
+                            <td style="color: #0AFEFF; background: #002E2E">Start Time</td>
+                            <td style="color: #0AFEFF; background: #002E2E">End Date</td>
+                            <td style="color: #0AFEFF; background: #002E2E">End Time</td>
+                            <td style="color: #0AFEFF; background: #002E2E">Root Cause</td>
+                            <td style="color: #0AFEFF; background: #002E2E">Resolution</td>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr v-for="occurrence in explanation['time']">
+                            <td> {{ occurrence['start_date'] }}</td>
+                            <td> {{ occurrence['start_time'] }}</td>
+                            <td> {{ occurrence['end_date'] }}</td>
+                            <td> {{ occurrence['end_time'] }}</td>
+                            <td> {{ occurrence['root_cause'] }}</td>
+                            <td> {{ occurrence['actions_taken'] }}</td>
+                          </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
-                    <div class="table-container" style="margin-bottom: 10px; margin-top: 10px">
-                      <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
-                        <thead>
-                        <tr style="align-content: center; text-align: center; font-weight: bold;">
-                          <td style="color: #0AFEFF; background: #002E2E">Start Date</td>
-                          <td style="color: #0AFEFF; background: #002E2E">Start Time</td>
-                          <td style="color: #0AFEFF; background: #002E2E">End Date</td>
-                          <td style="color: #0AFEFF; background: #002E2E">End Time</td>
-                          <td style="color: #0AFEFF; background: #002E2E">Root Cause</td>
-                          <td style="color: #0AFEFF; background: #002E2E">Resolution</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="occurrence in explanation['time']">
-                          <td> {{ occurrence['start_date'] }}</td>
-                          <td> {{ occurrence['start_time'] }}</td>
-                          <td> {{ occurrence['end_date'] }}</td>
-                          <td> {{ occurrence['end_time'] }}</td>
-                          <td> {{ occurrence['root_cause'] }}</td>
-                          <td> {{ occurrence['actions_taken'] }}</td>
-                        </tr>
-                        </tbody>
-                      </table>
+                    <div style="width: 100%; text-align: center">
+                      <button class="button"
+                              style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 20px"
+                              v-on:click.prevent="selectAnomaly(explanation['name'])">Select
+                      </button>
                     </div>
                   </div>
-                  <div style="width: 100%; text-align: center">
-                    <button class="button"
-                            style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 20px"
-                            v-on:click.prevent="selectAnomaly(explanation['name'])">Resolve
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -248,9 +248,7 @@ export default {
     return {
       isLoading: false,
       isAnomalySelected: false,
-      anomaliesForExplanations: '',
       checked: [],
-      investigating: false,
       explaining: false
     }
   },
@@ -261,7 +259,6 @@ export default {
       selectedSymptomsList: 'getSelectedSymptomsList',
       lastSelectedSymptomsList: 'getLastSelectedSymptomsList',
       diagnosisReport: 'getDiagnosisReport',
-      explanationsReport: 'getExplanationsReport',
       selectedAnomalies: 'getSelectedAnomaliesList',
     }),
     checkAll: {
@@ -336,82 +333,15 @@ export default {
     },
     clearFullDiagnosisReport() {
       this.$store.dispatch('clearDiagnosisReport');
+      this.explaining = false;
+      this.checked = [];
     },
     async requestDiagnosis() {
       this.isLoading = true;
+      this.explaining = false;
+      this.checked = [];
       await this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
       this.isLoading = false;
-    },
-    async chatKGExplanations() {
-      let response = await this.requestDiagnosis();
-      var verylikely = []
-      var likely = []
-      var somewhatlikely = []
-      //create a message from daphne
-      for (let anomaly of Object.values(this.diagnosisReport['diagnosis_list'])) {
-        if (anomaly['score'] > 0.66) {
-          verylikely.push(anomaly['name']);
-
-        } else if (anomaly['score'] >= 0.33 && anomaly['score'] <= 0.66) {
-          likely.push(anomaly['name']);
-
-        } else if (anomaly['score'] < 0.33 && anomaly['score'] > 0) {
-          somewhatlikely.push(anomaly['name']);
-        }
-      }
-      let general = 'Based on my diagnosis using the knowledge graph, the most likely anomalies with the signature you have selected are : ';
-      let text = general + '<ul>'
-      let voice = general
-
-      if (verylikely.length !== 0) {
-        for (let i = 0; i < verylikely.length; i++) {
-          text = text + '<li>' + verylikely[i] + '</li>';
-          voice = voice + verylikely[i] + ', ';
-          if (i === verylikely.length - 2) {
-            voice = voice + ' and '
-          }
-          if (i === verylikely.length - 1) {
-            voice = voice + '.'
-          }
-        }
-      } else {
-        if (likely.length !== 0) {
-          for (let i = 0; i < likely.length; i++) {
-            text = text + '<li>' + likely[i] + '</li>'
-            voice = voice + likely[i] + ', '
-            if (i === likely.length - 2) {
-              voice = voice + ' and '
-            }
-            if (i === likely.length - 1) {
-              voice = voice + '.'
-            }
-          }
-        } else {
-          if (somewhatlikely.length !== 0) {
-            for (let i = 0; i < somewhatlikely.length; i++) {
-              text = text + '<li>' + somewhatlikely[i] + '</li>';
-              voice = voice + somewhatlikely[i] + ', '
-              if (i === somewhatlikely.length - 2) {
-                voice = voice + ' and '
-              }
-              if (i === somewhatlikely.length - 1) {
-                voice = voice + '.'
-              }
-            }
-          }
-        }
-      }
-
-      if (this.command === 'stop') {
-        responsiveVoice.cancel();
-      } else {
-        this.$store.commit('addDialoguePiece', {
-          "voice_message": voice,
-          "visual_message_type": ["text"],
-          "visual_message": [text],
-          "writer": "daphne"
-        });
-      }
     },
     async selectAnomaly(anomalyName) {
       this.isAnomalySelected = true;
@@ -426,21 +356,91 @@ export default {
     diagnosisTutorial(event) {
       this.$root.$emit('diagnosisTutorialIndividual');
     },
-    async requestExplanations() {
+    async showExplanations() {
+      this.explaining = false;
+      this.isLoading = true;
       if (this.checked.length === 0) {
         document.getElementById('alert').style.display = "block";
       } else {
-        this.investigating = true;
-        this.explaining = true;
         document.getElementById('alert').style.display = "none";
-        await this.$store.dispatch('requestExplanations', this.checked);
-        this.investigating = false;
-        this.explaining = false;
-        this.checked = [];
+
+        var verylikely = []
+        var likely = []
+        var somewhatlikely = []
+
+        //create a message from daphne
+        for (let anomaly of Object.values(this.diagnosisReport['diagnosis_list'])) {
+          if (anomaly['score'] > 0.66) {
+            verylikely.push(anomaly['name'], anomaly['num_occurrences']);
+
+          } else if (anomaly['score'] >= 0.33 && anomaly['score'] <= 0.66) {
+            likely.push(anomaly['name'], anomaly['num_occurrences']);
+
+          } else if (anomaly['score'] < 0.33 && anomaly['score'] > 0) {
+            somewhatlikely.push(anomaly['name'], anomaly['num_occurrences']);
+          }
+        }
+        let general = 'According to the diagnosis report, the most likely anomalies with the signature that you have selected are ';
+        let text = general + '<ul>'
+        let voice = general
+
+        if (verylikely.length !== 0) {
+          for (let i = 0; i < verylikely.length; i = i+2) {
+            text = text + '<li>' + verylikely[i] + ' with ' + verylikely[i+1] + ' occurrences in the past</li>'
+            voice = voice + verylikely[i] + ' with ' + verylikely[i+1] + ' occurrences in the past';
+            if (i === verylikely.length - 4) {
+              voice = voice + ' and '
+            }
+            if (i === verylikely.length - 1) {
+              voice = voice + '.'
+            }
+          }
+        } else {
+          if (likely.length !== 0) {
+            for (let i = 0; i < likely.length; i = i+2) {
+              text = text + '<li>' + likely[i] + ' with ' + likely[i+1] + ' occurrences in the past</li>'
+              voice = voice + likely[i] + ' with ' + likely[i+1] + ' occurrences in the past';
+              if (i === likely.length - 4) {
+                voice = voice + ' and '
+              }
+              if (i === likely.length - 1) {
+                voice = voice + '.'
+              }
+            }
+          } else {
+            if (somewhatlikely.length !== 0) {
+              for (let i = 0; i < somewhatlikely.length; i = i+2) {
+                text = text + '<li>' + somewhatlikely[i] + ' with ' + somewhatlikely[i+1] + ' occurrences in the past</li>'
+                voice = voice + somewhatlikely[i] + ' with ' + somewhatlikely[i+1] + ' occurrences in the past';
+                if (i === somewhatlikely.length - 4) {
+                  voice = voice + ' and '
+                }
+                if (i === somewhatlikely.length - 1) {
+                  voice = voice + '.'
+                }
+              }
+            }
+          }
+        }
+        if (this.command === 'stop') {
+          responsiveVoice.cancel();
+        } else {
+          this.$store.commit('addDialoguePiece', {
+            "voice_message": voice,
+            "visual_message_type": ["text"],
+            "visual_message": [text],
+            "writer": "daphne"
+          });
+        }
       }
+      this.isLoading = false;
+      this.explaining = true;
+      document.getElementById('explanations').style.display = "block";
     },
     clearExplanations() {
-      this.$store.dispatch('clearExplanationReport');
+      document.getElementById('explanations').style.display = "none";
+      this.explaining = false;
+      this.checked = [];
     },
     tickOrCross(anomaly, symptom) {
       let ticksOrCross = 'cross'

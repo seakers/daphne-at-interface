@@ -1,6 +1,6 @@
 <template>
   <div id="anomaly-detection">
-    <div class="is-title" v-bind:style="{'background': '--primary-color', 'color': '--secondary__color'}">
+    <div class="is-title" v-bind:style="{'background': backgroundColor, 'color': fontColor}">
       Anomaly Detection
       <span class="tutorialLink">
             <u v-on:click.prevent="detectionTutorial">?</u>
@@ -43,8 +43,8 @@ export default {
 
   data: function () {
     return {
-      backgroundColor: '#002E2E',
-      fontColor: '#0AFEFF',
+      backgroundColor: '--primary-color',
+      fontColor: '--secondary-color',
       flash: false
     }
   },
@@ -95,6 +95,7 @@ export default {
         let fontColor = theColors['font'];
         this.backgroundColor = backgroundColor;
         this.fontColor = fontColor;
+        console.log(this.backgroundColor, this.fontColor)
       }
     }
   }
