@@ -95,7 +95,6 @@ export default {
         let fontColor = theColors['font'];
         this.backgroundColor = backgroundColor;
         this.fontColor = fontColor;
-        console.log(this.backgroundColor, this.fontColor)
       }
     }
   }

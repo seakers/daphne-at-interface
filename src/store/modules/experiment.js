@@ -123,7 +123,7 @@ const actions = {
             });
             // add steps
             surveyLink.addStep({
-                text: `The time for the experiment has expired. Please click the "Survey Link" button to
+                text: `That's it for this experiment. Please click the "Survey Link" button to
                     fill out the survey. Thank you.`,
                 buttons: [
                     {
@@ -136,7 +136,7 @@ const actions = {
             surveyLink.show();
             // once the button is clicked, the tour is over and redirect to survey
             surveyLink.on("complete", () => {
-                setTimeout(() => { window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_6ydIj0PRqBE5RT7"); }, 2000);
+                setTimeout(() => { window.location.replace("https://tamu.qualtrics.com/jfe/form/SV_5u2vCanwaqxnMwe"); }, 1000);
             });
         }
         catch(e) {

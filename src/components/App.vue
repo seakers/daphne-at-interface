@@ -1,14 +1,21 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div class="is-seclss-background-black is-vertical-filler">
     <div class="box is-header is-main" style="margin-bottom: 5px; width: 100%">
-      <div v-if="username" style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, {{ username }}</p></div>
+      <div v-if="username" style="margin-left: 1em; float: left; z-index: 1; width: 30%"><p>Welcome, {{ username }}</p>
+      </div>
       <div v-else style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, guest</p></div>
+      <div>
+        <p style="float: left; font-weight: bolder; font-size: 20px; margin-right: 5px"> Time Left to solve this
+          anomaly: </p>
+        <p style="float: left; font-weight: bolder; font-size: 20px; color: red"> {{ countDown }} </p>
+      </div>
       <div style="width: 30%; float: right">
         <p style="float: left">{{ timestamp }}</p>
         <div style="float: right">
           <a id="theme" style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"
              v-on:click.prevent="changeSettings"><i class="fas fa-cogs"></i></a>
-          <a id="clear_history" style="font-weight:bold; float: right; margin-left: 1em; margin-right: 1em; line-height: inherit"
+          <a id="clear_history"
+             style="font-weight:bold; float: right; margin-left: 1em; margin-right: 1em; line-height: inherit"
              v-on:click.prevent="logout">Sign Out</a>
         </div>
       </div>
@@ -91,7 +98,9 @@ export default {
       chatTutorial: {},
       conclusionTutorial: {},
       forceReload: false,
-      timestamp: ""
+      timestamp: "",
+      countDown: 180,
+      isAnomaly: '',
     }
   },
   created() {
@@ -112,17 +121,35 @@ export default {
     ...mapGetters({
       telemetryIsOngoing: 'getTelemetryIsOngoing',
       heraUser: 'getHeraUser',
+      symptoms: 'getSymptomsList'
     }),
   },
   methods: {
-    changeSettings(){
+    countdownTimer() {
+      if (this.symptoms !== 0) {
+        if (this.countDown > 0) {
+          setTimeout(() => {
+            this.countDown -= 1
+          }, 1000)
+        }
+      }
+    },
+    changeSettings() {
       this.$store.commit('activateModal', 'SettingsModal');
     },
-    getNow: function() {
+    getNow: function () {
       const today = new Date();
       const date = today.toDateString();
       const time = today.toLocaleTimeString();
       this.timestamp = date + ' ' + time;
+      this.isAnomaly = this.symptoms.length !== 0;
+      if (this.isAnomaly === true && this.countDown > 0) {
+        if (this.isModalActive === false) {
+          this.countdownTimer();
+        }
+      } else if (this.isAnomaly === false && this.isModalActive === false) {
+        this.countDown = 180
+      }
     },
     onCountdownEnd() {
       console.log('Countdown ended!');
@@ -175,8 +202,7 @@ export default {
         }
         if (!seen_tutorial) {
           this.$store.commit('setExperimentStage', 'tutorial');
-        }
-        else {
+        } else {
           this.$store.commit('setExperimentStage', 'with_daphne');
         }
         this.$store.commit('setInExperiment', true);
@@ -288,7 +314,7 @@ export default {
     },
     sleep(delay) {
       const start = new Date().getTime();
-      while (new Date().getTime() < start + delay);
+      while (new Date().getTime() < start + delay) ;
     },
   },
   components: {
@@ -380,8 +406,8 @@ export default {
       this.introTutorial.addStep({
         attachTo: {
           element: '#settings',
-              useModalOverlay: false,
-              on: 'bottom'
+          useModalOverlay: false,
+          on: 'bottom'
         },
         text: `This is the Settings overlay. You can select a theme by clicking on one of the buttons on the top right corner and observe how the appearance of the display changes. You have two themes to select from: Light and Dark. When you have selected the theme that you like, click on Next.`,
         buttons: [
@@ -1496,6 +1522,14 @@ export default {
     }
   },
   watch: {
+    symptomsList(newVal, oldVal) {
+      let oldValJSON = JSON.stringify(oldVal);
+      let newValJSON = JSON.stringify(newVal);
+      if (oldValJSON !== newValJSON) {
+        let newSymptomsList = JSON.parse(newValJSON);
+        console.log("we are here");
+      }
+    },
     experimentStage: async function (val, oldVal) {
 
       if (this.inExperiment && !this.isRecovering) {
