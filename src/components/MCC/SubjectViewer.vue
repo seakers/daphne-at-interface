@@ -33,6 +33,8 @@
                 </p>
               </li>
             </ul>
+            <p style="color: #0AFEFF">Workload Answer:</p>
+            <p style="color: white"> {{new_workload_answer}} {{this.new_timestamp}}</p>
           </div>
         </div>
         <div class="column is-5">
@@ -40,44 +42,47 @@
           <div class="scrollable-mcccontainer">
             <ChatArea :dialogue-history="dialogueHistory"></ChatArea>
           </div>
-          <div class="is-content" style="float: right">
+          <div class="is-content" style="text-align: center">
             <div class="control">
-              <a class="button is-info" v-on:click.prevent="switchAlarms">
+              <button class="button is-info" v-on:click.prevent="switchAlarms">
                                 <span class="icon is-small">
                                     <i class="fas"
                                        v-bind:class="[ this.playAlarms ? 'fa-volume-up' : 'fa-volume-off' ]"></i>
                                 </span>
-              </a>
+              </button>
+              <input class="input" style="width:70%;background-color: var(--color__bg); border-color: var(--color__shadow); color: var(--color__text); "
+                     type="text" name="workload_problem" v-model="workload_problem"/>
+              <p>{{timestamp}}</p>
             </div>
 
             <div class="control" style="margin-top: 10px">
-              <button type="submit" class="button is-primary" v-on:click="openSituationalAwarenessModal" style="background-color: blue">
+              <button type="submit" class="button is-primary" v-on:click="openSituationalAwarenessModal" style="background-color: blue; width: 70%">
                 Situational Awareness
               </button>
             </div>
 
             <div class="control" style="margin-top: 10px">
-              <button type="submit" class="button is-primary" v-on:click="openWorkloadModal" style="background-color: blue">
+              <button type="submit" class="button is-primary" v-on:click="openWorkloadModal" style="background-color: blue; width: 70%">
                 Workload
               </button>
             </div>
 
             <div class="control" style="margin-top: 10px">
-              <button type="submit" class="button is-primary" v-on:click="afterAnomalySurvey" style="background-color: blue">
+              <button type="submit" class="button is-primary" v-on:click="afterAnomalySurvey" style="background-color: blue; width: 70%">
                 Send After Anomaly Survey
               </button>
             </div>
 
             <div class="control" style="margin-top: 10px">
               <button type="submit" class="button is-primary" v-on:click="finishExperiment"
-                      style="background-color: blue">
+                      style="background-color: blue; width: 70%">
                 Send Final Survey
               </button>
             </div>
 
             <div class="control" style="margin-top: 10px">
               <button type="submit" class="button is-primary" v-on:click="forceFinishExperiment"
-                      style="background-color: red">
+                      style="background-color: red; width: 70%">
                 Force Logout User
               </button>
             </div>
@@ -110,7 +115,12 @@ export default {
       selectedProceduresInfo: {},
       lastProvidedDiagnosis: [],
       playAlarms: false,
-      isLoggedIn: false
+      isLoggedIn: false,
+      workload_answer: '',
+      workload_problem:'',
+      timestamp: '',
+      new_workload_answer: '',
+      new_timestamp: ''
     }
   },
   components: {
@@ -138,6 +148,13 @@ export default {
               this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
               this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
               this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
+              this.new_workload_answer = state["daphneat"]["workload_answer"];
+              if (this.new_workload_answer !== this.workload_answer) {
+                console.log(this.new_workload_answer !== this.workload_answer)
+                this.workload_answer = this.new_workload_answer;
+                this.new_timestamp = this.getNow();
+                console.log(this.new_timestamp)
+              }
             } else {
               this.currentStage = 'UNKNOWN';
               this.dialogueHistory = [];
@@ -145,6 +162,7 @@ export default {
               this.selectedAnomaliesList = [];
               this.selectedProceduresList = [];
               this.selectedProceduresInfo = [];
+              this.workload_answer = [];
             }
           } catch (e) {
             this.currentStage = 'UNKNOWN';
@@ -153,6 +171,7 @@ export default {
             this.selectedAnomaliesList = [];
             this.selectedProceduresList = [];
             this.selectedProceduresInfo = [];
+            this.workload_answer = [];
           }
         } else {
           console.error('Error retrieving user state.');
@@ -162,6 +181,7 @@ export default {
           this.selectedAnomaliesList = [];
           this.selectedProceduresList = [];
           this.selectedProceduresInfo = [];
+          this.workload_answer = [];
         }
       } catch (e) {
         console.error('Networking error:', e);
@@ -171,6 +191,7 @@ export default {
         this.selectedAnomaliesList = [];
         this.selectedProceduresList = [];
         this.selectedProceduresInfo = [];
+        this.workload_answer = [];
       }
     },
     async openSituationalAwarenessModal() {
@@ -179,8 +200,10 @@ export default {
       await fetchPost(API_URL + 'experiment-at/situational-awareness', reqData);
     },
     async openWorkloadModal() {
+      this.timestamp = this.getNow();
       let reqData = new FormData();
       reqData.append('user_id', this.userId);
+      reqData.append('workload_problem', this.workload_problem);
       await fetchPost(API_URL + 'experiment-at/workload', reqData);
     },
     async afterAnomalySurvey() {
@@ -231,10 +254,16 @@ export default {
         }
       }
     },
+    getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      return date + ' ' + time;
+    }
   },
   mounted() {
     this.refreshUserInformation();
-    setInterval(this.refreshUserInformation, 5000);
+    setInterval(this.refreshUserInformation, 1000);
 
   }
 }

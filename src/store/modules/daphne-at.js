@@ -32,7 +32,11 @@ const state = {
     selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies. RELEVANT FOR THE CONTEXT.
     selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
     loadingNewAnomaly: false,
-    isLoggedIn: false
+    isLoggedIn: false,
+
+    //measures
+    workload_answer: '',
+    workload_problem: ''
 };
 
 const getters = {
@@ -55,11 +59,13 @@ const getters = {
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
     getPlayAlarms(state) {return state.playAlarms},
+    getWorkloadProblem(state) {return state.workload_problem},
+    getWorkloadAnswer(state) {return state.workload_answer}
 };
 
 const actions = {
     async updateTelemetryPlotData({state, commit}, telemetryData) {
-        commit('mutateTelemetryPlotData', telemetryData)
+        commit('TelemetryPlotData', telemetryData)
     },
     async updateTelemetryValuesAndInfo({state, commit}, telemetryDict) {
         let telemetryValues = JSON.parse(telemetryDict['values']);
@@ -413,6 +419,8 @@ const mutations = {
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
     mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
+    mutateWorkloadProblem(state, newVal) {state.workload_problem = newVal;},
+    mutateWorkloadAnswer(state, newVal) {state.workload_answer = newVal;},
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {

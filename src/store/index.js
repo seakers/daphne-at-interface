@@ -200,6 +200,10 @@ export default new Vuex.Store({
             else if (received_info['type'] === 'situational_awareness') {
                 commit('activateModal', 'SituationalAwarenessModal');
             }
+            // Workload Questions
+            else if (received_info['type'] === 'workload') {
+                commit('mutateWorkloadProblem', received_info['workload_problem']);
+            }
             else if (received_info['type'] === 'after_anomaly_survey') {
                 // set up pop up to link
                 const surveyLink = new Shepherd.Tour({

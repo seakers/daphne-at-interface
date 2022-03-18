@@ -1,5 +1,13 @@
 <template>
   <div class="chat-container box is-main" style="margin: 5px; width: 24%; height: 92%">
+    <div v-if="this.workload_problem" class="box is-seclss-background-black" style="text-align: center; margin: 0px 0px 0px 0px">
+      <span style="color: var(--color__text)">{{this.workload_problem}}
+        <input style="background-color: var(--color__bg); border-color: var(--color__shadow); color: var(--color__text); margin-right: 10px"
+             type="text" name="answer" v-model="workload_answer"/>
+      </span>
+      <button class="button theme-buttons" style="width: 30%; margin-top: 15px"
+              v-on:click.prevent="submitWorkloadAnswer">Submit</button>
+    </div>
     <div class="is-title " style="text-align: center">Chatbox</div>
     <div style="height: 85%">
       <section class="chat-area" style="height: 85%" ref="chatArea">
@@ -77,6 +85,7 @@ export default {
         timeline_plot: 'TimelineResponse',
         active_message: 'ActiveMessage',
       },
+      workload_answer: ''
     }
   },
   computed: {
@@ -84,6 +93,7 @@ export default {
       dialogueHistory: state => state.daphne.dialogueHistory,
       isLoading: state => state.daphne.isLoading,
       isSpeaking: state => state.daphne.isSpeaking,
+      workload_problem: state => state.workload_problem
     }),
     ...mapGetters([
       'getResponse'
@@ -93,6 +103,7 @@ export default {
       isSpeaking: 'getIsSpeaking',
       isUnmute: 'getIsUnmute',
       daphneVoice: 'getDaphneVoice',
+      workload_problem: 'getWorkloadProblem'
     }),
     command: {
       get() {
@@ -121,7 +132,6 @@ export default {
   },
   methods: {
     scrollToBottom: function () {
-      console.log("Scrolling to bottom");
       let container = this.$el.querySelector(".chat-area");
       container.scrollTop = container.scrollHeight;
     },
@@ -142,6 +152,10 @@ export default {
     chatTutorial(event) {
       this.$root.$emit('chatTutorialIndividual');
     },
+    submitWorkloadAnswer() {
+      this.$store.commit("mutateWorkloadAnswer", this.workload_answer);
+      this.$store.commit("mutateWorkloadProblem", '');
+    }
   },
   watch: {
     dialogueHistory: function (val, oldVal) {
