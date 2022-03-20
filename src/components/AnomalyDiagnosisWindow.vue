@@ -72,7 +72,7 @@
           <div style="text-align: center; margin-top: 30px">
             <p id="alert" style="display: none">Please select an anomaly to investigate.</p>
             <button class="button" type="submit" onclick="errorMessage()"
-                    style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
+                    style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
                     v-on:click.prevent="showExplanations">Provide Explanations
             </button>
           </div>
@@ -80,7 +80,7 @@
       </div>
       <div class="horizontal-divider" style="margin-top: 10px; margin-bottom: 10px"></div>
       <div class="is-content">
-        <div v-if="this.explaining === false">
+        <div v-if="diagnosisReport.length === 0 || this.explaining === false">
           <img v-if="isLoading"
                src="assets/img/loader.svg"
                style="display: block; margin: auto;"
@@ -88,7 +88,7 @@
                alt="Loading spinner">
           <p v-else>No explanations requested.</p>
         </div>
-        <div v-else id='explanations'>
+        <div v-else id='explanations' style="display: block">
           <div class="is-mini-title" style="margin-bottom:5px; font-size: 22px">
             Explanations
             <u style="float: right; cursor: pointer" v-on:click.prevent="clearExplanations">Clear</u>
@@ -219,7 +219,7 @@
                     </div>
                     <div style="width: 100%; text-align: center">
                       <button class="button"
-                              style="width: 55%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 20px"
+                              style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 20px"
                               v-on:click.prevent="selectAnomaly(explanation['name'])">Select
                       </button>
                     </div>
@@ -356,11 +356,13 @@ export default {
     diagnosisTutorial(event) {
       this.$root.$emit('diagnosisTutorialIndividual');
     },
-    async showExplanations() {
+    showExplanations() {
       this.explaining = false;
       this.isLoading = true;
       if (this.checked.length === 0) {
+        this.isLoading = false;
         document.getElementById('alert').style.display = "block";
+        document.getElementById('explanations').style.display = "none";
       } else {
         document.getElementById('alert').style.display = "none";
 
@@ -438,9 +440,9 @@ export default {
       document.getElementById('explanations').style.display = "block";
     },
     clearExplanations() {
-      document.getElementById('explanations').style.display = "none";
       this.explaining = false;
       this.checked = [];
+      document.getElementById('explanations').style.display = "none";
     },
     tickOrCross(anomaly, symptom) {
       let ticksOrCross = 'cross'

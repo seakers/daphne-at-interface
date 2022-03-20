@@ -34,7 +34,7 @@
               </li>
             </ul>
             <p style="color: #0AFEFF">Workload Answer:</p>
-            <p style="color: white"> {{new_workload_answer}} {{this.new_timestamp}}</p>
+            <p style="color: white"> {{new_workload_answer}} {{this.new_workload_timestamp}}</p>
           </div>
         </div>
         <div class="column is-5">
@@ -120,7 +120,7 @@ export default {
       workload_problem:'',
       timestamp: '',
       new_workload_answer: '',
-      new_timestamp: ''
+      new_workload_timestamp: ''
     }
   },
   components: {
@@ -150,10 +150,8 @@ export default {
               this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
               this.new_workload_answer = state["daphneat"]["workload_answer"];
               if (this.new_workload_answer !== this.workload_answer) {
-                console.log(this.new_workload_answer !== this.workload_answer)
                 this.workload_answer = this.new_workload_answer;
-                this.new_timestamp = this.getNow();
-                console.log(this.new_timestamp)
+                this.new_workload_timestamp = this.getNow();
               }
             } else {
               this.currentStage = 'UNKNOWN';

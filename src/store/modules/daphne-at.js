@@ -65,7 +65,7 @@ const getters = {
 
 const actions = {
     async updateTelemetryPlotData({state, commit}, telemetryData) {
-        commit('TelemetryPlotData', telemetryData)
+        commit('mutateTelemetryPlotData', telemetryData)
     },
     async updateTelemetryValuesAndInfo({state, commit}, telemetryDict) {
         let telemetryValues = JSON.parse(telemetryDict['values']);
@@ -130,7 +130,6 @@ const actions = {
         let response = await fetchPost('/api/at/retrieveInfoFromProcedure', reqData);
         if (response.ok) {
             let info = await response.json();
-            console.log(info['checkableSteps']);
             return info;
         } else {
             console.log('Error retrieving the procedure objective.');

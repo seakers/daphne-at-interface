@@ -2,9 +2,9 @@
   <div>
   <div class="message-body">
     <div class="modal-survey">
-      <p><b>Answer the following questions. Click on Done <i>ONLY</i> after submitting the survey.</b></p>
+      <p><b>How confident are you about your selection? Click on Done <i>ONLY</i> after submitting your answer.</b></p>
       <section class="modal-card-body">
-        <iframe style="width: 100%; height: 500px" src="https://tamu.qualtrics.com/jfe/form/SV_8AlVsnyHiGXWgSO"></iframe>
+        <iframe style="width: 100%; height: 500px" src="https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"></iframe>
       </section>
       <div style="text-align: center">
       <button class="button is-success" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 15px"
@@ -18,11 +18,14 @@
 <script>
 
 export default {
-  name: "SituationalAwarenessModal",
+  name: "AfterAnomalySurveyModal",
   computed: {
   },
   methods: {
     submitAnswer() {
+      this.$store.commit("mutateSelectedAnomaliesList", []);
+      this.$store.commit("mutateSelectedSymptomsList", []);
+      this.$store.commit("mutateDiagnosisReport", []);
       this.$emit('close-modal')
     }
   },

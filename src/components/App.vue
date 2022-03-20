@@ -1522,14 +1522,6 @@ export default {
     }
   },
   watch: {
-    symptomsList(newVal, oldVal) {
-      let oldValJSON = JSON.stringify(oldVal);
-      let newValJSON = JSON.stringify(newVal);
-      if (oldValJSON !== newValJSON) {
-        let newSymptomsList = JSON.parse(newValJSON);
-        console.log("we are here");
-      }
-    },
     experimentStage: async function (val, oldVal) {
 
       if (this.inExperiment && !this.isRecovering) {

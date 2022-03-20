@@ -205,32 +205,7 @@ export default new Vuex.Store({
                 commit('mutateWorkloadProblem', received_info['workload_problem']);
             }
             else if (received_info['type'] === 'after_anomaly_survey') {
-                // set up pop up to link
-                const surveyLink = new Shepherd.Tour({
-                    defaultStepOptions: {
-                        classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    },
-                    useModalOverlay: true,
-                    exitOnEsc: false
-                });
-                // add steps
-                surveyLink.addStep({
-                    text: `Time to solve this anomaly has expired. Please click the "Survey Link" button to
-                    fill out the survey. Thank you.`,
-                    buttons: [
-                        {
-                            text: 'Survey Link',
-                            action: surveyLink.next
-                        }
-                    ]
-                });
-                // show the closing pop up
-                surveyLink.show();
-                // once the button is clicked, the tour is over and redirect to survey
-                surveyLink.on("complete", () => {
-                    setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_5u2vCanwaqxnMwe"); }, 1000);
-                });
+                commit('activateModal', 'AfterAnomalySurveyModal');
             }
         },
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="modal" v-bind:class="{ 'is-active': isActive }">
-    <div v-if="modalContent === 'SituationalAwarenessModal'">
+    <div v-if="modalContent === 'SituationalAwarenessModal' || modalContent === 'AfterAnomalySurveyModal'">
       <div class="modal-background modal-backdrop"></div>
       <div class="modal-content">
         <article class="message">
@@ -28,6 +28,7 @@ import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 import SettingsModal from './SettingsModal';
 import SituationalAwarenessModal from './SituationalAwarenessModal'
+import AfterAnomalySurveyModal from './AfterAnomalySurveyModal'
 
 export default {
   name: 'modal',
@@ -42,6 +43,7 @@ export default {
     RegisterModal,
     SettingsModal,
     SituationalAwarenessModal,
+    AfterAnomalySurveyModal
   },
   methods: {
     onCloseModal() {
