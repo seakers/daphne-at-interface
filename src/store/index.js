@@ -204,8 +204,28 @@ export default new Vuex.Store({
             else if (received_info['type'] === 'workload') {
                 commit('mutateWorkloadProblem', received_info['workload_problem']);
             }
-            else if (received_info['type'] === 'after_anomaly_survey') {
-                commit('activateModal', 'AfterAnomalySurveyModal');
+            else if (received_info['type'] === 'message') {
+                // set up pop up to link
+                const surveyLink = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add steps
+                surveyLink.addStep({
+                    text: `Unfortunately, this procedure did not fix the anomaly. Try again.`,
+                    buttons: [
+                        {
+                            text: 'Okay',
+                            action: surveyLink.next
+                        }
+                    ]
+                });
+                // show the closing pop up
+                surveyLink.show();
             }
         },
     },

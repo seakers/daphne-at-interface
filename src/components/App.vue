@@ -5,7 +5,7 @@
       </div>
       <div v-else style="margin-left: 1em; float: left; z-index: 1; width: 40%"><p>Welcome, guest</p></div>
       <div>
-        <p style="float: left; font-weight: bolder; font-size: 20px; margin-right: 5px"> Time Left to solve this
+        <p style="float: left; font-weight: bolder; font-size: 20px; margin-right: 5px"> Time left to solve this
           anomaly: </p>
         <p style="float: left; font-weight: bolder; font-size: 20px; color: red"> {{ countDown }} </p>
       </div>
@@ -149,6 +149,40 @@ export default {
         }
       } else if (this.isAnomaly === false && this.isModalActive === false) {
         this.countDown = 180
+      }
+      else if (this.countDown === 0) {
+        // set up pop up to link
+        const surveyLink = new Shepherd.Tour({
+          defaultStepOptions: {
+            classes: 'shadow-md bg-purple-dark',
+            scrollTo: true
+          },
+          useModalOverlay: true,
+          exitOnEsc: false
+        });
+        // add steps
+        surveyLink.addStep({
+          text: `You have run out of time. Please click on the survey link to fill the survey.`,
+          buttons: [
+            {
+              text: 'Survey Link',
+              action: surveyLink.next
+            }
+          ]
+        });
+        // show the closing pop up
+        surveyLink.show();
+
+        // once the button is clicked, the tour is over and redirect to survey
+        surveyLink.on("complete", () => {
+          setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"); }, 1000);
+        });
+
+        this.$store.commit("mutateSelectedAnomaliesList", []);
+        this.$store.commit("mutateSelectedSymptomsList", []);
+        this.$store.commit('mutateSelectedProceduresList', []);
+        this.$store.commit('mutateSelectedProceduresInfo', {});
+        this.$store.commit("mutateDiagnosisReport", []);
       }
     },
     onCountdownEnd() {

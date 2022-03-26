@@ -26,11 +26,6 @@
           @select="newSelection"
           @remove="newDeselection">
       </multiselect>
-      <div v-if="clearButtonBoolean">
-        <a class="button is-small-button" v-on:click.prevent="clearCompletedProcedures" style="float:right">
-          Clear Completed Procedures
-        </a>
-      </div>
     </div>
     <div v-if="isLoading" class="is-content">
       <img v-if="isLoading"
@@ -41,7 +36,9 @@
     </div>
     <div v-else v-for="(anomalyDict, anomalyIndex) in anomalyList" class="is-content" :key="componentKey">
       <div class="horizontal-divider" style="margin-bottom: 10px"></div>
-      <p class="is-mini-title" style="margin-bottom:10px">{{ anomalyDict['anomalyName'] }}</p>
+      <p class="is-mini-title" style="margin-bottom:10px">{{ anomalyDict['anomalyName'] }}
+        <u v-if="clearButtonBoolean" style="float: right; cursor: pointer" v-on:click.prevent="clearCompletedProcedures">Clear</u>
+      </p>
       <div v-for="(procedureDict, procedureIndex) in anomalyDict['anomalyProcedures']">
         <div class="procedure" :class="{
                             'is-closed': !anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen'],
@@ -127,7 +124,7 @@
       <div style="width: 100%; text-align: center; vertical-align: middle">
         <button class="button"
                 style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 25px"
-                v-on:click.prevent="selectAnomaly(anomalyDict['anomalyName'])">Submit Anomaly for Resolution
+                v-on:click="submitAnomaly(anomalyDict['anomalyName'])">Submit Anomaly
         </button>
       </div>
       <div class="horizontal-divider" style="margin-top: 30px"></div>
@@ -139,7 +136,7 @@
 import Multiselect from 'vue-multiselect'
 import {mapGetters, mapMutations} from 'vuex';
 import {updateCheckboxes} from "../scripts/at-display-builders";
-
+import Shepherd from 'shepherd.js';
 let loaderImage = require('../images/loader.svg');
 
 export default {
@@ -311,8 +308,40 @@ export default {
         window.open(window.location.href + "api/at/recommendation/procedure?filename=%2Fhome%2Fubuntu%2Fdaphne_brain%2FAT%2Fdatabases%2Fprocedures%2F" + url, '_blank')
       }
     },
-    async selectAnomaly() {
-      this.$store.commit('activateModal', 'AfterAnomalySurveyModal');
+    submitAnomaly(name) {
+      // set up pop up to link
+      const surveyLink = new Shepherd.Tour({
+        defaultStepOptions: {
+          classes: 'shadow-md bg-purple-dark',
+          scrollTo: true
+        },
+        useModalOverlay: true,
+        exitOnEsc: false
+      });
+      var prompt_text = 'You have selected ' + name + ' anomaly for diagnosis. Please click on the survey link to fill the survey.'
+      // add steps
+      surveyLink.addStep({
+        text: prompt_text,
+        buttons: [
+          {
+            text: 'Survey Link',
+            action: surveyLink.next
+          }
+        ]
+      });
+      // show the closing pop up
+      surveyLink.show();
+
+      // once the button is clicked, the tour is over and redirect to survey
+      surveyLink.on("complete", () => {
+        setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"); }, 1000);
+      });
+
+      this.$store.commit("mutateSelectedAnomaliesList", []);
+      this.$store.commit("mutateSelectedSymptomsList", []);
+      this.$store.commit('mutateSelectedProceduresList', []);
+      this.$store.commit('mutateSelectedProceduresInfo', {});
+      this.$store.commit("mutateDiagnosisReport", []);
     }
   },
   mounted: function () {
