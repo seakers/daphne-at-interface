@@ -68,12 +68,6 @@
             </div>
 
             <div class="control" style="margin-top: 10px">
-              <button type="submit" class="button is-primary" v-on:click="afterAnomalySurvey" style="background-color: blue; width: 70%">
-                Send After Anomaly Survey
-              </button>
-            </div>
-
-            <div class="control" style="margin-top: 10px">
               <button type="submit" class="button is-primary" v-on:click="finishExperiment"
                       style="background-color: blue; width: 70%">
                 Send Final Survey
@@ -110,17 +104,25 @@ export default {
       currentStage: [],
       dialogueHistory: [],
       selectedSymptomsList: [],
+      new_selectedSymptomsList: [],
       selectedAnomaliesList: [],
+      new_selectedAnomaliesList: [],
       selectedProceduresList: [],
       selectedProceduresInfo: {},
+      new_selectedProceduresInfo:{},
       lastProvidedDiagnosis: [],
+      new_lastProvidedDiagnosis: [],
       playAlarms: false,
       isLoggedIn: false,
       workload_answer: '',
       workload_problem:'',
-      timestamp: '',
+      workload_timestamp: '',
       new_workload_answer: '',
-      new_workload_timestamp: ''
+      new_workload_timestamp: '',
+      diagnosis_timestamp: '',
+      symptoms_timestamp: '',
+      anomalies_timestamp: '',
+      procedure_timestamp: ''
     }
   },
   components: {
@@ -144,10 +146,26 @@ export default {
               this.currentStage = state["experiment"]["experimentStage"];
               this.dialogueHistory = state["daphne"]["dialogueHistory"];
               this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
+              if (JSON.stringify(this.new_selectedSymptomsList) !== JSON.stringify(this.selectedSymptomsList)) {
+                this.new_selectedSymptomsList = this.selectedSymptomsList;
+                this.symptoms_timestamp = this.getNow();
+              }
               this.selectedAnomaliesList = state["daphneat"]["selectedAnomaliesList"];
+              if (JSON.stringify(this.new_selectedAnomaliesList) !== JSON.stringify(this.selectedAnomaliesList)) {
+                this.new_selectedAnomaliesList = this.selectedAnomaliesList;
+                this.anomalies_timestamp = this.getNow();
+              }
               this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
               this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
+              if (JSON.stringify(this.new_selectedProceduresInfo) !== JSON.stringify(this.selectedProceduresInfo)) {
+                this.new_selectedProceduresInfo = this.selectedProceduresInfo;
+                this.procedure_timestamp = this.getNow();
+              }
               this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
+              if (JSON.stringify(this.new_lastProvidedDiagnosis) !== JSON.stringify(this.lastProvidedDiagnosis)) {
+                this.new_lastProvidedDiagnosis = this.lastProvidedDiagnosis;
+                this.diagnosis_timestamp = this.getNow();
+              }
               this.new_workload_answer = state["daphneat"]["workload_answer"];
               if (this.new_workload_answer !== this.workload_answer) {
                 this.workload_answer = this.new_workload_answer;
@@ -198,17 +216,11 @@ export default {
       await fetchPost(API_URL + 'experiment-at/situational-awareness', reqData);
     },
     async openWorkloadModal() {
-      this.timestamp = this.getNow();
+      this.workload_timestamp = this.getNow();
       let reqData = new FormData();
       reqData.append('user_id', this.userId);
       reqData.append('workload_problem', this.workload_problem);
       await fetchPost(API_URL + 'experiment-at/workload', reqData);
-    },
-    async afterAnomalySurvey() {
-      console.log('Send Survey Link');
-      let reqData = new FormData();
-      reqData.append('user_id', this.userId);
-      await fetchPost(API_URL + 'experiment-at/after-anomaly-survey', reqData);
     },
     async finishExperiment() {
       console.log('FINISH EXPERIMENT');
