@@ -1,17 +1,16 @@
 <template>
   <div>
-  <div class="message-body">
-    <div class="modal-survey">
-      <p><b>Answer the following questions. Click on Done <i>ONLY</i> after submitting the survey.</b></p>
-      <section class="modal-card-body">
-        <iframe style="width: 100%; height: 500px" src="https://tamu.qualtrics.com/jfe/form/SV_8AlVsnyHiGXWgSO"></iframe>
-      </section>
-      <div style="text-align: center">
-      <button class="button is-success" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 15px"
-                id="send_command" v-on:click.prevent="submitAnswer">Done</button>
+    <div class="message-body" style="display: flex; justify-content: center; text-align: center">
+      <div class="modal-survey" id="survey" style="display:block">
+        <p>Click on the "Survey Link" button below to fill out the survey.</p>
+        <button class="button theme-buttons" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 15px"
+                v-on:click.prevent="fillSurvey">Survey Link</button>
+      </div>
+      <div class="modal-survey" id="done" style="display:none">
+        <p>Click on "Done" button below to return to the experiment.</p>
+        <button class="button theme-buttons" v-on:click.prevent="submitAnswer">Done</button>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -20,10 +19,18 @@
 export default {
   name: "SituationalAwarenessModal",
   computed: {
+    isDone: false
   },
   methods: {
     submitAnswer() {
+      document.getElementById('survey').style.display = 'block';
+      document.getElementById('done').style.display = 'none';
       this.$emit('close-modal')
+    },
+    fillSurvey() {
+      document.getElementById('survey').style.display = 'none';
+      document.getElementById('done').style.display = 'block';
+      window.open("https://tamu.qualtrics.com/jfe/form/SV_8AlVsnyHiGXWgSO");
     }
   },
   watch: {}

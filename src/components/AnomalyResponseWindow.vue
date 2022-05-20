@@ -309,33 +309,35 @@ export default {
       }
     },
     submitAnomaly(name) {
-      // set up pop up to link
-      const surveyLink = new Shepherd.Tour({
-        defaultStepOptions: {
-          classes: 'shadow-md bg-purple-dark',
-          scrollTo: true
-        },
-        useModalOverlay: true,
-        exitOnEsc: false
-      });
-      var prompt_text = 'You have selected ' + name + ' anomaly for diagnosis. Please click on the survey link to fill the survey.'
-      // add steps
-      surveyLink.addStep({
-        text: prompt_text,
-        buttons: [
-          {
-            text: 'Survey Link',
-            action: surveyLink.next
-          }
-        ]
-      });
-      // show the closing pop up
-      surveyLink.show();
-
-      // once the button is clicked, the tour is over and redirect to survey
-      surveyLink.on("complete", () => {
-        setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_b1s8iAlcslQSMuO"); }, 1000);
-      });
+      commit('activateModal', 'ConfidenceModal');
+      //
+      // // set up pop up to link
+      // const surveyLink = new Shepherd.Tour({
+      //   defaultStepOptions: {
+      //     classes: 'shadow-md bg-purple-dark',
+      //     scrollTo: true
+      //   },
+      //   useModalOverlay: true,
+      //   exitOnEsc: false
+      // });
+      // var prompt_text = 'You have selected ' + name + ' anomaly for diagnosis. Please click on the survey link to fill the survey.'
+      // // add steps
+      // surveyLink.addStep({
+      //   text: prompt_text,
+      //   buttons: [
+      //     {
+      //       text: 'Survey Link',
+      //       action: surveyLink.next
+      //     }
+      //   ]
+      // });
+      // // show the closing pop up
+      // surveyLink.show();
+      //
+      // // once the button is clicked, the tour is over and redirect to survey
+      // surveyLink.on("complete", () => {
+      //   setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"); }, 1000);
+      // });
 
       this.$store.commit("mutateSelectedAnomaliesList", []);
       this.$store.commit("mutateSelectedSymptomsList", []);

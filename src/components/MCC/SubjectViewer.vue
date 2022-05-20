@@ -9,21 +9,21 @@
         <div class="column is-7">
           <p class="is-mini-title" style="margin-bottom:20px">Daphne-AT display summary:</p>
           <div class="content">
-            <p style="color: #0AFEFF">Selected symptoms:</p>
+            <p style="color: #0AFEFF">Selected symptoms at {{this.symptoms_timestamp}}:</p>
             <ul>
               <li style="color: white" v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"] }}</li>
             </ul>
-            <p style="color: #0AFEFF">Last provided diagnosis:</p>
+            <p style="color: #0AFEFF">Last provided diagnosis at {{ this.diagnosis_timestamp }} :</p>
             <ul>
               <li style="color: white" v-for="anomaly in lastProvidedDiagnosis">
                 {{ anomaly['name'] }} (with a score of {{ anomaly['score'] }})
               </li>
             </ul>
-            <p style="color: #0AFEFF">Selected anomalies:</p>
+            <p style="color: #0AFEFF">Selected anomalies at {{ this.anomalies_timestamp }}:</p>
             <ul>
               <li style="color: white" v-for="anomaly in selectedAnomaliesList">{{ anomaly }}</li>
             </ul>
-            <p style="color: #0AFEFF">Selected procedures:</p>
+            <p style="color: #0AFEFF">Selected procedures at {{ this.procedure_timestamp }}:</p>
             <ul>
               <li style="color: white" v-for="(procedureDict, procedureName) in selectedProceduresInfo">
                 <p style="margin-bottom:2px">{{ procedureName }}</p>
@@ -33,8 +33,8 @@
                 </p>
               </li>
             </ul>
-            <p style="color: #0AFEFF">Workload Answer:</p>
-            <p style="color: white"> {{new_workload_answer}} {{this.new_workload_timestamp}}</p>
+            <p style="color: #0AFEFF">Workload Answer at {{this.new_workload_timestamp}}:</p>
+            <p style="color: white"> {{new_workload_answer}} </p>
           </div>
         </div>
         <div class="column is-5">
@@ -52,7 +52,7 @@
               </button>
               <input class="input" style="width:70%;background-color: var(--color__bg); border-color: var(--color__shadow); color: var(--color__text); "
                      type="text" name="workload_problem" v-model="workload_problem"/>
-              <p>{{timestamp}}</p>
+              <p>{{workload_timestamp}}</p>
             </div>
 
             <div class="control" style="margin-top: 10px">
@@ -61,9 +61,24 @@
               </button>
             </div>
 
+            <!--            <div class="control" style="margin-top: 10px">-->
+            <!--              <button type="submit" class="button is-primary" v-on:click="openWorkloadModal" style="background-color: blue; width: 70%">-->
+            <!--                Workload-->
+            <!--              </button>-->
+            <!--            </div>-->
+
             <div class="control" style="margin-top: 10px">
-              <button type="submit" class="button is-primary" v-on:click="openWorkloadModal" style="background-color: blue; width: 70%">
-                Workload
+              <button type="submit" class="button is-primary" v-on:click="openConfidenceModal" style="background-color: blue; width: 70%">
+                Confidence
+              </button>
+            </div>
+
+            <div class="control" style="margin-top: 10px">
+              <button type="submit" class="button is-primary" v-on:click="sendMsgCorrect" style="background-color: green; width: 35%">
+                Correct
+              </button>
+              <button type="submit" class="button is-primary" v-on:click="sendMsgIncorrect" style="background-color: red; width: 35%">
+                Incorrect
               </button>
             </div>
 
@@ -214,6 +229,21 @@ export default {
       let reqData = new FormData();
       reqData.append('user_id', this.userId);
       await fetchPost(API_URL + 'experiment-at/situational-awareness', reqData);
+    },
+    async openConfidenceModal() {
+      let reqData = new FormData();
+      reqData.append('user_id', this.userId);
+      await fetchPost(API_URL + 'experiment-at/confidence', reqData);
+    },
+    async sendMsgCorrect(){
+      let reqData = new FormData();
+      reqData.append('user_id', this.userId);
+      await fetchPost(API_URL + 'experiment-at/send-msg-correct', reqData);
+    },
+    async sendMsgIncorrect(){
+      let reqData = new FormData();
+      reqData.append('user_id', this.userId);
+      await fetchPost(API_URL + 'experiment-at/send-msg-incorrect', reqData);
     },
     async openWorkloadModal() {
       this.workload_timestamp = this.getNow();
