@@ -200,11 +200,15 @@ export default new Vuex.Store({
             else if (received_info['type'] === 'situational_awareness') {
                 commit('activateModal', 'SituationalAwarenessModal');
             }
+            // Confidence Questions
+            else if (received_info['type'] === 'confidence') {
+                commit('activateModal', 'ConfidenceModal');
+            }
             // Workload Questions
             else if (received_info['type'] === 'workload') {
                 commit('mutateWorkloadProblem', received_info['workload_problem']);
             }
-            else if (received_info['type'] === 'message') {
+            else if (received_info['type'] === 'send_msg_correct') {
                 // set up pop up to link
                 const surveyLink = new Shepherd.Tour({
                     defaultStepOptions: {
@@ -216,16 +220,45 @@ export default new Vuex.Store({
                 });
                 // add steps
                 surveyLink.addStep({
-                    text: `Unfortunately, this procedure did not fix the anomaly. Try again.`,
+                    text: `Congratulations! The procedure you selected has resolved the anomaly. Click on the button below to fill out the survey for this scenario.`,
                     buttons: [
                         {
-                            text: 'Okay',
+                            text: 'Survey Link',
                             action: surveyLink.next
                         }
                     ]
                 });
                 // show the closing pop up
                 surveyLink.show();
+                surveyLink.on("complete", () => {
+                    setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"); }, 1000);
+                });
+            }
+            else if (received_info['type'] === 'send_msg_incorrect') {
+                // set up pop up to link
+                const surveyLink = new Shepherd.Tour({
+                    defaultStepOptions: {
+                        classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    },
+                    useModalOverlay: true,
+                    exitOnEsc: false
+                });
+                // add steps
+                surveyLink.addStep({
+                    text: `Unfortunately, the procedure you selected was wrong and did not resolve the anomaly. Please fill out the survey for this scenario.`,
+                    buttons: [
+                        {
+                            text: 'Survey Link',
+                            action: surveyLink.next
+                        }
+                    ]
+                });
+                // show the closing pop up
+                surveyLink.show();
+                surveyLink.on("complete", () => {
+                    setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"); }, 1000);
+                });
             }
         },
     },

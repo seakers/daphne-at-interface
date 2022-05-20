@@ -8,6 +8,14 @@
         </article>
       </div>
     </div>
+    <div v-else-if="modalContent === 'ConfidenceModal'">
+      <div class="modal-background modal-backdrop"></div>
+      <div class="modal-content">
+        <article class="message">
+          <component v-bind:is="modalContent" v-on:close-modal="onCloseModal"></component>
+        </article>
+      </div>
+    </div>
     <div v-else>
       <div class="modal-background"></div>
       <div class="modal-content">
@@ -28,6 +36,7 @@ import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 import SettingsModal from './SettingsModal';
 import SituationalAwarenessModal from './SituationalAwarenessModal'
+import ConfidenceModal from './ConfidenceModal'
 
 export default {
   name: 'modal',
@@ -42,6 +51,7 @@ export default {
     RegisterModal,
     SettingsModal,
     SituationalAwarenessModal,
+    ConfidenceModal
   },
   methods: {
     onCloseModal() {

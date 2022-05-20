@@ -61,9 +61,24 @@
               </button>
             </div>
 
+<!--            <div class="control" style="margin-top: 10px">-->
+<!--              <button type="submit" class="button is-primary" v-on:click="openWorkloadModal" style="background-color: blue; width: 70%">-->
+<!--                Workload-->
+<!--              </button>-->
+<!--            </div>-->
+
             <div class="control" style="margin-top: 10px">
-              <button type="submit" class="button is-primary" v-on:click="openWorkloadModal" style="background-color: blue; width: 70%">
-                Workload
+              <button type="submit" class="button is-primary" v-on:click="openConfidenceModal" style="background-color: blue; width: 70%">
+                Confidence
+              </button>
+            </div>
+
+            <div class="control" style="margin-top: 10px">
+              <button type="submit" class="button is-primary" v-on:click="sendMsgCorrect" style="background-color: green; width: 35%">
+                Correct
+              </button>
+              <button type="submit" class="button is-primary" v-on:click="sendMsgIncorrect" style="background-color: red; width: 35%">
+                Incorrect
               </button>
             </div>
 
@@ -214,6 +229,21 @@ export default {
       let reqData = new FormData();
       reqData.append('user_id', this.userId);
       await fetchPost(API_URL + 'experiment-at/situational-awareness', reqData);
+    },
+    async openConfidenceModal() {
+      let reqData = new FormData();
+      reqData.append('user_id', this.userId);
+      await fetchPost(API_URL + 'experiment-at/confidence', reqData);
+    },
+    async sendMsgCorrect(){
+      let reqData = new FormData();
+      reqData.append('user_id', this.userId);
+      await fetchPost(API_URL + 'experiment-at/send-msg-correct', reqData);
+    },
+    async sendMsgIncorrect(){
+      let reqData = new FormData();
+      reqData.append('user_id', this.userId);
+      await fetchPost(API_URL + 'experiment-at/send-msg-incorrect', reqData);
     },
     async openWorkloadModal() {
       this.workload_timestamp = this.getNow();

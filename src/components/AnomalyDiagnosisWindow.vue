@@ -192,6 +192,12 @@
                           {{ explanation['num_occurrences'] }}
                         </div>
                       </div>
+                      <div style="width: 100%; text-align: center">
+                        <button class="button"
+                                style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 20px"
+                                v-on:click.prevent="selectAnomaly(explanation['name'])">Select
+                        </button>
+                      </div>
                       <div class="table-container" style="margin-bottom: 10px; margin-top: 10px">
                         <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
                           <thead>
@@ -216,12 +222,6 @@
                           </tbody>
                         </table>
                       </div>
-                    </div>
-                    <div style="width: 100%; text-align: center">
-                      <button class="button"
-                              style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-bottom: 20px"
-                              v-on:click.prevent="selectAnomaly(explanation['name'])">Select
-                      </button>
                     </div>
                   </div>
                 </li>
