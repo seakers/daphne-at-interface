@@ -389,7 +389,7 @@ export default {
         let voice = general
 
         if (verylikely.length !== 0) {
-          if (verylikely.length > 1) {
+          if (verylikely.length > 2) {
             confidence = 'LOW';
             confidenceColor = 'red'
           }
@@ -409,7 +409,7 @@ export default {
           }
         } else {
           if (likely.length !== 0) {
-            if (likely.length > 1) {
+            if (likely.length > 2) {
               confidence = 'LOW';
               confidenceColor = 'red'
             }
@@ -429,7 +429,7 @@ export default {
             }
           } else {
             if (somewhatlikely.length !== 0) {
-              if (somewhatlikely.length > 1) {
+              if (somewhatlikely.length > 2) {
                 confidence = 'LOW';
                 confidenceColor = 'red'
               }
@@ -450,7 +450,7 @@ export default {
             }
           }
         }
-        voice = voice + ' My confidence in this diagnosis is ' + confidence + '.';
+        voice =  'My confidence in this diagnosis is ' + confidence + '. ' + voice;
         text = 'My confidence in this diagnosis: ' + '<p style="color:' + confidenceColor + '">' + confidence + '</p>' + '</br>' + text
         if (this.command === 'stop') {
           responsiveVoice.cancel();
