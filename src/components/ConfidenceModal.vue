@@ -47,7 +47,7 @@
 <script>
 
 export default {
-  name: "SituationalAwarenessModal",
+  name: "ConfidenceModal",
   data() {
     return {
       mark: ''

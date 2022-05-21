@@ -369,6 +369,8 @@ export default {
         var verylikely = []
         var likely = []
         var somewhatlikely = []
+        var confidence = ''
+        var confidenceColor = ''
 
         //create a message from daphne
         for (let anomaly of Object.values(this.diagnosisReport['diagnosis_list'])) {
@@ -387,6 +389,14 @@ export default {
         let voice = general
 
         if (verylikely.length !== 0) {
+          if (verylikely.length > 1) {
+            confidence = 'LOW';
+            confidenceColor = 'red'
+          }
+          else {
+            confidence = 'HIGH';
+            confidenceColor = 'green'
+          }
           for (let i = 0; i < verylikely.length; i = i+2) {
             text = text + '<li>' + verylikely[i] + ' with ' + verylikely[i+1] + ' occurrences in the past</li>'
             voice = voice + verylikely[i] + ' with ' + verylikely[i+1] + ' occurrences in the past';
@@ -399,6 +409,14 @@ export default {
           }
         } else {
           if (likely.length !== 0) {
+            if (likely.length > 1) {
+              confidence = 'LOW';
+              confidenceColor = 'red'
+            }
+            else {
+              confidence = 'HIGH';
+              confidenceColor = 'green'
+            }
             for (let i = 0; i < likely.length; i = i+2) {
               text = text + '<li>' + likely[i] + ' with ' + likely[i+1] + ' occurrences in the past</li>'
               voice = voice + likely[i] + ' with ' + likely[i+1] + ' occurrences in the past';
@@ -411,6 +429,14 @@ export default {
             }
           } else {
             if (somewhatlikely.length !== 0) {
+              if (somewhatlikely.length > 1) {
+                confidence = 'LOW';
+                confidenceColor = 'red'
+              }
+              else {
+                confidence = 'HIGH';
+                confidenceColor = 'green'
+              }
               for (let i = 0; i < somewhatlikely.length; i = i+2) {
                 text = text + '<li>' + somewhatlikely[i] + ' with ' + somewhatlikely[i+1] + ' occurrences in the past</li>'
                 voice = voice + somewhatlikely[i] + ' with ' + somewhatlikely[i+1] + ' occurrences in the past';
@@ -424,6 +450,8 @@ export default {
             }
           }
         }
+        voice = voice + ' My confidence in this diagnosis is ' + confidence + '.';
+        text = 'My confidence in this diagnosis: ' + '<p style="color:' + confidenceColor + '">' + confidence + '</p>' + '</br>' + text
         if (this.command === 'stop') {
           responsiveVoice.cancel();
         } else {
