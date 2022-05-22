@@ -309,7 +309,7 @@ export default {
       }
     },
     submitAnomaly(name) {
-      commit('activateModal', 'ConfidenceModal');
+      this.$store.commit('activateModal', 'ConfidenceModal');
       //
       // // set up pop up to link
       // const surveyLink = new Shepherd.Tour({
