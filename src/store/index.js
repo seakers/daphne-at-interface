@@ -220,7 +220,7 @@ export default new Vuex.Store({
                 });
                 // add steps
                 surveyLink.addStep({
-                    text: `Congratulations! The procedure you selected has resolved the anomaly. Click on the button below to fill out the survey for this scenario.`,
+                    text: `<b>Congratulations!</b> The procedure you selected has resolved the anomaly. Click on the button below to fill out the survey for this scenario.`,
                     buttons: [
                         {
                             text: 'Survey Link',
@@ -246,7 +246,7 @@ export default new Vuex.Store({
                 });
                 // add steps
                 surveyLink.addStep({
-                    text: `Unfortunately, the procedure you selected was wrong and did not resolve the anomaly. Please fill out the survey for this scenario.`,
+                    text: `<b>Unfortunately</b>, the procedure you selected was wrong and did not resolve the anomaly. Please fill out the survey for this scenario.`,
                     buttons: [
                         {
                             text: 'Survey Link',
