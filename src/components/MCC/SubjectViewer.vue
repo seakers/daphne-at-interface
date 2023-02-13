@@ -193,7 +193,7 @@
       },
         mounted() {
           this.refreshUserInformation();
-          setInterval(this.refreshUserInformation, 5000);
+          setInterval(this.refreshUserInformation, 1000);
 
         }
       }
