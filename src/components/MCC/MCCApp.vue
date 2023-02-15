@@ -100,7 +100,7 @@
         },
         mounted() {
             this.updateSubjectList();
-            setInterval(this.updateSubjectList, 2000);
+            setInterval(this.updateSubjectList, 1200);
         }
     }
 </script>
