@@ -32,7 +32,10 @@ const state = {
     selectedProceduresList: [], // A list of all the procedures that relate to the current selected anomalies. RELEVANT FOR THE CONTEXT.
     selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
     loadingNewAnomaly: false,
-    isLoggedIn: false
+    isLoggedIn: false,
+
+    //Chat minimization variable
+    isChatVisible: true
 };
 
 const getters = {
@@ -55,6 +58,7 @@ const getters = {
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
     getPlayAlarms(state) {return state.playAlarms},
+    getIsChatVisible(state) {return state.isChatVisible}
 };
 
 const actions = {
@@ -414,6 +418,7 @@ const mutations = {
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
     mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
+    mutateIsChatVisible(state) {state.isChatVisible = !state.isChatVisible},
     restoreDaphneAT(state, recoveredState) {
         Object.keys(recoveredState).forEach((key) => {
             state[key] = recoveredState[key];
