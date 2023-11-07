@@ -1,6 +1,9 @@
 <template>
-  <div class="chat-container box is-main" style="margin: 5px; width: 24%; height: 92%">
-    <div class="is-title " style="text-align: center">DAPHNE Chatbot</div>
+  <div class="chat-container box is-main" style="height:92%; width:24%">
+    <div class="is-title " style="text-align: center">
+      DAPHNE Chatbot
+      <u v-on:click="minimizeChat" class="tutorialLink">Hide</u>
+    </div>
     <div style="height: 85%">
       <section class="chat-area" style="height: 85%" ref="chatArea">
         <div v-for="piece in dialogueHistory" class="chat-message content"
@@ -53,11 +56,12 @@
 import * as _ from 'lodash-es';
 import TextResponse from './TextResponse';
 import ListResponse from './ListResponse';
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import {mapGetters} from 'vuex';
 import SiriWave from "siriwave";
 import daphne_awake from '../sounds/awake.mp3'
 import daphne_asleep from '../sounds/asleep.mp3'
+import {commit} from "lodash-es";
 
 let loaderImage = require('../images/loader.svg');
 let responsiveVoice = window.responsiveVoice;
@@ -85,14 +89,14 @@ export default {
     ...mapState({
       dialogueHistory: state => state.daphne.dialogueHistory,
       isLoading: state => state.daphne.isLoading,
-      isSpeaking: state => state.daphne.isSpeaking
+      isSpeaking: state => state.daphne.isSpeaking,
     }),
     ...mapGetters([
       'getResponse'
     ]),
     ...mapGetters({
       isListening: 'getIsListening',
-      isSpeaking: 'getIsSpeaking'
+      isSpeaking: 'getIsSpeaking',
     }),
     command: {
       get() {
@@ -125,6 +129,9 @@ export default {
     chatTutorial(event) {
       this.$root.$emit('chatTutorialIndividual');
     },
+    minimizeChat(event) {
+      this.$store.commit('mutateIsChatVisible');
+    }
   },
   watch: {
     dialogueHistory: function (val, oldVal) {

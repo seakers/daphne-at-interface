@@ -13,8 +13,8 @@
         </div>
       </div>
     </div>
-    <div class="columns is-gapless is-vertical-filler is-mobile">
-      <div class="is-seclss-background-black column is-9 is-vertical-filler">
+    <div v-if="isChatVisible" class="columns is-gapless is-vertical-filler is-mobile">
+      <div class="is-seclss-background-black column is-9">
         <div class="is-seclss-background-black sticky" style="z-index: 1">
           <div class="box is-main" style="margin-bottom: 5px;">
             <anomaly-detection-window></anomaly-detection-window>
@@ -34,6 +34,29 @@
       </div>
       <div class="is-seclss-background-black column is-3 is-pulled-right" style="z-index: 1">
         <chat-window></chat-window>
+      </div>
+    </div>
+    <div v-else>
+      <div class="is-seclss-background-black column is-12">
+        <div class="is-seclss-background-black sticky" style="z-index: 1">
+          <div class="box is-main" style="margin-bottom: 5px;">
+            <anomaly-detection-window></anomaly-detection-window>
+          </div>
+        </div>
+        <div class="is-seclss-background-black" style="position: relative;">
+          <div class="box is-main" style="margin-bottom: 5px">
+            <sensor-data-window></sensor-data-window>
+          </div>
+          <div class="box is-main" style="margin-bottom: 5px;">
+            <anomaly-diagnosis-window></anomaly-diagnosis-window>
+          </div>
+          <div class="box is-main" style="margin-bottom: 5px;">
+            <anomaly-response-window></anomaly-response-window>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button v-on:click="minimizeChat" style="position: fixed; bottom:2%; right:2%; border-radius: 100px; font-size: 20px; padding: 10px 24px; background-color:#002E2E; color: #0AFEFF">Daphne &nbsp; <i class="fas fa-comment-dots"></i></button>
       </div>
     </div>
     <div class="is-seclss-background-black" style="bottom: 0; z-index: 0; height: 20px; float: bottom">
@@ -107,11 +130,13 @@ export default {
       stageInformation: state => state.experiment.stageInformation,
       isRecovering: state => state.experiment.isRecovering,
       currentStageNum: state => state.experiment.currentStageNum,
-      username: state => state.auth.username
+      username: state => state.auth.username,
+      isChatVisible: state => state.daphneat.isChatVisible
     }),
     ...mapGetters({
       telemetryIsOngoing: 'getTelemetryIsOngoing',
       heraUser: 'getHeraUser',
+      isChatVisible: 'getIsChatVisible'
     }),
   },
   methods: {
@@ -148,6 +173,9 @@ export default {
       if (this.modalContent === 'LoginModal') {
         this.initExperiment();
       }
+    },
+    minimizeChat(event) {
+      this.$store.commit('mutateIsChatVisible');
     },
     async initExperiment() {
       // Start the experiment for data collection
