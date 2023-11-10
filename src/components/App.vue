@@ -114,7 +114,12 @@ export default {
       chatTutorial: {},
       conclusionTutorial: {},
       forceReload: false,
-      timestamp: ""
+      timestamp: "",
+
+      //anomaly alert variables
+      anomalyCount: 0,
+      coolDownActive: false
+
     }
   },
   created() {
@@ -131,15 +136,21 @@ export default {
       isRecovering: state => state.experiment.isRecovering,
       currentStageNum: state => state.experiment.currentStageNum,
       username: state => state.auth.username,
-      isChatVisible: state => state.daphneat.isChatVisible
+      isChatVisible: state => state.daphneat.isChatVisible,
+      symptomsList: state => state.daphne.symptomsList
     }),
     ...mapGetters({
       telemetryIsOngoing: 'getTelemetryIsOngoing',
       heraUser: 'getHeraUser',
-      isChatVisible: 'getIsChatVisible'
     }),
   },
   methods: {
+    coolDownFunction(){ //to delay symptomsList watcher
+      this.coolDownActive = true;
+      setTimeout(() => {
+        this.coolDownActive = false;
+      }, 10000)
+    },
     changeSettings(){
       this.$store.commit('activateModal', 'SettingsModal');
     },
@@ -1525,6 +1536,16 @@ export default {
     }
   },
   watch: {
+    symptomsList:{
+      handler(newVal, oldVal){
+        if(!this.coolDownActive){
+          if(newVal.length > oldVal.length){
+              this.$store.commit('activateModal','AnomalyModal');
+          }
+          this.coolDownFunction();
+        }
+      }
+    },
     experimentStage: async function (val, oldVal) {
 
       if (this.inExperiment && !this.isRecovering) {
