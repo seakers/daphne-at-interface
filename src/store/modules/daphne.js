@@ -14,7 +14,9 @@ const state = {
     prevResponse: {},
     isLoading: false,
     isListening: false,
-    isSpeaking: false
+    isSpeaking: false,
+    isUnmute: true,
+    daphneVoice: 'US English Female'
 };
 
 const initialState = _.cloneDeep(state);
@@ -35,6 +37,12 @@ const getters = {
     },
     getIsSpeaking(state) {
         return state.isSpeaking;
+    },
+    getIsUnmute(state) {
+        return state.isUnmute;
+    },
+    getDaphneVoice(state) {
+        return state.daphneVoice;
     }
 };
 
@@ -138,6 +146,13 @@ const mutations = {
     },
     addDialoguePiece(state, dialoguePiece) {
         state.dialogueHistory.push(dialoguePiece);
+    },
+    setIsUnmute(state, newVal) {
+        state.isUnmute = newVal
+    },
+    setDaphneVoice(state, newVal) {
+        console.log(newVal)
+        state.daphneVoice = newVal
     },
 };
 

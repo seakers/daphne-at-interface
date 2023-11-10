@@ -33,9 +33,9 @@ const state = {
     selectedProceduresInfo: {}, // A dictionary with the information regarding the current status of the procedures.
     loadingNewAnomaly: false,
     isLoggedIn: false,
-
-    //Chat minimization variable
-    isChatVisible: true
+    isChatVisible: true,
+    workload_answer: '',
+    workload_problem: ''
 };
 
 const getters = {
@@ -58,7 +58,9 @@ const getters = {
     getSelectedProceduresInfo(state) {return state.selectedProceduresInfo},
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
     getPlayAlarms(state) {return state.playAlarms},
-    getIsChatVisible(state) {return state.isChatVisible}
+    getIsChatVisible(state) {return state.isChatVisible},
+    getWorkloadProblem(state) {return state.workload_problem},
+    getWorkloadAnswer(state) {return state.workload_answer}
 };
 
 const actions = {
@@ -128,7 +130,6 @@ const actions = {
         let response = await fetchPost('/api/at/retrieveInfoFromProcedure', reqData);
         if (response.ok) {
             let info = await response.json();
-            console.log(info['checkableSteps']);
             return info;
         } else {
             console.log('Error retrieving the procedure objective.');
@@ -417,6 +418,8 @@ const mutations = {
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
     mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
+    mutateWorkloadProblem(state, newVal) {state.workload_problem = newVal;},
+    mutateWorkloadAnswer(state, newVal) {state.workload_answer = newVal;},
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     mutateIsChatVisible(state) {state.isChatVisible = !state.isChatVisible},
     restoreDaphneAT(state, recoveredState) {

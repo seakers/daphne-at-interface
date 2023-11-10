@@ -6,8 +6,8 @@
       <div style="width: 25%; float: right">
         <p style="float: left">{{ timestamp }}</p>
         <div style="float: right">
-          <a id="theme" style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"
-             v-on:click.prevent="changeSettings"><i class="fas fa-cogs"></i></a>
+<!--          <a id="theme" style="font-weight:bold; margin-left: 1em; margin-right: 1em; line-height: inherit"-->
+<!--             v-on:click.prevent="changeSettings"><i class="fas fa-cogs"></i></a>-->
           <a id="clear_history" style="font-weight:bold; float: right; margin-left: 1em; margin-right: 1em; line-height: inherit"
              v-on:click.prevent="logout">Sign Out</a>
         </div>

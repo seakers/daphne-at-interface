@@ -43,8 +43,8 @@ export default {
 
   data: function () {
     return {
-      backgroundColor: '#002E2E',
-      fontColor: '#0AFEFF',
+      backgroundColor: '--primary-color',
+      fontColor: '--secondary-color',
       flash: false
     }
   },

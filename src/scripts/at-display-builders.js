@@ -1,6 +1,6 @@
 export function detectionColorStyle(symptomsList) {
     if (symptomsList.length === 0) {
-        let theColors = {'background': '#002E2E', 'font': '#0AFEFF'};
+        let theColors = {'background': 'var(--primary-color)', 'font': 'var(--secondary-color)'};
         return theColors
     }
     else {
