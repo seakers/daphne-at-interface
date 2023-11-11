@@ -15,7 +15,8 @@
     import Stage2Modal from './Stage2Modal';
     import LoginModal from './LoginModal';
     import RegisterModal from './RegisterModal';
-    import SettingsModal from './SettingsModal'
+    import SettingsModal from './SettingsModal';
+    import SymptomChangeNotificationModal from './SymptomChangeNotificationModal';
 
     export default {
         name: 'modal',
@@ -29,7 +30,8 @@
             Stage2Modal,
             LoginModal,
             RegisterModal,
-            SettingsModal
+            SettingsModal,
+            SymptomChangeNotificationModal
         },
         methods: {
             onCloseModal() {

@@ -22,7 +22,7 @@
           deselectLabel="Click to remove"
           openDirection="below"
           track-by="name"
-          :preselect-first="true"
+          :preselect-first="false"
           @select="newSelection"
           @remove="newDeselection">
       </multiselect>
@@ -121,12 +121,6 @@
           </div>
         </div>
       </div>
-<!--      <div style="width: 100%; text-align: center; vertical-align: middle">-->
-<!--        <button class="button"-->
-<!--                style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 25px"-->
-<!--                v-on:click="submitAnomaly(anomalyDict['anomalyName'])">Submit Anomaly-->
-<!--        </button>-->
-<!--      </div>-->
       <div class="horizontal-divider" style="margin-top: 30px"></div>
     </div>
   </div>
@@ -308,43 +302,6 @@ export default {
         window.open(window.location.href + "api/at/recommendation/procedure?filename=%2Fhome%2Fubuntu%2Fdaphne_brain%2FAT%2Fdatabases%2Fprocedures%2F" + url, '_blank')
       }
     },
-    submitAnomaly(name) {
-      this.$store.commit('activateModal', 'ConfidenceModal');
-      //
-      // // set up pop up to link
-      // const surveyLink = new Shepherd.Tour({
-      //   defaultStepOptions: {
-      //     classes: 'shadow-md bg-purple-dark',
-      //     scrollTo: true
-      //   },
-      //   useModalOverlay: true,
-      //   exitOnEsc: false
-      // });
-      // var prompt_text = 'You have selected ' + name + ' anomaly for diagnosis. Please click on the survey link to fill the survey.'
-      // // add steps
-      // surveyLink.addStep({
-      //   text: prompt_text,
-      //   buttons: [
-      //     {
-      //       text: 'Survey Link',
-      //       action: surveyLink.next
-      //     }
-      //   ]
-      // });
-      // // show the closing pop up
-      // surveyLink.show();
-      //
-      // // once the button is clicked, the tour is over and redirect to survey
-      // surveyLink.on("complete", () => {
-      //   setTimeout(() => { window.open("https://tamu.qualtrics.com/jfe/form/SV_29RmM0hE4YV4Omq"); }, 1000);
-      // });
-
-      this.$store.commit("mutateSelectedAnomaliesList", []);
-      this.$store.commit("mutateSelectedSymptomsList", []);
-      this.$store.commit('mutateSelectedProceduresList', []);
-      this.$store.commit('mutateSelectedProceduresInfo', {});
-      this.$store.commit("mutateDiagnosisReport", []);
-    }
   },
   mounted: function () {
     this.loadAnomalies()
@@ -355,7 +312,7 @@ export default {
         for (let procedure in this.anomalyList[anomaly]['anomalyProcedures']) {
           for (let step in this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps']) {
             let currComparison = this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][step]['label'] + ", " + this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][step]['action'];
-            if (currComparison == this.response) {
+            if (currComparison === this.response) {
               let nextPrev;
               let prevPrev;
               if ((parseInt(step) - 1) > -1) {
@@ -366,11 +323,11 @@ export default {
                 prevPrev = this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step) + 1]['label'] + ", " + this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step) + 1]['action'];
               }
 
-              if (this.prevResponse == nextPrev) {
+              if (this.prevResponse === nextPrev) {
                 this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step) - 1]['isDone'] = true;
-              } else if (this.prevResponse == prevPrev) {
+              } else if (this.prevResponse === prevPrev) {
                 this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][step]['isDone'] = false;
-              } else if (step == 1) {
+              } else if (step === 1) {
                 this.anomalyList[anomaly]['anomalyProcedures'][procedure]['procedureSteps'][parseInt(step) - 1]['isDone'] = true;
               }
               console.log("Previous " + this.prevResponse);

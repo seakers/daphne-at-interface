@@ -148,69 +148,54 @@ export default {
     minimizeChat(event) {
       this.$store.commit('mutateIsChatVisible');
     },
-    // watch: {
-      // dialogueHistory: function (val, oldVal) {
-      //   this.$nextTick(() => {
-      //     this.scrollToBottom();
-      //   });
-      //   if (this.isUnmute) {
-      //     if (val.length > 0) {
-      //       let lastMessage = val[val.length - 1];
-      //       if (lastMessage['writer'] === "daphne") {
-      //         let voiceAnswer = lastMessage['voice_message'];
-      //         responsiveVoice.speak(voiceAnswer, this.daphneVoice, {rate: 1.05}, {volume: 1});
-      //       }
-      //     }
-      //   }
-      // },
-      watch: {
-        dialogueHistory: function (val, oldVal) {
-          this.$nextTick(() => {
-            this.scrollToBottom();
-          });
-          if (this.isUnmute) {
-            if (val.length > 0) {
-              let lastMessage = val[val.length - 1];
-              if (lastMessage['writer'] === "daphne") {
-                let voiceAnswer = lastMessage['voice_message'];
-                responsiveVoice.speak(voiceAnswer, this.daphneVoice, {rate: 1.05}, {volume: 1});
-              }
-            }
-          }
-        },
-        isLoading: function (val, oldVal) {
-          if (val === true) {
-            _.delay(() => {
-              this.scrollToBottom();
-            }, 500);
-          }
-        },
-        isSpeaking: async function (val, oldVal) {
-          if (val) {
-            this.siriWave = new SiriWave({
-              container: document.getElementById('siri-container'),
-              cover: true,
-              style: "ios9",
-              curveDefinition: [
-                {color: "255,255,255", supportLine: true},
-                {color: "15, 82, 169"}, // blue
-                {color: "173, 57, 76"}, // red
-                {color: "48, 220, 155"}, // green
-              ]
-            });
-            this.siriWave.start();
-            let audio = new Audio(daphne_awake);
-            await audio.play();
-            this.siriWave.setAmplitude(5);
-          } else {
-            let audio = new Audio(daphne_asleep);
-            await audio.play();
-            this.siriWave.stop();
-            this.siriWave.dispose();
+  },
+  watch: {
+    dialogueHistory: function (val, oldVal) {
+      this.$nextTick(() => {
+        this.scrollToBottom();
+      });
+      if (this.isUnmute) {
+        if (val.length > 0) {
+          let lastMessage = val[val.length - 1];
+          if (lastMessage['writer'] === "daphne") {
+            let voiceAnswer = lastMessage['voice_message'];
+            responsiveVoice.speak(voiceAnswer, this.daphneVoice, {rate: 1.05}, {volume: 1});
           }
         }
       }
+    },
+    isLoading: function (val, oldVal) {
+      if (val === true) {
+        _.delay(() => {
+          this.scrollToBottom();
+        }, 500);
+      }
+    },
+    isSpeaking: async function (val, oldVal) {
+      if (val) {
+        this.siriWave = new SiriWave({
+          container: document.getElementById('siri-container'),
+          cover: true,
+          style: "ios9",
+          curveDefinition: [
+            {color: "255,255,255", supportLine: true},
+            {color: "15, 82, 169"}, // blue
+            {color: "173, 57, 76"}, // red
+            {color: "48, 220, 155"}, // green
+          ]
+        });
+        this.siriWave.start();
+        let audio = new Audio(daphne_awake);
+        await audio.play();
+        this.siriWave.setAmplitude(5);
+      } else {
+        let audio = new Audio(daphne_asleep);
+        await audio.play();
+        this.siriWave.stop();
+        this.siriWave.dispose();
+      }
     }
+  }
 }
 </script>
 

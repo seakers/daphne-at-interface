@@ -68,7 +68,7 @@
             <p id="alert" style="display: none; color: red">Please select an anomaly to investigate.</p>
             <button class="button" type="submit" onclick="errorMessage()"
                     style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;"
-                    v-on:click.prevent="showExplanations">Provide Explanations
+                    v-on:click.prevent="showExplanations">Show explanations
             </button>
           </div>
         </div>

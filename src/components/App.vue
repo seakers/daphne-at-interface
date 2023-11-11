@@ -56,7 +56,7 @@
         </div>
       </div>
       <div>
-        <button v-on:click="minimizeChat" style="position: fixed; bottom:2%; right:2%; border-radius: 100px; font-size: 20px; padding: 10px 24px; background-color:#002E2E; color: #0AFEFF">Daphne &nbsp; <i class="fas fa-comment-dots"></i></button>
+        <button v-on:click.prevent="maximizeChat" style="position: fixed; bottom:2%; right:2%; border-radius: 100px; font-size: 20px; padding: 10px 24px; background-color:#002E2E; color: #0AFEFF">Daphne &nbsp; <i class="fas fa-comment-dots"></i></button>
       </div>
     </div>
     <div class="is-seclss-background-black" style="bottom: 0; z-index: 0; height: 20px; float: bottom">
@@ -78,7 +78,8 @@ import {fetchGet, fetchPost} from "../scripts/fetch-helpers";
 import DaphneAnswer from "./DaphneAnswer";
 import TheFooter from "./TheFooter";
 import RegisterModal from './RegisterModal';
-import SettingsModal from './SettingsModal'
+import SettingsModal from './SettingsModal';
+import SymptomChangeNotificationModal from './SymptomChangeNotificationModal'
 import Modal from './Modal';
 import ChatWindow from "./ChatWindow";
 import AnomalyResponseWindow from "./AnomalyResponseWindow";
@@ -137,20 +138,14 @@ export default {
       currentStageNum: state => state.experiment.currentStageNum,
       username: state => state.auth.username,
       isChatVisible: state => state.daphneat.isChatVisible,
-      symptomsList: state => state.daphne.symptomsList
     }),
     ...mapGetters({
       telemetryIsOngoing: 'getTelemetryIsOngoing',
       heraUser: 'getHeraUser',
+      symptomsList: 'getSymptomsList'
     }),
   },
   methods: {
-    coolDownFunction(){ //to delay symptomsList watcher
-      this.coolDownActive = true;
-      setTimeout(() => {
-        this.coolDownActive = false;
-      }, 10000)
-    },
     changeSettings(){
       this.$store.commit('activateModal', 'SettingsModal');
     },
@@ -185,7 +180,7 @@ export default {
         this.initExperiment();
       }
     },
-    minimizeChat(event) {
+    maximizeChat(event) {
       this.$store.commit('mutateIsChatVisible');
     },
     async initExperiment() {
@@ -1536,14 +1531,11 @@ export default {
     }
   },
   watch: {
-    symptomsList:{
-      handler(newVal, oldVal){
-        if(!this.coolDownActive){
-          if(newVal.length > oldVal.length){
-              this.$store.commit('activateModal','AnomalyModal');
-          }
-          this.coolDownFunction();
-        }
+    symptomsList(newVal, oldVal) {
+      let oldValJSON = JSON.stringify(oldVal);
+      let newValJSON = JSON.stringify(newVal);
+      if (newValJSON.length !== 0 && oldValJSON.length < newValJSON.length){
+        this.$store.commit('activateModal', 'SymptomChangeNotificationModal');
       }
     },
     experimentStage: async function (val, oldVal) {
