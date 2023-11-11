@@ -54,23 +54,16 @@
               </ul>
             </div>
             <div class="column" style="margin-top: 20px; padding: 0px">
-              <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Could be caused by anomalies:</span>
-              <input type="checkbox" v-model="checked" :value="all"
-                     style="border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
+              <span style="margin-bottom:20px; color: #0AFEFF; background: #002E2E">Could be caused by anomalies:</span><br />
+              <span><input type='checkbox' v-model="allSelected" v-on:click="selectAllAnomalies()"> Select All </span>
               <ul v-for="anomaly in diagnosisReport['diagnosis_list']">
                 <li>
-                  <input type="checkbox" v-model="checked" :value="anomaly"
+                  <input type="checkbox" class='checkall' v-model="checked" :value="anomaly"
                          style="border-color: #0AFEFF; color: #0AFEFF; background: #002E2E;">
                   {{ anomaly['name'] }} <span :style="{'color': 0.66<anomaly['score']<1?(anomaly['score']<0.33 ? 'green' : 'yellow'):'red'}">({{anomaly['text_score']}}) </span>
                 </li>
               </ul>
             </div>
-<!--            <div style="margin: 0px; padding: 0px; font-weight: bold">-->
-<!--              <a script="float:right" v-on:click.prevent="clearFullDiagnosisReport">-->
-<!--                X-->
-<!--              </a>-->
-<!--            </div>-->
-<!--          </div>-->
           <div style="text-align: center; margin-top: 30px">
             <p id="alert" style="display: none; color: red">Please select an anomaly to investigate.</p>
             <button class="button" type="submit" onclick="errorMessage()"
@@ -222,6 +215,20 @@ export default {
   },
 
   methods: {
+    selectAllAnomalies: function() {
+      let checked = [];
+      if (!this.allSelected) {
+        this.diagnosisReport['diagnosis_list'].forEach(function (anomaly) {
+          checked.push(anomaly);
+        });
+        this.checked = checked;
+      }
+      else {
+        this.allSelected = false;
+        this.checked = checked;
+        this.clearExplanations();
+      }
+    },
     showSignature(anomaly) {
       const sign = 'The signature of the anomaly ' + anomaly['name'] + ' is: ';
       let text = sign + '<ul>';

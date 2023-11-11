@@ -121,12 +121,12 @@
           </div>
         </div>
       </div>
-      <div style="width: 100%; text-align: center; vertical-align: middle">
-        <button class="button"
-                style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 25px"
-                v-on:click="submitAnomaly(anomalyDict['anomalyName'])">Submit Anomaly
-        </button>
-      </div>
+<!--      <div style="width: 100%; text-align: center; vertical-align: middle">-->
+<!--        <button class="button"-->
+<!--                style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 25px"-->
+<!--                v-on:click="submitAnomaly(anomalyDict['anomalyName'])">Submit Anomaly-->
+<!--        </button>-->
+<!--      </div>-->
       <div class="horizontal-divider" style="margin-top: 30px"></div>
     </div>
   </div>

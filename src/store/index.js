@@ -204,10 +204,6 @@ export default new Vuex.Store({
             else if (received_info['type'] === 'confidence') {
                 commit('activateModal', 'ConfidenceModal');
             }
-            // Workload Questions
-            else if (received_info['type'] === 'workload') {
-                commit('mutateWorkloadProblem', received_info['workload_problem']);
-            }
             else if (received_info['type'] === 'send_msg_correct') {
                 // set up pop up to link
                 const surveyLink = new Shepherd.Tour({

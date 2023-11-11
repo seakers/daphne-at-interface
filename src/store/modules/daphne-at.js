@@ -34,8 +34,6 @@ const state = {
     loadingNewAnomaly: false,
     isLoggedIn: false,
     isChatVisible: true,
-    workload_answer: '',
-    workload_problem: ''
 };
 
 const getters = {
@@ -59,8 +57,6 @@ const getters = {
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
     getPlayAlarms(state) {return state.playAlarms},
     getIsChatVisible(state) {return state.isChatVisible},
-    getWorkloadProblem(state) {return state.workload_problem},
-    getWorkloadAnswer(state) {return state.workload_answer}
 };
 
 const actions = {
@@ -418,8 +414,6 @@ const mutations = {
     mutateLoadingNewAnomaly(state, newVal) {state.loadingNewAnomaly = newVal; },
     setIsTelemetryInitialized(state, isTelemetryInitialized) {state.isTelemetryInitialized = isTelemetryInitialized; },
     mutatePlayAlarms(state) {state.playAlarms = !state.playAlarms; },
-    mutateWorkloadProblem(state, newVal) {state.workload_problem = newVal;},
-    mutateWorkloadAnswer(state, newVal) {state.workload_answer = newVal;},
     setTelemetryType(state, telemetryType) {state.telemetryType = telemetryType; },
     mutateIsChatVisible(state) {state.isChatVisible = !state.isChatVisible},
     restoreDaphneAT(state, recoveredState) {

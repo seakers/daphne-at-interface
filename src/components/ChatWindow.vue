@@ -1,19 +1,9 @@
 <template>
-  <div class="chat-container box is-main" style="height:92%; width:24%">
+  <div class="chat-container box is-main" style="margin: 5px; width: 24%; height: 92%">
     <div class="is-title " style="text-align: center">
-      DAPHNE Chatbot
+      Chatbot
       <u v-on:click="minimizeChat" class="tutorialLink">Hide</u>
     </div>
-  <div class="chat-container box is-main" style="margin: 5px; width: 24%; height: 92%">
-    <div v-if="this.workload_problem" class="box is-seclss-background-black" style="text-align: center; background-color: darkred ;margin: 0px 0px 0px 0px">
-      <span style="color: var(--color__text)">{{this.workload_problem}}
-        <input style="background-color: var(--color__bg); border-color: var(--color__shadow); color: var(--color__text); margin-right: 5px"
-             type="text" name="answer" v-model="workload_answer"/>
-      </span>
-      <button class="button theme-buttons" style="width: 30%; margin-top: 15px"
-              v-on:click.prevent="submitWorkloadAnswer">Submit</button>
-    </div>
-    <div class="is-title " style="text-align: center">Chatbox</div>
     <div style="height: 85%">
       <section class="chat-area" style="height: 85%" ref="chatArea">
         <div v-for="piece in dialogueHistory" class="chat-message content"
@@ -59,7 +49,6 @@
       </div>
     </div>
   </div>
-  </div>
 </template>
 
 
@@ -92,7 +81,6 @@ export default {
         timeline_plot: 'TimelineResponse',
         active_message: 'ActiveMessage',
       },
-      workload_answer: ''
     }
   },
   computed: {
@@ -100,7 +88,6 @@ export default {
       dialogueHistory: state => state.daphne.dialogueHistory,
       isLoading: state => state.daphne.isLoading,
       isSpeaking: state => state.daphne.isSpeaking,
-      workload_problem: state => state.workload_problem
     }),
     ...mapGetters([
       'getResponse'
@@ -110,7 +97,6 @@ export default {
       isSpeaking: 'getIsSpeaking',
       isUnmute: 'getIsUnmute',
       daphneVoice: 'getDaphneVoice',
-      workload_problem: 'getWorkloadProblem'
     }),
     command: {
       get() {
@@ -161,59 +147,70 @@ export default {
     },
     minimizeChat(event) {
       this.$store.commit('mutateIsChatVisible');
-      {
-        this.$store.commit("mutateWorkloadAnswer", this.workload_answer);
-        this.$store.commit("mutateWorkloadProblem", '');
-      }
     },
-    watch: {
-      dialogueHistory: function (val, oldVal) {
-        this.$nextTick(() => {
-          this.scrollToBottom();
-        });
-        if (this.isUnmute) {
-          if (val.length > 0) {
-            let lastMessage = val[val.length - 1];
-            if (lastMessage['writer'] === "daphne") {
-              let voiceAnswer = lastMessage['voice_message'];
-              responsiveVoice.speak(voiceAnswer, this.daphneVoice, {rate: 1.05}, {volume: 1});
+    // watch: {
+      // dialogueHistory: function (val, oldVal) {
+      //   this.$nextTick(() => {
+      //     this.scrollToBottom();
+      //   });
+      //   if (this.isUnmute) {
+      //     if (val.length > 0) {
+      //       let lastMessage = val[val.length - 1];
+      //       if (lastMessage['writer'] === "daphne") {
+      //         let voiceAnswer = lastMessage['voice_message'];
+      //         responsiveVoice.speak(voiceAnswer, this.daphneVoice, {rate: 1.05}, {volume: 1});
+      //       }
+      //     }
+      //   }
+      // },
+      watch: {
+        dialogueHistory: function (val, oldVal) {
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
+          if (this.isUnmute) {
+            if (val.length > 0) {
+              let lastMessage = val[val.length - 1];
+              if (lastMessage['writer'] === "daphne") {
+                let voiceAnswer = lastMessage['voice_message'];
+                responsiveVoice.speak(voiceAnswer, this.daphneVoice, {rate: 1.05}, {volume: 1});
+              }
             }
           }
-        }
-      },
-      isLoading: function (val, oldVal) {
-        if (val === true) {
-          _.delay(() => {
-            this.scrollToBottom();
-          }, 500);
-        }
-      },
-      isSpeaking: async function (val, oldVal) {
-        if (val) {
-          this.siriWave = new SiriWave({
-            container: document.getElementById('siri-container'),
-            cover: true,
-            style: "ios9",
-            curveDefinition: [
-              {color: "255,255,255", supportLine: true},
-              {color: "15, 82, 169"}, // blue
-              {color: "173, 57, 76"}, // red
-              {color: "48, 220, 155"}, // green
-            ]
-          });
-          this.siriWave.start();
-          let audio = new Audio(daphne_awake);
-          await audio.play();
-          this.siriWave.setAmplitude(5);
-        } else {
-          let audio = new Audio(daphne_asleep);
-          await audio.play();
-          this.siriWave.stop();
-          this.siriWave.dispose();
+        },
+        isLoading: function (val, oldVal) {
+          if (val === true) {
+            _.delay(() => {
+              this.scrollToBottom();
+            }, 500);
+          }
+        },
+        isSpeaking: async function (val, oldVal) {
+          if (val) {
+            this.siriWave = new SiriWave({
+              container: document.getElementById('siri-container'),
+              cover: true,
+              style: "ios9",
+              curveDefinition: [
+                {color: "255,255,255", supportLine: true},
+                {color: "15, 82, 169"}, // blue
+                {color: "173, 57, 76"}, // red
+                {color: "48, 220, 155"}, // green
+              ]
+            });
+            this.siriWave.start();
+            let audio = new Audio(daphne_awake);
+            await audio.play();
+            this.siriWave.setAmplitude(5);
+          } else {
+            let audio = new Audio(daphne_asleep);
+            await audio.play();
+            this.siriWave.stop();
+            this.siriWave.dispose();
+          }
         }
       }
     }
-  }
 }
 </script>
 
