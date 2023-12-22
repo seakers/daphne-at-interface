@@ -74,6 +74,9 @@
             },
             plotLayout () {
                 try {
+                    //TODO: DELETE THIS
+                    console.log(this.plotData);
+                    console.log(this.telemetryInfo);
                     return setLayout(this.selectedVariables, this.telemetryInfo, this.plotData);
                 }
                 catch(err) {
