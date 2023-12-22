@@ -61,10 +61,6 @@
                 for (let i = 0; i < variables.length; i++) {
                     aux.push({'name': variables[i]});
                 }
-              //TODO: DELETE THIS
-                console.log(this.plotData);
-                console.log(this.telemetryInfo);
-                console.log(aux)
                 return aux;
             },
             options ()  {
@@ -74,10 +70,6 @@
                     aux.push({'name': variables[i]});
                 }
               aux.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
-              //TODO: DELETE THIS
-              console.log(this.plotData);
-              console.log(this.telemetryInfo);
-              console.log(aux)
               return aux;
             },
             plotLayout () {
