@@ -243,6 +243,7 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
         let variable = selectedVariables[index];
         // let units = telemetryInfo[variable]['Unit'];
         // selectedVariablesUnits[variable] = units;
+        console.log(telemetryInfo)
         selectedVariablesUnits[variable] = telemetryInfo[variable]['Unit'];
     }
 
