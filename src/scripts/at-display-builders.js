@@ -241,8 +241,9 @@ export function setLayout(selectedVariables, telemetryInfo, plotData) {
     let selectedVariablesUnits = {};
     for (let index in selectedVariables) {
         let variable = selectedVariables[index];
-        let units = telemetryInfo[variable]['units'];
-        selectedVariablesUnits[variable] = units;
+        // let units = telemetryInfo[variable]['Unit'];
+        // selectedVariablesUnits[variable] = units;
+        selectedVariablesUnits[variable] = telemetryInfo[variable]['Unit'];
     }
 
     let layout = {
