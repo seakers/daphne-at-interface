@@ -299,17 +299,19 @@ export default {
     },
     async selectAnomaly(anomalyName) {
       this.isAnomalySelected = true;
-      if (!this.selectedAnomalies.includes(anomalyName)) {
         if (anomalyName.includes('&')) {
           let anomaly = anomalyName.split(' & ');
-          await this.$store.dispatch('addSelectedAnomaly', anomaly[0]);
-          await this.$store.dispatch('addSelectedAnomaly', anomaly[1]);
+          if (!this.selectedAnomaliesList.includes(anomaly[0])) {
+            await this.$store.dispatch('addSelectedAnomaly', anomaly[0]);
+          }
+          if (!this.selectedAnomaliesList.includes(anomaly[1])) {
+            await this.$store.dispatch('addSelectedAnomaly', anomaly[1]);
+          }
         }
         else {
           await this.$store.dispatch('addSelectedAnomaly', anomalyName);
         }
         this.isAnomalySelected = false;
-      }
     },
     recoverSymptomsList() {
       this.$store.dispatch('recoverSymptomsList')
