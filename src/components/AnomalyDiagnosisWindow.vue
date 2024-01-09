@@ -196,7 +196,7 @@ export default {
       selectedSymptomsList: 'getSelectedSymptomsList',
       lastSelectedSymptomsList: 'getLastSelectedSymptomsList',
       diagnosisReport: 'getDiagnosisReport',
-      selectedAnomalies: 'getSelectedAnomaliesList',
+      selectedAnomaliesList: 'getSelectedAnomaliesList',
     }),
     checkAll: {
       get: function () {
@@ -301,11 +301,13 @@ export default {
       this.isAnomalySelected = true;
         if (anomalyName.includes('&')) {
           let anomaly = anomalyName.split(' & ');
-          if (!this.selectedAnomaliesList.includes(anomaly[0])) {
-            await this.$store.dispatch('addSelectedAnomaly', anomaly[0]);
+          let firstAnomaly = anomaly[0];
+          let secondAnomaly = anomaly[1];
+          if (!this.selectedAnomaliesList.includes(firstAnomaly)) {
+            await this.$store.dispatch('addSelectedAnomaly', firstAnomaly);
           }
-          if (!this.selectedAnomaliesList.includes(anomaly[1])) {
-            await this.$store.dispatch('addSelectedAnomaly', anomaly[1]);
+          if (!this.selectedAnomaliesList.includes(secondAnomaly)) {
+            await this.$store.dispatch('addSelectedAnomaly', secondAnomaly);
           }
         }
         else {

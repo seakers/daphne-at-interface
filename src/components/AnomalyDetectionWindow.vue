@@ -9,6 +9,10 @@
       <span class="tutorialLink">
                 <u v-on:click.prevent="clear">Clear</u>
             </span>
+      <span class="tutorialLink">&#8287; &#8287;</span>
+      <span class="tutorialLink">
+                <u v-on:click.prevent="selectall">Select All</u>
+            </span>
     </div>
     <div v-if="(this.symptomsList.length === 0)" class="is-content" style="min-height: 100px">
       No anomalous symptoms detected.
@@ -81,6 +85,12 @@ export default {
     clear() {
       this.$store.commit('mutateSymptomsList', []);
       this.$store.commit('mutateSelectedSymptomsList', []);
+    },
+    selectall() {
+      let symptomsList = this.symptomsList;
+      for (let i = 0; i < symptomsList.length; i = i + 1) {
+        this.$store.dispatch('addSelectedSymptom', symptomsList[i]);
+      }
     }
   },
 
