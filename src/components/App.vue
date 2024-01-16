@@ -395,56 +395,54 @@ export default {
           }
         ]
       });
-      this.introTutorial.addStep(
-          {
-            attachTo: {
-              element: '#theme',
-              on: 'left-end'
-            },
-            useModalOverlay: true,
-            text: `This is the Settings button. It helps you change the appearance of the display. Click on the button to open the Settings overlay.`,
-            advanceOn: {selector: '#theme', event: 'click'},
-            buttons: [
-              {
-                text: 'Skip',
-                action: this.introTutorial.cancel
-              }
-            ]
-          }
-      );
-      this.introTutorial.addStep({
-        attachTo: {
-          element: '#settings',
-              useModalOverlay: false,
-              on: 'bottom'
-        },
-        text: `This is the Settings overlay. You can select a theme by clicking on one of the buttons on the top right corner and observe how the appearance of the display changes. You have two themes to select from: Light and Dark. When you have selected the theme that you like, click on Next.`,
-        buttons: [
-          {
-            text: 'Skip',
-            action: this.introTutorial.cancel
-          },
-          {
-            text: 'Next',
-            action: this.introTutorial.next
-          }
-        ],
-      });
-      this.introTutorial.addStep({
-        attachTo: {
-          element: '#modalCloseButton',
-          useModalOverlay: false,
-          on: 'bottom'
-        },
-        text: `Click on this X to close the overlay and to proceed to the next step of the tutorial.`,
-        buttons: [
-          {
-            text: 'Skip',
-            action: this.introTutorial.cancel
-          }
-        ],
-        advanceOn: {selector: '#modalCloseButton', event: 'click'},
-      });
+      // this.introTutorial.addStep({
+      //       attachTo: {
+      //         element: '#theme',
+      //         on: 'left-end'
+      //       },
+      //       useModalOverlay: true,
+      //       text: `This is the Settings button. It helps you change the appearance of the display. Click on the button to open the Settings overlay.`,
+      //       advanceOn: {selector: '#theme', event: 'click'},
+      //       buttons: [
+      //         {
+      //           text: 'Skip',
+      //           action: this.introTutorial.cancel
+      //         }
+      //       ]
+      //     });
+      // this.introTutorial.addStep({
+      //   attachTo: {
+      //     element: '#settings',
+      //         useModalOverlay: false,
+      //         on: 'bottom'
+      //   },
+      //   text: `This is the Settings overlay. You can select a theme by clicking on one of the buttons on the top right corner and observe how the appearance of the display changes. You have two themes to select from: Light and Dark. When you have selected the theme that you like, click on Next.`,
+      //   buttons: [
+      //     {
+      //       text: 'Skip',
+      //       action: this.introTutorial.cancel
+      //     },
+      //     {
+      //       text: 'Next',
+      //       action: this.introTutorial.next
+      //     }
+      //   ],
+      // });
+      // this.introTutorial.addStep({
+      //   attachTo: {
+      //     element: '#modalCloseButton',
+      //     useModalOverlay: false,
+      //     on: 'bottom'
+      //   },
+      //   text: `Click on this X to close the overlay and to proceed to the next step of the tutorial.`,
+      //   buttons: [
+      //     {
+      //       text: 'Skip',
+      //       action: this.introTutorial.cancel
+      //     }
+      //   ],
+      //   advanceOn: {selector: '#modalCloseButton', event: 'click'},
+      // });
       // list of steps
       const introSteps = [
         {
