@@ -60,10 +60,10 @@
                 <span style="color: #0AFEFF; background: #002E2E">Objective </span>
                 {{ procedureDict['procedureObjective'] }}
               </p>
-              <p style="margin-top: 10px">
+              <p v-if="!procedureDict['procedureEquipment'].includes('ERROR: missing equipment list.')" style="margin-top: 10px">
                 <span style="color: #0AFEFF; background: #002E2E">Equipment</span>
               </p>
-              <ul v-for="item in procedureDict['procedureEquipment']">
+              <ul v-if="!procedureDict['procedureEquipment'].includes('ERROR: missing equipment list.')"  v-for="item in procedureDict['procedureEquipment']">
                 <li style="margin-left: 20px">
                   {{ item }}
                 </li>

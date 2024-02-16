@@ -85,9 +85,16 @@ export default {
       } else {
         this.$store.commit('mutateHeraUser', true);
       }
+
+      this.$store.commit('addDialoguePiece', {
+        "voice_message": `Hi ${this.username}`,
+        "visual_message_type": ["text"],
+        "visual_message": ['Hi ' + this.username + ', how can I help?'], // Mapping each item to its detection_text property
+        "writer": "daphne"
+      });
     },
     loginAfterPopup() {
-      this.$store.dispatch('loginUser', {
+        this.$store.dispatch('loginUser', {
         username: this.username,
         password: this.password,
         daphneVersion: 'AT',
