@@ -174,7 +174,6 @@
 <script>
 
 import {mapGetters} from 'vuex';
-import {fetchPost} from "../scripts/fetch-helpers";
 
 let loaderImage = require('../images/loader.svg');
 
@@ -296,15 +295,6 @@ export default {
       this.explaining = false;
       this.checked = [];
       await this.$store.dispatch('requestDiagnosis', this.selectedSymptomsList);
-      console.log(this.diagnosisReport['diagnosis_list'])
-      let filteredDiagnosisList = this.diagnosisReport['diagnosis_list'].filter(item => item['score'] > 0.66);
-      let anomaly_list =  filteredDiagnosisList.map(item => item['name']).join('<br><br>');
-      this.$store.commit('addDialoguePiece', {
-        "voice_message": "Based on the the current evidence, The most likely root cause are ",
-        "visual_message_type": ["text"],
-        "visual_message": ["Based on the the current evidence, The most likely root cause are :<br><br>"+anomaly_list], // Mapping each item to its detection_text property
-        "writer": "daphne"
-      });
       this.isLoading = false;
     },
     async selectAnomaly(anomalyName) {
@@ -314,88 +304,14 @@ export default {
           let firstAnomaly = anomaly[0];
           let secondAnomaly = anomaly[1];
           if (!this.selectedAnomaliesList.includes(firstAnomaly)) {
-            this.$store.commit('addDialoguePiece', {
-              "voice_message": "Ok Let me fetch the first Procedure based on your selection",
-              "visual_message_type": ["text"],
-              "visual_message": ["Ok! Let me fetch the first Procedure based on your selection"], // Mapping each item to its detection_text property
-              "writer": "daphne"
-            });
-
             await this.$store.dispatch('addSelectedAnomaly', firstAnomaly);
-
-            this.$store.state.command = "How to solve "+ firstAnomaly;
-            let reqData = new FormData();
-            reqData.append('command', this.$store.state.command);
-            let dataResponse = await fetchPost('/api/at/dialogue/command', reqData);
-            console.log("COMMAND" + this.$store.state.command);
-
-            if (dataResponse.ok) {
-              let data = await dataResponse.json();
-              this.$store.commit('addDialoguePiece', data['response']);
-              this.$store.commit('setResponse', data['response']['visual_message']);
-              console.log("VOICE MESSAGE" + data['response']['voice_message']);
-              console.log("VISUAL MESSAGE" + data['response']['visual_message']);
-            }
-            else {
-              console.error('Error processing the command.');
-            }
           }
           if (!this.selectedAnomaliesList.includes(secondAnomaly)) {
-            this.$store.commit('addDialoguePiece', {
-              "voice_message": "Now Let me fetch the second Procedure",
-              "visual_message_type": ["text"],
-              "visual_message": ["Now Let me fetch the second Procedure"], // Mapping each item to its detection_text property
-              "writer": "daphne"
-            });
-
             await this.$store.dispatch('addSelectedAnomaly', secondAnomaly);
-
-            this.$store.state.command = "How to solve "+ secondAnomaly;
-            let reqData = new FormData();
-            reqData.append('command', this.$store.state.command);
-            let dataResponse = await fetchPost('/api/at/dialogue/command', reqData);
-            console.log("COMMAND" + this.$store.state.command);
-
-            if (dataResponse.ok) {
-              let data = await dataResponse.json();
-              this.$store.commit('addDialoguePiece', data['response']);
-              this.$store.commit('setResponse', data['response']['visual_message']);
-              console.log("VOICE MESSAGE" + data['response']['voice_message']);
-              console.log("VISUAL MESSAGE" + data['response']['visual_message']);
-            }
-            else {
-              console.error('Error processing the command.');
-            }
-
           }
         }
         else {
-          this.$store.commit('addDialoguePiece', {
-            "voice_message": "Ok Let me fetch the Procedure based on your selection",
-            "visual_message_type": ["text"],
-            "visual_message": ["Ok Let me fetch the Procedure based on your selection"], // Mapping each item to its detection_text property
-            "writer": "daphne"
-          });
-
           await this.$store.dispatch('addSelectedAnomaly', anomalyName);
-
-          this.$store.state.command = "How to solve "+ anomalyName;
-          console.log(this.$store.state.command)
-          let reqData = new FormData();
-          reqData.append('command', this.$store.state.command);
-          let dataResponse = await fetchPost('/api/at/dialogue/command', reqData);
-          console.log("COMMAND" + this.$store.state.command);
-
-          if (dataResponse.ok) {
-            let data = await dataResponse.json();
-            this.$store.commit('addDialoguePiece', data['response']);
-            this.$store.commit('setResponse', data['response']['visual_message']);
-            console.log("VOICE MESSAGE" + data['response']['voice_message']);
-            console.log("VISUAL MESSAGE" + data['response']['visual_message']);
-          }
-          else {
-            console.error('Error processing the command.');
-          }
         }
         this.isAnomalySelected = false;
     },

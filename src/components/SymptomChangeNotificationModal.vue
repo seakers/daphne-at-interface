@@ -12,8 +12,6 @@
 
 <script>
 
-import {mapGetters} from "vuex";
-
 export default {
   name: "SettingsModal",
   data: function () {
@@ -21,21 +19,9 @@ export default {
       theme: "dark"
     }
   },
-  computed: {
-    ...mapGetters({
-      symptomsList: 'getSymptomsList'
-    })
-  },
+  computed: {},
   methods: {
     closeModal(state) {
-      let symp_list =  this.symptomsList.map(item => item['detection_text']).join('<br><br>');
-
-      this.$store.commit('addDialoguePiece', {
-        "voice_message": "Attention an Anomaly has been Detected, here is the signature",
-        "visual_message_type": ["text"],
-        "visual_message": ["Attention an Anomaly has been Detected, here is the signature:<br><br>"+symp_list], // Mapping each item to its detection_text property
-        "writer": "daphne"
-      });
         this.$store.commit('closeModal');
     },
   },
