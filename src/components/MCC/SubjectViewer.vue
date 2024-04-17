@@ -48,6 +48,11 @@
                                 </span>
                             </a>
                         </div>
+                      <div class="control" style="margin-top: 10px">
+                        <button type="submit" class="button is-primary" v-on:click="openSituationalAwarenessModal" style="background-color: blue">
+                          Situational Awareness
+                        </button>
+                      </div>
                         <div class="control">
                             <button type="submit" class="button is-primary" v-on:click="finishExperiment" style="background-color: red">
                                 Send Survey Link
@@ -147,6 +152,11 @@
             this.selectedProceduresList = [];
             this.selectedProceduresInfo = [];
           }
+        },
+        async openSituationalAwarenessModal() {
+          let reqData = new FormData();
+          reqData.append('user_id', this.userId);
+          await fetchPost(API_URL + 'experiment-at/situational-awareness', reqData);
         },
         async finishExperiment() {
           console.log('FINISH EXPERIMENT');

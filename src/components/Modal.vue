@@ -1,5 +1,14 @@
 <template>
     <div class="modal" v-bind:class="{ 'is-active': isActive }">
+      <div v-if="modalContent === 'SituationalAwarenessModal'">
+        <div class="modal-background modal-backdrop"></div>
+        <div class="modal-content">
+          <article class="message">
+            <component v-bind:is="modalContent" v-on:close-modal="onCloseModal"></component>
+          </article>
+        </div>
+      </div>
+      <div v-else>
         <div class="modal-background"></div>
         <div class="modal-content">
             <article class="message">
@@ -7,6 +16,7 @@
             </article>
         </div>
         <button id="modalCloseButton" class="modal-close is-large" aria-label="close"  v-on:click.prevent="$emit('close-modal')"></button>
+    </div>
     </div>
 </template>
 
@@ -17,7 +27,7 @@
     import RegisterModal from './RegisterModal';
     import SettingsModal from './SettingsModal';
     import SymptomChangeNotificationModal from './SymptomChangeNotificationModal';
-
+    import SituationalAwarenessModal from './SituationalAwarenessModal'
     export default {
         name: 'modal',
         props: ['modalContent', 'isActive'],
@@ -31,7 +41,8 @@
             LoginModal,
             RegisterModal,
             SettingsModal,
-            SymptomChangeNotificationModal
+            SymptomChangeNotificationModal,
+            SituationalAwarenessModal,
         },
         methods: {
             onCloseModal() {
@@ -42,5 +53,8 @@
 </script>
 
 <style scoped>
-
+.modal-backdrop{
+  background-color: black;
+  display: flex;
+}
 </style>
