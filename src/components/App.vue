@@ -353,20 +353,22 @@ export default {
         useModalOverlay: true,
         exitOnEsc: false
       });
+      //Commenting to hide Tutorial
       // add steps
-      this.tutorialConfirm.addStep({
-        text: 'Would you like to continue with the tutorial?',
-        buttons: [
-          {
-            text: 'No',
-            action: this.tutorialConfirm.cancel
-          },
-          {
-            text: 'Yes',
-            action: this.tutorialConfirm.next
-          }
-        ]
-      });
+      // this.tutorialConfirm.addStep({
+      //   text: 'Would you like to continue with the tutorial?',
+      //   buttons: [
+      //     {
+      //       text: 'No',
+      //       action: this.tutorialConfirm.cancel
+      //     },
+      //     {
+      //       text: 'Yes',
+      //       action: this.tutorialConfirm.next
+      //     }
+      //   ]
+      // });
+      //Commenting to Hide Tutorial
 
       // Tutorial
       // full tutorial at the beginning
