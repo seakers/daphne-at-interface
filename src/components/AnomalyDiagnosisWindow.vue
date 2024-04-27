@@ -317,6 +317,7 @@ export default {
       this.checked = [];
     },
     async requestDiagnosis() {
+      this.allSelected = false;
       this.isLoading = true;
       this.explaining = false;
       this.checked = [];
