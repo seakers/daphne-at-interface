@@ -208,12 +208,12 @@ export default {
           let data = await dataResponse.json();
           seen_tutorial = data['seen_tutorial'];
         }
-        if (!seen_tutorial) {
-          this.$store.commit('setExperimentStage', 'tutorial');
-        }
-        else {
+        // if (!seen_tutorial) {
+        //   this.$store.commit('setExperimentStage', 'tutorial');
+        // }
+        //else {
           this.$store.commit('setExperimentStage', 'with_daphne');
-        }
+       // }
         this.$store.commit('setInExperiment', true);
       });
     },
