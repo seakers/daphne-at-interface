@@ -197,6 +197,8 @@ export default {
       lastSelectedSymptomsList: 'getLastSelectedSymptomsList',
       diagnosisReport: 'getDiagnosisReport',
       selectedAnomaliesList: 'getSelectedAnomaliesList',
+      selectedLeftSymptoms: 'getSelectedLeftSymptomsList',
+      selectedRightSymptoms: 'getSelectedRightSymptomsList'
     }),
     checkAll: {
       get: function () {
@@ -277,9 +279,33 @@ export default {
       }
     },
     deselectSymptom(symptom) {
+
+      for (let i = 0; i < this.selectedLeftSymptoms.length; i++) {
+        console.log(typeof this.selectedLeftSymptoms, typeof symptom)
+        // Check if the symptom property of the current object is equal to the value you're looking for
+        if (this.selectedLeftSymptoms[i].symptom['detection_text'] === symptom['detection_text']) {
+          // If the symptom is found, remove it
+          this.selectedLeftSymptoms.splice(i, 1);
+          // Exit the loop since the symptom is found
+          break;
+        }
+      }
+
+      for (let i = 0; i < this.selectedRightSymptoms.length; i++) {
+        // Check if the symptom property of the current object is equal to the value you're looking for
+        if (this.selectedRightSymptoms[i].symptom['detection_text'] === symptom['detection_text']) {
+          // If the symptom is found, remove it
+          this.selectedRightSymptoms.splice(i, 1);
+          // Exit the loop since the symptom is found
+          break;
+        }
+      }
+
       this.$store.dispatch('removeSelectedSymptom', symptom);
     },
     clearSymptoms() {
+      this.selectedLeftSymptoms.splice(0, this.selectedLeftSymptoms.length);
+      this.selectedRightSymptoms.splice(0, this.selectedRightSymptoms.length);
       this.$store.dispatch('clearSelectedSymptoms');
       this.$store.dispatch('clearDiagnosisReport');
       this.explaining = false;

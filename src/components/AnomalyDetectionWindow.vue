@@ -21,14 +21,14 @@
       <div class="columns">
         <div class="column is-6">
           <ul>
-            <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListLeftColumn" style="cursor: pointer;">
+            <li v-on:click="selectSymptom(symptom); leftToggleFontWeight(index,symptom)" v-for="(symptom,index) in symptomsListLeftColumn"  v-bind:style="{ 'font-weight': isLeftSelected(index) ? 'bold' : 'normal', cursor: 'pointer'}">
               {{ symptom['detection_text'] }}
             </li>
           </ul>
         </div>
         <div class="column is-6">
           <ul>
-            <li v-on:click="selectSymptom(symptom)" v-for="symptom in symptomsListRightColumn" style="cursor: pointer;">
+            <li v-on:click="selectSymptom(symptom); rightToggleFontWeight(index,symptom)" v-for="(symptom,index) in symptomsListRightColumn"  v-bind:style="{ 'font-weight': isRightSelected(index) ? 'bold' : 'normal', cursor: 'pointer', hover: { 'font-weight': 'bold' }}">
               {{ symptom['detection_text'] }}
             </li>
           </ul>
@@ -49,13 +49,16 @@ export default {
     return {
       backgroundColor: '--primary-color',
       fontColor: '--secondary-color',
-      flash: false
+      flash: false,
     }
   },
 
   computed: {
     ...mapGetters({
       symptomsList: 'getSymptomsList',
+      selectedSymptomsList: 'getSelectedSymptomsList',
+      selectedLeftSymptoms: 'getSelectedLeftSymptomsList',
+      selectedRightSymptoms: 'getSelectedRightSymptomsList'
     }),
     symptomsListLeftColumn() {
       let aux = [];
@@ -76,6 +79,40 @@ export default {
   },
 
   methods: {
+    leftToggleFontWeight(index,symptom) {
+      console.log(this.selectedSymptomsList);
+      console.log(this.selectedLeftSymptoms);
+        if (this.isLeftSelected(index)) {
+          this.$store.commit('mutateSelectedLeftSymptomsList',this.selectedLeftSymptoms.filter(item => item.index !== index));
+          this.$store.dispatch('removeSelectedSymptom', symptom);
+
+        } else {
+          this.selectedLeftSymptoms.push({index: index, symptom: symptom});
+          this.$store.commit('mutateSelectedLeftSymptomsList',this.selectedLeftSymptoms);
+        }
+
+
+    },
+    isLeftSelected(index) {
+      console.log(this.selectedLeftSymptoms);
+      if(this.selectedLeftSymptoms!==undefined)
+      return this.selectedLeftSymptoms.some(item => item.index === index);
+      return false;
+    },
+    rightToggleFontWeight(index,symptom) {
+        if (this.isRightSelected(index)) {
+          this.$store.commit('mutateSelectedRightSymptomsList',this.selectedRightSymptoms.filter(item => item.index !== index));
+          this.$store.dispatch('removeSelectedSymptom', symptom);
+        } else {
+          this.selectedRightSymptoms.push({index: index, symptom: symptom});
+          this.$store.commit('mutateSelectedRightSymptomsList',this.selectedRightSymptoms);
+        }
+    },
+    isRightSelected(index) {
+      if(this.selectedRightSymptoms!==undefined)
+      return this.selectedRightSymptoms.some(item => item.index === index);
+      return false;
+    },
     selectSymptom(symptom) {
       this.$store.dispatch('addSelectedSymptom', symptom);
     },
@@ -83,17 +120,30 @@ export default {
       this.$root.$emit('detectionTutorialIndividual');
     },
     clear() {
+      this.selectedLeftSymptoms.splice(0, this.selectedLeftSymptoms.length);
+      this.selectedRightSymptoms.splice(0, this.selectedRightSymptoms.length);
       this.$store.commit('mutateSymptomsList', []);
       this.$store.commit('mutateSelectedSymptomsList', []);
     },
     selectall() {
       let symptomsList = this.symptomsList;
+      let even=0;
+      let odd =0;
       for (let i = 0; i < symptomsList.length; i = i + 1) {
         this.$store.dispatch('addSelectedSymptom', symptomsList[i]);
+        if(i%2===0)
+        {
+          this.selectedLeftSymptoms.push({index: even, symptom: symptomsList[i]});
+          even++;
+        }
+        else
+        {
+          this.selectedRightSymptoms.push({index: odd, symptom: symptomsList[i]});
+          odd++;
+        }
       }
     }
   },
-
   watch: {
     symptomsList(newVal, oldVal) {
       let oldValJSON = JSON.stringify(oldVal);
@@ -106,6 +156,7 @@ export default {
         this.backgroundColor = backgroundColor;
         this.fontColor = fontColor;
       }
+
     }
   }
 }

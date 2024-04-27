@@ -4,6 +4,7 @@ import {fetchPost} from "../../scripts/fetch-helpers";
 import startAnomalySound from '../../sounds/woopwoop.mp3';
 import endAnomalySound from '../../sounds/endgame.mp3';
 
+
 const state = {
     // Telemetry group
     heraUser: true,
@@ -24,6 +25,8 @@ const state = {
     selectedSymptomsList: [], // A list of the symptoms selected by the user to be diagnosed.
     lastSelectedSymptomsList: [], // A list of the symptoms that appear in the  last requested diagnosis report
     diagnosisReport: [], // Contains the information related to a requested diagnosis.
+    selectedLeftSymptoms: [],
+    selectedRightSymptoms:[],
 
     // Anomaly treatment related variables
     selectedAnomaliesList: [], // A list of the anomalies selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
@@ -34,6 +37,7 @@ const state = {
     loadingNewAnomaly: false,
     isLoggedIn: false,
     isChatVisible: true,
+    symptoms_timestamp: ""
 };
 
 const getters = {
@@ -47,6 +51,8 @@ const getters = {
     getTelemetryInfo(state) {return state.telemetryInfo},
     getSymptomsList(state) {return state.symptomsList},
     getSelectedSymptomsList(state) {return state.selectedSymptomsList},
+    getSelectedLeftSymptomsList(state) {return state.selectedLeftSymptoms},
+    getSelectedRightSymptomsList(state) {return state.selectedRightSymptoms},
     getLastSelectedSymptomsList(state) {return state.lastSelectedSymptomsList},
     getDiagnosisReport(state) {return state.diagnosisReport},
     getSelectedAnomaliesList(state) {return state.selectedAnomaliesList},
@@ -57,6 +63,7 @@ const getters = {
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
     getPlayAlarms(state) {return state.playAlarms},
     getIsChatVisible(state) {return state.isChatVisible},
+    getSymptomsTimestamp(state) { return state.symptoms_timestamp}
 };
 
 const actions = {
@@ -99,8 +106,10 @@ const actions = {
                 index = i;
             }
         }
+
         currentSelectedSymptoms.splice(index, 1);
         commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
+      
     },
     async clearSelectedSymptoms({state, commit}) {
         commit('mutateSelectedSymptomsList', []);
@@ -404,6 +413,8 @@ const mutations = {
     mutateTelemetryPlotSelectedVariables(state, newVal) {state.telemetryPlotSelectedVariables = newVal; },
     mutateSymptomsList(state, newVal) {state.symptomsList = newVal; },
     mutateSelectedSymptomsList(state, newVal) {state.selectedSymptomsList = newVal; },
+    mutateSelectedLeftSymptomsList(state, newVal) {state.selectedLeftSymptoms = newVal; },
+    mutateSelectedRightSymptomsList(state, newVal) {state.selectedRightSymptoms = newVal; },
     mutateLastSelectedSymptomsList(state, newVal) {state.lastSelectedSymptomsList = newVal; },
     mutateDiagnosisReport(state, newVal) {state.diagnosisReport = newVal; },
     mutateAllAnomaliesList(state, newVal) {state.allAnomaliesList = newVal; },
@@ -421,6 +432,7 @@ const mutations = {
             state[key] = recoveredState[key];
         });
     },
+    mutateSymptomsTimestamp(state, newVal) { state.symptoms_timestamp = newVal }
 };
 
 export default {
