@@ -1,6 +1,6 @@
 <template>
     <div class="modal" v-bind:class="{ 'is-active': isActive }">
-      <div v-if="modalContent === 'SituationalAwarenessModal'">
+      <div v-if="modalContent === 'WithoutDaphneSessionModal'">
         <div class="modal-background modal-backdrop"></div>
         <div class="modal-content">
           <article class="message">
@@ -27,7 +27,7 @@
     import RegisterModal from './RegisterModal';
     import SettingsModal from './SettingsModal';
     import SymptomChangeNotificationModal from './SymptomChangeNotificationModal';
-    import SituationalAwarenessModal from './SituationalAwarenessModal'
+    import WithoutDaphneSession from './WithoutDaphneSessionModal'
     export default {
         name: 'modal',
         props: ['modalContent', 'isActive'],
@@ -42,7 +42,7 @@
             RegisterModal,
             SettingsModal,
             SymptomChangeNotificationModal,
-            SituationalAwarenessModal,
+            WithoutDaphneSession,
         },
         methods: {
             onCloseModal() {

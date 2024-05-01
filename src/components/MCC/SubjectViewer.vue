@@ -49,7 +49,7 @@
                             </a>
                         </div>
                       <div class="control" style="margin-top: 10px">
-                        <button type="submit" class="button is-primary" v-on:click="openSituationalAwarenessModal" style="background-color: blue">
+                        <button type="submit" class="button is-primary" v-on:click="withoutDaphneSessionModal" style="background-color: blue">
                           Situational Awareness
                         </button>
                       </div>
@@ -153,10 +153,10 @@
             this.selectedProceduresInfo = [];
           }
         },
-        async openSituationalAwarenessModal() {
+        async withoutDaphneSessionModal() {
           let reqData = new FormData();
           reqData.append('user_id', this.userId);
-          await fetchPost(API_URL + 'experiment-at/situational-awareness', reqData);
+          await fetchPost(API_URL + 'experiment-at/without-daphne-session', reqData);
         },
         async finishExperiment() {
           console.log('FINISH EXPERIMENT');
