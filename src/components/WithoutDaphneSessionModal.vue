@@ -2,9 +2,7 @@
   <div>
     <div class="message-body" style="display: flex; justify-content: center; text-align: center">
       <div class="modal-survey" id="survey" style="display:block">
-        <p>The system just froze. Click on the "Survey Link" button below to fill out the survey. Do <b><u>NOT</u></b> click on anything else on this screen until you finish the survey below.</p>
-        <button class="button theme-buttons" style="width: 30%; border-color: #0AFEFF; color: #0AFEFF; background: #002E2E; margin-top: 15px"
-                v-on:click.prevent="fillSurvey">Survey Link</button>
+        <p>This is a <b><u>without</u></b> Daphne session. Please close the browser window.</p>
       </div>
       <div class="modal-survey" id="done" style="display:none">
         <p>If you have filled out the survey, click on "Done" button below to return to the experiment.</p>
