@@ -50,7 +50,7 @@
                         </div>
                       <div class="control" style="margin-top: 10px">
                         <button type="submit" class="button is-primary" v-on:click="withoutDaphneSessionModal" style="background-color: blue">
-                          Situational Awareness
+                          Without Daphne Session
                         </button>
                       </div>
                         <div class="control">
