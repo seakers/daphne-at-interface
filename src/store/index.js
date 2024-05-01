@@ -200,6 +200,10 @@ export default new Vuex.Store({
             else if (received_info['type'] === 'situational_awareness') {
                 commit('activateModal', 'SituationalAwarenessModal');
             }
+            // Without Daphne Sessions
+            else if (received_info['type'] === 'without_daphne_session') {
+                commit('activateModal', 'WithoutDaphneSessionModal');
+            }
             // Confidence Questions
             else if (received_info['type'] === 'confidence') {
                 commit('activateModal', 'ConfidenceModal');
