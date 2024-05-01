@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="message-body" style="display: flex; justify-content: center; text-align: center">
-      <div class="modal-survey" id="survey" style="display:block">
+      <div class="modal-survey" id="survey">
         <p>This is a <b>without</b> Daphne session. Please close the browser window and perform this session without using Daphne.</p>
       </div>
     </div>
@@ -13,11 +13,11 @@
 export default {
   name: "WithoutDaphneSessionModal",
   computed: {
-    isDone: false
   },
   methods: {
   },
-  watch: {}
+  watch: {
+  }
 }
 </script>
 
