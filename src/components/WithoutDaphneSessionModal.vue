@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="message-body" style="display: flex; justify-content: center; text-align: center">
-      <div class="modal-survey content" id="survey">
+      <div class="modal-survey content" style="display: block; height: 400px">
         <p>This is a <b>without</b> Daphne session. Please close the browser window and perform this session without using Daphne.</p>
       </div>
     </div>
