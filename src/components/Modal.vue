@@ -27,7 +27,7 @@
     import RegisterModal from './RegisterModal';
     import SettingsModal from './SettingsModal';
     import SymptomChangeNotificationModal from './SymptomChangeNotificationModal';
-    import WithoutDaphneSession from './WithoutDaphneSessionModal'
+    import WithoutDaphneSessionModal from './WithoutDaphneSessionModal'
     export default {
         name: 'modal',
         props: ['modalContent', 'isActive'],
@@ -42,7 +42,7 @@
             RegisterModal,
             SettingsModal,
             SymptomChangeNotificationModal,
-            WithoutDaphneSession,
+            WithoutDaphneSessionModal,
         },
         methods: {
             onCloseModal() {
