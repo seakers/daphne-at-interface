@@ -180,6 +180,9 @@ export default {
         this.initExperiment();
       }
     },
+    showTutorial() {
+      this.$store.commit('setExperimentStage', 'tutorial');
+    },
     maximizeChat(event) {
       this.$store.commit('mutateIsChatVisible');
     },
@@ -208,12 +211,12 @@ export default {
           let data = await dataResponse.json();
           seen_tutorial = data['seen_tutorial'];
         }
-        // if (!seen_tutorial) {
-        //   this.$store.commit('setExperimentStage', 'tutorial');
-        // }
-        // else {
+        if (!seen_tutorial) {
+          this.$store.commit('setExperimentStage', 'tutorial');
+        }
+        else {
           this.$store.commit('setExperimentStage', 'with_daphne');
-        //}
+        }
         this.$store.commit('setInExperiment', true);
       });
     },
@@ -344,6 +347,7 @@ export default {
     if (!this.isViewer) {
       // Generate the session
       await fetchPost(API_URL + 'auth/generate-session', new FormData());
+      this.autoStartTelemetry();
       // skip tutorial button
       this.tutorialConfirm = new Shepherd.Tour({
         defaultStepOptions: {
@@ -353,7 +357,7 @@ export default {
         useModalOverlay: true,
         exitOnEsc: false
       });
-      //Commenting to hide Tutorial
+      // Commenting to hide Tutorial
       // add steps
       this.tutorialConfirm.addStep({
         text: 'Would you like to continue with the tutorial?',
@@ -368,8 +372,6 @@ export default {
           }
         ]
       });
-      //Commenting to Hide Tutorial
-
       // Tutorial
       // full tutorial at the beginning
       this.introTutorial = new Shepherd.Tour({
@@ -1513,6 +1515,8 @@ export default {
       this.$root.$on('chatTutorialIndividual', () => {
         this.chatTutorialIndividual();
       });
+
+      this.autoStopTelemetry();
 
       // Experiment
       this.$store.dispatch('recoverExperiment').then(async () => {
