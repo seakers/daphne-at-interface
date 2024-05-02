@@ -374,8 +374,6 @@ export default {
           }
         ]
       });
-      // Commenting to Hide Tutorial
-
       // Tutorial
       // full tutorial at the beginning
       this.introTutorial = new Shepherd.Tour({
