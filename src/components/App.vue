@@ -324,6 +324,15 @@ export default {
       window.location.reload();
     },
     showTutorial() {
+      
+      this.tutorialConfirm = new Shepherd.Tour({
+        defaultStepOptions: {
+          classes: 'shadow-md bg-purple-dark',
+          scrollTo: true
+        },
+        useModalOverlay: true,
+        exitOnEsc: false
+      });
       this.tutorialConfirm.addStep({
               text: 'Would you like to continue with the tutorial?',
               buttons: [
