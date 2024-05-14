@@ -4,7 +4,7 @@
       <p>Hello! You need to be registered user to use Daphne. If you are already registered, please add you username and
         password below.</p>
       <form id="login-form">
-        <p v-if="hasLoginError">{{ loginError }}</p>
+        <p style="color: red; font-weight: bold" v-if="hasLoginError">{{ loginError }}</p>
         <div class="field">
           <label class="label">Username</label>
           <div class="control has-icons-left">
