@@ -1,7 +1,7 @@
 <template>
   <div id="anomaly_response">
     <div class="is-title">
-      Anomaly Response
+      Anomaly Responses
       <span class="tutorialLink">
                 <u v-on:click.prevent="responseTutorial">?</u>
             </span>
