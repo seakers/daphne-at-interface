@@ -23,6 +23,8 @@ export default {
   methods: {
     closeModal(state) {
         this.$store.commit('closeModal');
+        this.$store.dispatch('detectAnomalousSymptoms', true);
+
     },
   },
   watch: {

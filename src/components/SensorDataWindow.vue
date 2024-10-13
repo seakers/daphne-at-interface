@@ -99,7 +99,16 @@
         components: {
             VuePlotly,
             Multiselect,
-        }
+        },
+      watch: {
+        selectedVariables(newVal, oldVal) {
+          console.log("7777777777777777777777")
+          console.log(newVal);
+          console.log(oldVal);
+          this.plotLayout();
+          }
+        },
+
     }
 </script>
 

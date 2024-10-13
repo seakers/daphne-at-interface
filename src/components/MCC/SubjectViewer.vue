@@ -9,6 +9,7 @@
                 <div class="column is-7">
                     <p class="is-mini-title" style="margin-bottom:20px">Daphne-AT display summary:</p>
                     <div class="content">
+                        <p style="color: #0AFEFF">Timestamp: {{lastUpdatedTimestamp}}</p>
                         <p style="color: #0AFEFF">Selected symptoms:</p>
                         <ul>
                             <li style="color: white" v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"]}}</li>
@@ -89,6 +90,7 @@
           selectedProceduresList: [],
           selectedProceduresInfo: {},
           lastProvidedDiagnosis: [],
+          lastUpdatedTimestamp: None,
           playAlarms: false,
           isLoggedIn: false
         }
@@ -107,7 +109,9 @@
 
             if (dataResponse.ok) {
               // Add the new functionality
-              let state = await dataResponse.json();
+              let response = await dataResponse.json();
+              let state = response.current_state;
+              let timestamp = response.experiment_end_date;
               try {
                 eval(state["daphneat"]["isLoggedIn"]);
                 if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
@@ -118,6 +122,7 @@
                   this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
                   this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
                   this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
+                  this.lastUpdatedTimestamp = timestamp
                 } else {
                   this.currentStage = 'UNKNOWN';
                   this.dialogueHistory = [];

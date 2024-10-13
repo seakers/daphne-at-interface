@@ -11,7 +11,8 @@ const state = {
     isListening: false,
     isSpeaking: false,
     isUnmute: true,
-    daphneVoice: 'US English Female'
+    daphneVoice: 'US English Female',
+    anomalousSymptomsDetected: false,
 };
 
 const initialState = _.cloneDeep(state);
@@ -38,7 +39,10 @@ const getters = {
     },
     getDaphneVoice(state) {
         return state.daphneVoice;
-    }
+    },
+    getAnomalousSymptomsDetected(state) {
+        return state.anomalousSymptomsDetected;
+    },
 };
 
 // actions
@@ -74,6 +78,17 @@ const actions = {
         }
         catch(e) {
             console.error('Networking error:', e);
+        }
+    },
+    async detectAnomalousSymptoms({ commit }, value) {
+        commit('setAnomalousSymptomsDetected', value);
+        if (value) {
+            commit('addDialoguePiece', {
+                "voice_message": `I have detected a change in the measurements. Would you like me to plot the measurements?`,
+                "visual_message_type": ["text"],
+                "visual_message": ['I have detected a change in the measurements. Would you like me to plot the measurements?'],
+                "writer": "daphne"
+            });
         }
     },
     async executeCommand({ state, commit, rootState }) {
@@ -120,6 +135,9 @@ const mutations = {
     },
     setIsSpeaking(state, speak) {
         state.isSpeaking = speak;
+    },
+    setAnomalousSymptomsDetected(state, value) {
+        state.anomalousSymptomsDetected = value;
     },
     setResponse(state, response) {
         state.prevResponse = state.response;

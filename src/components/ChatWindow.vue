@@ -9,7 +9,7 @@
         <div v-for="piece in dialogueHistory" class="chat-message content"
              :class="{ 'chat-message-user': piece.writer === 'user', 'chat-message-daphne': piece.writer === 'daphne' }">
           <component v-for="(response, index) in piece['visual_message']"
-                     v-bind:is="responseTypes[piece['visual_message_type'][index]]" :response="response"
+                     v-bind:is="responseTypes[piece['visual_message_type'][index]]" :response="formatText(response)"
                      :key="index"></component>
         </div>
         <img src="assets/img/loader.svg" style="display: block; margin: auto;" align="center" height="64" width="64"
@@ -21,11 +21,17 @@
       <div class="sticky-textbox" style="position: absolute" width="24%">
         <div id="siri-container" style="height: 30px;"></div>
 
+        <div v-if="anomalousSymptomsDetected" style="text-align: center;">
+          <button class="button theme-buttons" @click="handleAnomalyResponse('yes')">Yes</button>
+          <button class="button theme-buttons" @click="handleAnomalyResponse('no')">No</button>
+        </div>
+        <div v-else>
         <div class="field has-addons is-fullwidth">
           <div class="control is-expanded">
             <input class="input" style="background-color: var(--color__bg); border-color: var(--color__shadow); color: var(--color__text); " type="text"
                    name="command" placeholder="Ask me something" v-model="command" v-on:keyup.enter="sendCommand">
           </div>
+        </div>
         </div>
 
         <div style="width: 100%; text-align: center">
@@ -88,11 +94,13 @@ export default {
       dialogueHistory: state => state.daphne.dialogueHistory,
       isLoading: state => state.daphne.isLoading,
       isSpeaking: state => state.daphne.isSpeaking,
+      anomalousSymptomsDetected: state => state.daphne.anomalousSymptomsDetected,
     }),
     ...mapGetters([
       'getResponse'
     ]),
     ...mapGetters({
+      symptomsList: 'getSymptomsList',
       isListening: 'getIsListening',
       isSpeaking: 'getIsSpeaking',
       isUnmute: 'getIsUnmute',
@@ -124,6 +132,25 @@ export default {
     }
   },
   methods: {
+    handleAnomalyResponse(response) {
+      // Handle the "Yes" action
+      if(response==='yes'){
+        let newSelectedVariables = [];
+        let symptomsList = this.symptomsList;
+        for (let i = 0; i < symptomsList.length; i++) {
+          newSelectedVariables[i] = symptomsList[i]['display_name'];
+        }
+        console.log('selected variablesssssssssssssssssssssssss')
+        console.log(newSelectedVariables)
+        console.log(symptomsList[0])
+        this.$store.dispatch('updateSelectedVariables', newSelectedVariables);
+      }
+      this.$store.commit('setAnomalousSymptomsDetected', false);
+    },
+    formatText(response) {
+      // Replace newline characters with <br> tags
+      return response.replace(/\n/g, '<br>');
+    },
     scrollToBottom: function () {
       let container = this.$el.querySelector(".chat-area");
       container.scrollTop = container.scrollHeight;
