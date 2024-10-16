@@ -9,21 +9,21 @@
                 <div class="column is-7">
                     <p class="is-mini-title" style="margin-bottom:20px">Daphne-AT display summary:</p>
                     <div class="content">
-                        <p style="color: #0AFEFF">Selected symptoms:</p>
+                        <p style="color: #0AFEFF">Selected symptoms:  Last Updated: {{lastUpdatedSymptomsTimestamp}}</p>
                         <ul>
                             <li style="color: white" v-for="symptom in selectedSymptomsList">{{ symptom["detection_text"]}}</li>
                         </ul>
-                        <p style="color: #0AFEFF">Last provided diagnosis:</p>
+                        <p style="color: #0AFEFF">Last provided diagnosis:  Last Updated: {{lastUpdatedDiagnosisTimestamp}}</p>
                         <ul>
                             <li style="color: white" v-for="anomaly in lastProvidedDiagnosis">
                                 {{anomaly['name']}} (with a score of {{anomaly['score']}})
                             </li>
                         </ul>
-                        <p style="color: #0AFEFF">Selected anomalies:</p>
+                        <p style="color: #0AFEFF">Selected anomalies:  Last Updated: {{lastUpdatedAnomaliesTimestamp}}</p>
                         <ul>
                             <li style="color: white" v-for="anomaly in selectedAnomaliesList">{{ anomaly }}</li>
                         </ul>
-                        <p style="color: #0AFEFF">Selected procedures:</p>
+                        <p style="color: #0AFEFF">Selected procedures:  Last Updated: {{lastUpdatedProceduresInfoTimestamp}}</p>
                         <ul>
                             <li style="color: white" v-for="(procedureDict, procedureName) in selectedProceduresInfo">
                                 <p style="margin-bottom:2px">{{procedureName}}</p>
@@ -89,6 +89,11 @@
           selectedProceduresList: [],
           selectedProceduresInfo: {},
           lastProvidedDiagnosis: [],
+          lastUpdatedSymptomsTimestamp: '',
+          lastUpdatedAnomaliesTimestamp: '',
+          lastUpdatedProceduresTimestamp: '',
+          lastUpdatedProceduresInfoTimestamp: '',
+          lastUpdatedDiagnosisTimestamp: '',
           playAlarms: false,
           isLoggedIn: false
         }
@@ -104,13 +109,20 @@
             reqData.append('user_id', this.userId);
 
             let dataResponse = await fetchPost(API_URL + 'experiment-at/get-state', reqData);
+            console.log("got the dataaaaaaaaa")
 
             if (dataResponse.ok) {
               // Add the new functionality
-              let state = await dataResponse.json();
+              let response = await dataResponse.json();
+              let state = response.current_state;
               try {
                 eval(state["daphneat"]["isLoggedIn"]);
                 if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
+                  console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+                  console.log("timesssssssssss", state["daphneat"]["lastUpdatedAnomaliesTimestamp"])
+                  console.log("timesssssssssss1", state["daphneat"]["lastUpdatedProceduresTimestamp"])
+                  console.log("timesssssssssss2", state["daphneat"]["lastUpdatedSymptomsTimestamp"])
+                  console.log("timesssssssssss3", state["daphneat"]["lastUpdatedProceduresInfoTimestamp"])
                   this.currentStage = state["experiment"]["experimentStage"];
                   this.dialogueHistory = state["daphne"]["dialogueHistory"];
                   this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];
@@ -118,6 +130,29 @@
                   this.selectedProceduresList = state["daphneat"]["selectedProceduresList"];
                   this.selectedProceduresInfo = state["daphneat"]["selectedProceduresInfo"];
                   this.lastProvidedDiagnosis = state["daphneat"]["diagnosisReport"]["diagnosis_list"];
+                  this.lastUpdatedAnomaliesTimestamp = state["daphneat"]["lastUpdatedAnomaliesTimestamp"],
+                  this.lastUpdatedSymptomsTimestamp = state["daphneat"]["lastUpdatedSymptomsTimestamp"],
+                  this.lastUpdatedProceduresTimestamp = state["daphneat"]["lastUpdatedProceduresTimestamp"],
+                  this.lastUpdatedProceduresInfoTimestamp = state["daphneat"]["lastUpdatedProceduresInfoTimestamp"],
+                  this.lastUpdatedDiagnosisTimestamp = state["daphneat"]["lastUpdatedDiagnosisTimestamp"]
+                  
+                  // try{
+                  //   let date = new Date(timestamp);
+                  //   // Format the date and time in a readable way
+                  //   let formattedDate = date.toLocaleString('en-US', {
+                  //     year: 'numeric',
+                  //     month: 'long',  // e.g., October
+                  //     day: 'numeric', // e.g., 15
+                  //     hour: 'numeric',
+                  //     minute: 'numeric',
+                  //     second: 'numeric',
+                  //     hour12: true    // Use 12-hour format with AM/PM
+                  //   });
+                  //   this.lastUpdatedTimestamp = formattedDate;
+                  // }
+                  // catch (e) {
+                  //   this.lastUpdatedTimestamp = timestamp;
+                  // }
                 } else {
                   this.currentStage = 'UNKNOWN';
                   this.dialogueHistory = [];
@@ -125,6 +160,12 @@
                   this.selectedAnomaliesList = [];
                   this.selectedProceduresList = [];
                   this.selectedProceduresInfo = [];
+                  this.lastUpdatedAnomaliesTimestamp = '';
+                  this.lastUpdatedSymptomsTimestamp = '';
+                  this.lastUpdatedProceduresTimestamp = '';
+                  this.lastUpdatedProceduresInfoTimestamp = '';
+                  this.lastUpdatedDiagnosisTimestamp = '';
+                  
                 }
               } catch (e) {
                 this.currentStage = 'UNKNOWN';
@@ -133,6 +174,11 @@
                 this.selectedAnomaliesList = [];
                 this.selectedProceduresList = [];
                 this.selectedProceduresInfo = [];
+                this.lastUpdatedAnomaliesTimestamp = '';
+                this.lastUpdatedSymptomsTimestamp = '';
+                this.lastUpdatedProceduresTimestamp = '';
+                this.lastUpdatedProceduresInfoTimestamp = '';
+                this.lastUpdatedDiagnosisTimestamp = '';
               }
             } else {
               console.error('Error retrieving user state.');
@@ -142,6 +188,11 @@
               this.selectedAnomaliesList = [];
               this.selectedProceduresList = [];
               this.selectedProceduresInfo = [];
+              this.lastUpdatedAnomaliesTimestamp = '';
+              this.lastUpdatedSymptomsTimestamp = '';
+              this.lastUpdatedProceduresTimestamp = '';
+              this.lastUpdatedProceduresInfoTimestamp = '';
+              this.lastUpdatedDiagnosisTimestamp = '';
             }
           } catch (e) {
             console.error('Networking error:', e);
@@ -151,6 +202,11 @@
             this.selectedAnomaliesList = [];
             this.selectedProceduresList = [];
             this.selectedProceduresInfo = [];
+            this.lastUpdatedAnomaliesTimestamp = '';
+            this.lastUpdatedSymptomsTimestamp = '';
+            this.lastUpdatedProceduresTimestamp = '';
+            this.lastUpdatedProceduresInfoTimestamp = '';
+            this.lastUpdatedDiagnosisTimestamp = '';
           }
         },
         async withoutDaphneSessionModal() {

@@ -65,11 +65,27 @@ export default new Vuex.Store({
                     commit('mutateTelemetryInfo', '');
                     commit('mutateSymptomsList', []);
                     commit('mutateSelectedSymptomsList', []);
+                    const now = new Date();
+                    let formattedDate = now.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',  // e.g., October
+                        day: 'numeric', // e.g., 15
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        second: 'numeric',
+                        hour12: true    // Use 12-hour format with AM/PM
+                      });
+                    
+                    commit('mutateLastUpdatedSymptomsTimestamp', formattedDate);
                     commit('mutateDiagnosisReport', []);
                     commit('mutateSelectedAnomaliesList', []);
                     commit('mutateSelectedAnomaliesInfo', {});
                     commit('mutateSelectedProceduresList', []);
                     commit('mutateSelectedProceduresInfo', {});
+                    commit('mutateLastUpdatedAnomaliesTimestamp', formattedDate);
+                    commit('mutateLastUpdatedProceduresTimestamp', formattedDate);
+                    commit('mutateLastUpdatedProceduresInfoTimestamp', formattedDate);
+                    commit('mutateLastUpdatedDiagnosisTimestamp', formattedDate);
                     commit('setIsTelemetryInitialized', false);
                 }
             }

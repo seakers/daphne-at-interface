@@ -28,6 +28,11 @@ const state = {
     selectedLeftSymptoms: [],
     selectedRightSymptoms:[],
 
+    lastUpdatedSymptomsTimestamp: '',
+    lastUpdatedAnomaliesTimestamp: '',
+    lastUpdatedProceduresTimestamp: '',
+    lastUpdatedProceduresInfoTimestamp: '',
+    lastUpdatedDiagnosisTimestamp: '',
     // Anomaly treatment related variables
     selectedAnomaliesList: [], // A list of the anomalies selected by the user to be displayed. RELEVANT FOR THE CONTEXT.
     selectedAnomaliesInfo: {}, // A dictionary with all the information of each of the selected anomalies.
@@ -63,7 +68,12 @@ const getters = {
     getLoadingNewAnomaly(state) {return state.loadingNewAnomaly},
     getPlayAlarms(state) {return state.playAlarms},
     getIsChatVisible(state) {return state.isChatVisible},
-    getSymptomsTimestamp(state) { return state.symptoms_timestamp}
+    getSymptomsTimestamp(state) { return state.symptoms_timestamp},
+    getLastUpdatedSymptomsTimestamp(state) {return state.lastUpdatedSymptomsTimestamp},
+    getLastUpdatedAnomaliesTimestamp(state) {return state.lastUpdatedAnomaliesTimestamp},
+    getLastUpdatedProceduresTimestamp(state) {return state.lastUpdatedProceduresTimestamp},
+    getLastUpdatedProceduresInfoTimestamp(state) {return state.lastUpdatedProceduresInfoTimestamp},
+    getLastUpdatedDiagnosisTimestamp(state) {return state.lastUpdatedDiagnosisTimestamp},
 };
 
 const actions = {
@@ -93,7 +103,20 @@ const actions = {
         }
         if (!already_in_list) {
             currentSelectedSymptoms.push(symptom);
+            console.log("committteddddddddddd")
             commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
+            const now = new Date();
+            let formattedDate = now.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',  // e.g., October
+                day: 'numeric', // e.g., 15
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true    // Use 12-hour format with AM/PM
+              });
+            commit('mutateLastUpdatedSymptomsTimestamp', formattedDate);
+            console.log("mutateeeeeeeee updateeeeeeeeee", now, "55555555555555", formattedDate);
         }
     },
     async removeSelectedSymptom({state, commit}, symptom) {
@@ -109,13 +132,46 @@ const actions = {
 
         currentSelectedSymptoms.splice(index, 1);
         commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedSymptomsTimestamp', formattedDate);
       
     },
     async clearSelectedSymptoms({state, commit}) {
         commit('mutateSelectedSymptomsList', []);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedSymptomsTimestamp', formattedDate);
     },
     async clearDiagnosisReport({state, commit}) {
         commit('mutateDiagnosisReport', []);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedDiagnosisTimestamp', formattedDate);
     },
     async retrieveProceduresFromAnomaly(state, anomalyName) {
         let reqData = new FormData();
@@ -187,6 +243,20 @@ const actions = {
         commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
         commit('mutateSelectedProceduresList', newSelectedProceduresList);
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedAnomaliesTimestamp', formattedDate);
+        commit('mutateLastUpdatedProceduresTimestamp', formattedDate);
+        commit('mutateLastUpdatedProceduresInfoTimestamp', formattedDate);
+        console.log("mutateeeeeeeee333 updateeeeeeeeee", now, "55555555555555", formattedDate);
 
         // Update the loading bool
         commit('mutateLoadingNewAnomaly', false);
@@ -234,6 +304,20 @@ const actions = {
         commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
         commit('mutateSelectedProceduresList', newSelectedProceduresList);
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedAnomaliesTimestamp', formattedDate);
+        commit('mutateLastUpdatedProceduresTimestamp', formattedDate);
+        commit('mutateLastUpdatedProceduresInfoTimestamp', formattedDate);
+        console.log("mutateeeeeeeee111 updateeeeeeeeee", now, "55555555555555", formattedDate);
 
     },
     removeSelectedAnomaly({state, commit}, anomalyName) {
@@ -300,6 +384,19 @@ const actions = {
         commit('mutateSelectedAnomaliesInfo', newSelectedAnomaliesInfo);
         commit('mutateSelectedProceduresList', newSelectedProceduresList);
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedAnomaliesTimestamp', formattedDate);
+        commit('mutateLastUpdatedProceduresTimestamp', formattedDate);
+        commit('mutateLastUpdatedProceduresInfoTimestamp', formattedDate);
     },
     updateProcedureDict({state, commit}, newProcedureDict) {
         // A copy of the state variable to be modified is made
@@ -334,10 +431,38 @@ const actions = {
 
         // Perform the commit
         commit('mutateSelectedProceduresInfo', newSelectedProceduresInfo);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedProceduresInfoTimestamp', formattedDate);
     },
     async requestDiagnosis({state, commit}, selectedSymptomsList) {
         // Clean the current diagnosis report
         commit('mutateDiagnosisReport', []);
+
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+
+          console.log("formatttttttttttt", formattedDate)
+        commit('mutateLastUpdatedDiagnosisTimestamp', formattedDate);
+
+        console.log("mutateeeeeeeee updateeeeeeeeee", now, "55555555555555");
+    
 
         // Update the last selected symptoms list
         let lastSelectedSymptomsList = JSON.parse(JSON.stringify(state.selectedSymptomsList));
@@ -367,6 +492,17 @@ const actions = {
         if (response.ok) {
             let diagnosis_report = await response.json();
             commit('mutateDiagnosisReport', diagnosis_report);
+            const now = new Date();
+            let formattedDate = now.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',  // e.g., October
+                day: 'numeric', // e.g., 15
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true    // Use 12-hour format with AM/PM
+              });
+        commit('mutateLastUpdatedDiagnosisTimestamp', formattedDate);
         } else {
             console.log('Error requesting a diagnosis report.')
         }
@@ -388,6 +524,17 @@ const actions = {
     async recoverSymptomsList({state, commit}) {
         let lastSymptomsList = state.lastSelectedSymptomsList;
         commit('mutateSelectedSymptomsList', lastSymptomsList);
+        const now = new Date();
+        let formattedDate = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',  // e.g., October
+            day: 'numeric', // e.g., 15
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true    // Use 12-hour format with AM/PM
+          });
+        commit('mutateLastUpdatedSymptomsTimestamp', formattedDate);
     },
     async triggerAlarm(state, alarm) {
         if (alarm === 'alarmIn') {
@@ -432,7 +579,12 @@ const mutations = {
             state[key] = recoveredState[key];
         });
     },
-    mutateSymptomsTimestamp(state, newVal) { state.symptoms_timestamp = newVal }
+    mutateSymptomsTimestamp(state, newVal) { state.symptoms_timestamp = newVal },
+    mutateLastUpdatedSymptomsTimestamp(state, newVal) { state.lastUpdatedSymptomsTimestamp = newVal},
+    mutateLastUpdatedAnomaliesTimestamp(state, newVal) { state.lastUpdatedAnomaliesTimestamp = newVal},
+    mutateLastUpdatedProceduresTimestamp(state, newVal) { state.lastUpdatedProceduresTimestamp = newVal},
+    mutateLastUpdatedProceduresInfoTimestamp(state, newVal) { state.lastUpdatedProceduresInfoTimestamp = newVal},
+    mutateLastUpdatedDiagnosisTimestamp(state, newVal) { state.lastUpdatedDiagnosisTimestamp = newVal},
 };
 
 export default {

@@ -45,7 +45,7 @@
                             'is-primary': anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen'],
                             'is-dark': !anomalyList[anomalyIndex]['anomalyProcedures'][procedureIndex]['procedureIsOpen']
                         }">
-          <div class="procedure-header" @click="toggleAccordion(procedureDict)">
+          <div class="procedure-header" @click="openModal(procedureDict)">
             {{ procedureDict['procedureName'] }}
             <span v-if="isComplete(procedureDict)" style="color: greenyellow; float:right">
                             COMPLETED
@@ -54,7 +54,79 @@
                             PENDING
                         </span>
           </div>
-          <div class="procedure-body">
+          <div v-if="showModal" class="modal is-active full-screen-modal">
+            <div class="modal-background" @click="closeModal"></div>
+            <div class="modal-content">
+              <div class="box">
+<!--                <span class="close-icon" @click="closeModal">&times;</span>-->
+                <!-- Displaying procedure details -->
+                <div class="procedure-content">
+                  <p>
+                    <span style="color: #0AFEFF; background: #002E2E">Objective </span>
+                    {{ modalData.procedureObjective }}
+                  </p>
+                  <p v-if="!modalData.procedureEquipment.includes('ERROR: missing equipment list.')" style="margin-top: 10px">
+                    <span style="color: #0AFEFF; background: #002E2E">Equipment</span>
+                  </p>
+                  <ul v-if="!modalData.procedureEquipment.includes('ERROR: missing equipment list.')" v-for="item in modalData.procedureEquipment">
+                    <li style="margin-left: 20px">{{ item }}</li>
+                  </ul>
+                  <p v-if="modalData['procedureReferences'].length > 0" style="margin-top: 10px">
+                    <span style="color: #0AFEFF; background: #002E2E">References</span>
+                  </p>
+                  <ul v-if="modalData['procedureReferences'].length > 0"
+                      v-for="(item, itemIndex) in modalData['procedureReferences']">
+                    <li v-on:click="openReference(modalData['procedureReferenceLinks'][itemIndex])"
+                        style="margin-left: 20px">
+                      {{ item }}
+                    </li>
+                  </ul>
+
+                  <p v-if="modalData['procedureFigures'].length > 0" style="margin-top: 10px">
+                    <span style="color: #0AFEFF; background: #002E2E">Figures </span>
+                  </p>
+                  <ul v-for="(item, itemIndex) in modalData['procedureFigures']">
+                    <li v-on:click="openFigure(item)" style="margin-left: 20px; cursor: pointer">
+                      Figure {{ itemIndex + 1 }}
+                    </li>
+                  </ul>
+                  <p style="margin-top: 10px">
+                    <span style="color: #0AFEFF; background: #002E2E">Steps to follow</span>
+                    ({{ completedSteps }}
+                    out of
+                    {{ modalData['checkableSteps'] }}
+                    steps performed)
+                  </p>
+                  <div class="scrollable-container" style="margin-left: 20px">
+                    <div v-for="(stepItem, stepIndex) in modalData['procedureSteps']">
+                      <input v-if="!stepItem['isStep']" type="checkbox"
+                             v-bind:style="{'margin-left': computeLeftMargin(stepItem)}"
+                             v-on:click="checkIt(modalData, stepIndex)"
+                             :checked="stepItem['isDone']">
+                      <label>{{ stepItem['label'] }} - {{ stepItem['action'] }}
+                        <span v-if="stepItem['hasFigure']">
+                                             (see
+                                            <a v-on:click="openFigure(stepItem['figure'])">
+                                                  Figure {{ stepItem['fNumber'] }}
+                                            </a>
+                                            <span v-if="stepItem['hasFigure2']">
+                                                 and
+                                                <a v-on:click="openFigure(stepItem['figure2'])">
+                                                     Figure {{ stepItem['fNumber2'] }}
+                                                </a>
+                                            </span>
+                                            )
+                                        </span>
+                      </label>
+                      <br/>
+                    </div></div>
+                </div>
+              </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
+          </div>
+
+          <!-- <div class="procedure-body">
             <div class="procedure-content">
               <p>
                 <span style="color: #0AFEFF; background: #002E2E">Objective </span>
@@ -118,7 +190,9 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
+
+
         </div>
       </div>
       <div class="horizontal-divider" style="margin-top: 30px"></div>
@@ -140,6 +214,8 @@ export default {
     return {
       componentKey: true,
       anomalyListCopy: [],
+      modalData: {},
+      showModal: false,
     }
   },
 
@@ -216,7 +292,10 @@ export default {
         }
       }
       return false;
-    }
+    },
+    completedSteps() {
+      return this.modalData['procedureSteps'].filter(step => step['isDone']).length;
+    },
   },
 
   methods: {
@@ -247,8 +326,9 @@ export default {
     },
     isComplete(procedureDict) {
       let currentStep = procedureDict['procedureCurrentStep'];
+      let currentSteps = procedureDict['procedureSteps'].filter(step => step['isDone']).length
       let totalSteps = procedureDict['checkableSteps'];
-      return currentStep === totalSteps;
+      return currentSteps === totalSteps;
     },
     checkIt(procedureDict, stepIndex) {
       // This auxiliary function returns the proper updated procedureDict object. It only changes whether the
@@ -265,12 +345,27 @@ export default {
           }
         }
       }
+      console.log("heyyyyyyyyyyyyyyyyyyyyyyy")
+      console.log(newProcedureDict)
+      console.log("heyyyyyyyyyyyyyyyyyyyyyyy")
+      
       newProcedureDict['procedureCurrentStep'] = numberOfCheckedBoxes;
+      this.modalData['procedureSteps'][stepIndex]['isDone'] = !this.modalData['procedureSteps'][stepIndex]['isDone']
       this.$store.dispatch('updateProcedureDict', newProcedureDict);
     },
     toggleAccordion(procedureDict) {
       procedureDict['procedureIsOpen'] = !procedureDict['procedureIsOpen'];
       this.$store.dispatch('updateProcedureDict', procedureDict);
+    },
+    openModal(procedureDict) {
+      this.modalData = procedureDict;
+      this.showModal = true;
+      console.log("44444444444444")
+      console.log(this.modalData)
+    },
+    closeModal() {
+      this.showModal = false; // close the modal
+      this.modalData = {};
     },
     responseTutorial(event) {
       this.$root.$emit('responseTutorialIndividual');
@@ -348,6 +443,60 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
+.full-screen-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
+.full-screen-modal .modal-background {
+  background-color: rgba(10, 10, 10, 0.86);
+}
+
+.full-screen-modal .modal-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.full-screen-modal .box {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  background-color: black;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Close icon styles */
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #ff3e00;
+}
+
+.close-icon:hover {
+  color: #ff6347;
+}
+
+/* Highlighted text styles */
+.highlight {
+  color: #0AFEFF;
+  background: #002E2E;
+  padding: 3px 6px;
+  border-radius: 3px;
+}
+
+/* Equipment section styling */
+.equipment {
+  margin-top: 10px;
+  font-weight: bold;
+}
 </style>
 

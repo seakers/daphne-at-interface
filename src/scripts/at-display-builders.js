@@ -489,10 +489,11 @@ export function updateCheckboxes(procedureDict, stepIndex) {
     // Local bool variable indicating whether the step box is checked or not (before update)
     let isChecked = procedure['procedureSteps'][stepIndex]['isDone'];
     let checkThisBox = !isChecked;
+    procedure['procedureSteps'][stepIndex]['isDone'] = !isChecked;
 
     // Depending on whether the step box is being checked or not, check or uncheck its parent step boxes
-    if (checkThisBox) {procedure = checkTheBox(procedure, stepIndex)}
-    else {procedure = uncheckTheBox(procedure, stepIndex)}
+    // if (checkThisBox) {procedure = checkTheBox(procedure, stepIndex)}
+    // else {procedure = uncheckTheBox(procedure, stepIndex)}
 
     // Return the updated procedure dictionary
     return procedure
