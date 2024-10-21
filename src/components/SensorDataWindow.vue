@@ -5,6 +5,15 @@
             <span class="tutorialLink">
             <u v-on:click.prevent="telemetryTutorial">?</u>
             </span>
+            <span class="tutorialLink">&#8287; &#8287;</span>
+            <span class="tutorialLink">
+                <u v-on:click.prevent="clear">Clear</u>
+            </span>
+            <span class="tutorialLink">&#8287; &#8287;</span>
+            <span class="tutorialLink">
+                <u v-on:click.prevent="plotAll">Plot All</u>
+            </span>
+
         </div>
         <div class="is-centered is-content">
             <div class="is-content is-multiselect">
@@ -49,6 +58,7 @@
 
         computed: {
             ...mapGetters({
+                symptomsList: 'getSymptomsList',
                 plotData: 'getPlotData',
                 selectedVariables: 'getSelectedVariables',
                 inputVariables: 'getInputVariables',
@@ -93,7 +103,20 @@
             },
             telemetryTutorial(event) {
                 this.$root.$emit('telemetryTutorialIndividual');
-            }
+            },
+            plotAll() {
+                let newSelectedVariables = [];
+                let symptomsList = this.symptomsList;
+                for (let i = 0; i < symptomsList.length; i++) {
+                    newSelectedVariables[i] = symptomsList[i]['display_name'];
+                }    
+                this.$store.dispatch('updateSelectedVariables', newSelectedVariables);
+            },
+            clear(){
+                let variables = this.inputVariables;
+                let newSelectedVariables = [variables[0]];
+                this.$store.dispatch('updateSelectedVariables', newSelectedVariables);
+            },
         },
 
         components: {

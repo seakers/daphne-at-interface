@@ -109,20 +109,13 @@
             reqData.append('user_id', this.userId);
 
             let dataResponse = await fetchPost(API_URL + 'experiment-at/get-state', reqData);
-            console.log("got the dataaaaaaaaa")
-
             if (dataResponse.ok) {
               // Add the new functionality
-              let response = await dataResponse.json();
-              let state = response.current_state;
+              let state = await dataResponse.json();
+
               try {
                 eval(state["daphneat"]["isLoggedIn"]);
                 if (state["daphneat"]["isLoggedIn"] && state !== 'None') {
-                  console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-                  console.log("timesssssssssss", state["daphneat"]["lastUpdatedAnomaliesTimestamp"])
-                  console.log("timesssssssssss1", state["daphneat"]["lastUpdatedProceduresTimestamp"])
-                  console.log("timesssssssssss2", state["daphneat"]["lastUpdatedSymptomsTimestamp"])
-                  console.log("timesssssssssss3", state["daphneat"]["lastUpdatedProceduresInfoTimestamp"])
                   this.currentStage = state["experiment"]["experimentStage"];
                   this.dialogueHistory = state["daphne"]["dialogueHistory"];
                   this.selectedSymptomsList = state["daphneat"]["selectedSymptomsList"];

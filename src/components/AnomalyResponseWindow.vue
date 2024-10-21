@@ -123,7 +123,7 @@
                 </div>
               </div>
             </div>
-            <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
+            <button class="modal-close is-large custom-close-button" aria-label="close" @click="closeModal"></button>
           </div>
 
           <!-- <div class="procedure-body">
@@ -345,9 +345,6 @@ export default {
           }
         }
       }
-      console.log("heyyyyyyyyyyyyyyyyyyyyyyy")
-      console.log(newProcedureDict)
-      console.log("heyyyyyyyyyyyyyyyyyyyyyyy")
       
       newProcedureDict['procedureCurrentStep'] = numberOfCheckedBoxes;
       this.modalData['procedureSteps'][stepIndex]['isDone'] = !this.modalData['procedureSteps'][stepIndex]['isDone']
@@ -360,8 +357,6 @@ export default {
     openModal(procedureDict) {
       this.modalData = procedureDict;
       this.showModal = true;
-      console.log("44444444444444")
-      console.log(this.modalData)
     },
     closeModal() {
       this.showModal = false; // close the modal
@@ -497,6 +492,19 @@ export default {
 .equipment {
   margin-top: 10px;
   font-weight: bold;
+}
+
+.custom-close-button {
+  font-size: 3rem;  
+  background-color: #ff5e5e;
+  border-radius: 50%;     
+  color: white;     
+  border: none;        
+  cursor: pointer;   
+}
+
+.custom-close-button:hover {
+  background-color: #ff3333; 
 }
 </style>
 

@@ -12,6 +12,8 @@ const state = {
     isSpeaking: false,
     isUnmute: true,
     daphneVoice: 'US English Female'
+    ,
+    // anomalousSymptomsDetected: false,
 };
 
 const initialState = _.cloneDeep(state);
@@ -107,7 +109,18 @@ const actions = {
             console.error('Networking error:', e);
         }
         commit('setIsLoading', false);
-    }
+    },
+    // async detectAnomalousSymptoms({ commit }, value) {
+    //     commit('setAnomalousSymptomsDetected', value);
+    //     if (value) {
+    //         commit('addDialoguePiece', {
+    //             "voice_message": `I have detected a change in the measurements. Would you like me to plot the measurements?`,
+    //             "visual_message_type": ["text"],
+    //             "visual_message": ['I have detected a change in the measurements. Would you like me to plot the measurements?'],
+    //             "writer": "daphne"
+    //         });
+    //     }
+    // },
 };
 
 // mutations
@@ -139,6 +152,9 @@ const mutations = {
     setDialogueHistory(state, dialogueHistory) {
         state.dialogueHistory = dialogueHistory;
     },
+    // setAnomalousSymptomsDetected(state, value) {
+    //     state.anomalousSymptomsDetected = value;
+    // },
     addDialoguePiece(state, dialoguePiece) {
         state.dialogueHistory.push(dialoguePiece);
     },

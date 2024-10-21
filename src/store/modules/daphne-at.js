@@ -103,7 +103,6 @@ const actions = {
         }
         if (!already_in_list) {
             currentSelectedSymptoms.push(symptom);
-            console.log("committteddddddddddd")
             commit('mutateSelectedSymptomsList', currentSelectedSymptoms);
             const now = new Date();
             let formattedDate = now.toLocaleString('en-US', {
@@ -116,7 +115,6 @@ const actions = {
                 hour12: true    // Use 12-hour format with AM/PM
               });
             commit('mutateLastUpdatedSymptomsTimestamp', formattedDate);
-            console.log("mutateeeeeeeee updateeeeeeeeee", now, "55555555555555", formattedDate);
         }
     },
     async removeSelectedSymptom({state, commit}, symptom) {
