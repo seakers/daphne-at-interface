@@ -68,7 +68,7 @@ store.subscribe(async (mutation, state) => {
                         state: partialState
                     }));
                 }
-            }, 1000);
+            }, 3000);
         }
     } else {
         if (stateTimer !== 0) {

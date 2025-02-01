@@ -338,7 +338,9 @@ export default {
           }
         }
         else {
-          await this.$store.dispatch('addSelectedAnomaly', anomalyName);
+          if (!this.selectedAnomaliesList.includes(anomalyName)) {
+            await this.$store.dispatch('addSelectedAnomaly', anomalyName);
+          }
         }
         this.isAnomalySelected = false;
     },

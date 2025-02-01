@@ -244,12 +244,12 @@ const actions = {
         const now = new Date();
         let formattedDate = now.toLocaleString('en-US', {
             year: 'numeric',
-            month: 'long',  // e.g., October
-            day: 'numeric', // e.g., 15
+            month: 'long', 
+            day: 'numeric',
             hour: 'numeric',
             minute: 'numeric',
             second: 'numeric',
-            hour12: true    // Use 12-hour format with AM/PM
+            hour12: true 
           });
         commit('mutateLastUpdatedAnomaliesTimestamp', formattedDate);
         commit('mutateLastUpdatedProceduresTimestamp', formattedDate);

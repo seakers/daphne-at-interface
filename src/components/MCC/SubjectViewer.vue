@@ -59,6 +59,11 @@
                             </button>
                         </div>
                         <div class="control">
+                            <button type="submit" class="button is-primary" v-on:click="removeUser" style="background-color: red">
+                                Remove User
+                            </button>
+                        </div>
+                        <div class="control">
                             <button type="submit" class="button is-primary" v-on:click="forceFinishExperiment" style="background-color: red">
                                 Force Logout User
                             </button>
@@ -212,6 +217,10 @@
           let reqData = new FormData();
           reqData.append('user_id', this.userId);
           await fetchPost(API_URL + 'experiment-at/finish-experiment-from-mcc', reqData);
+          this.$emit('remove-shown', this.userId);
+        },
+        removeUser() {
+          console.log('Remove person');
           this.$emit('remove-shown', this.userId);
         },
         async forceFinishExperiment() {

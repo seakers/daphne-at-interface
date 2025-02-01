@@ -345,8 +345,20 @@ export default {
           }
         }
       }
+
+      let currentStep = 0;
+
+      let stepsList = procedureDict['checkableStepsList'];
+      for (let i = 0; i < stepsList.length; i++) {
+        if(stepsList[i]['label'] == newProcedureDict['procedureSteps'][stepIndex]['label']){
+          currentStep = i+1;
+        }
+      }
+
+      console.log(currentStep);
+      newProcedureDict['procedureCurrentStep'] = currentStep;
       
-      newProcedureDict['procedureCurrentStep'] = numberOfCheckedBoxes;
+      // newProcedureDict['procedureCurrentStep'] = numberOfCheckedBoxes;
       this.modalData['procedureSteps'][stepIndex]['isDone'] = !this.modalData['procedureSteps'][stepIndex]['isDone']
       this.$store.dispatch('updateProcedureDict', newProcedureDict);
     },

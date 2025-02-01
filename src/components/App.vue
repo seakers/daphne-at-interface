@@ -126,7 +126,7 @@ export default {
     }
   },
   created() {
-    setInterval(this.getNow, 1000);
+    setInterval(this.getNow, 3000);
   },
   props: ["isViewer", "viewUserId"],
   computed: {

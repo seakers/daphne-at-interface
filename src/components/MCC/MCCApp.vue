@@ -73,29 +73,39 @@
                 }
             },
             addShownSubject() {
-                if (!this.shownSubjects.includes(this.selectedSubject)) {
+                let bool = false;
+                for (let index in this.shownSubjects) {
+                    if (this.shownSubjects[index].userName === this.selectedSubject.userName) {
+                        bool = true;
+                        break;
+                    }
+                }
+                if (!bool) {
                     this.shownSubjects.push(this.selectedSubject);
                 }
             },
             removeShownSubject() {
-                if (this.shownSubjects.includes(this.selectedSubject)) {
-                    let indexToDelete = -1;
-                    for (let index in this.shownSubjects) {
-                        if (this.shownSubjects[index] === this.selectedSubject) {
-                            indexToDelete = index;
-                        }
+                let indexToDelete = -1;
+                for (let index in this.shownSubjects) {
+                    if (this.shownSubjects[index].userName === this.selectedSubject.userName) {
+                        indexToDelete = index;
                     }
+                }
+                if (indexToDelete != -1){
                     this.shownSubjects.splice(indexToDelete, 1);
                 }
             },
             onRemoveShown(userId) {
+                console.log("one remove shownnnn")
                 let indexToDelete = -1;
                 for (let index in this.shownSubjects) {
-                    if (this.shownSubjects[index].id === userId) {
+                    if (this.shownSubjects[index].userId === userId) {
                         indexToDelete = index;
                     }
                 }
-                this.shownSubjects.splice(indexToDelete, 1);
+                if (indexToDelete != -1){
+                    this.shownSubjects.splice(indexToDelete, 1);
+                }
             }
         },
         mounted() {
